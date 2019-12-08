@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言 环境介绍 系统：win10 语言：python3.7 框架：pytorch1.1   内容概要 神经网络分类实验（对应于机器学习的聚类算法Kmeans） 手写数字集识别（神经网络+工程）    二、神经网络对数据分类2.1 网络数据生成 步骤一：  先随机生成一些数据，数据截图如下：   步骤二  通过两个相交的函数将数据分为4类，分类结果如下：  分割函数如下设计：  y = \fra">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写数字识别画板（qt）">
+<meta property="og:url" content="https://www.zwenc.cn/4013bb9b/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言 环境介绍 系统：win10 语言：python3.7 框架：pytorch1.1   内容概要 神经网络分类实验（对应于机器学习的聚类算法Kmeans） 手写数字集识别（神经网络+工程）    二、神经网络对数据分类2.1 网络数据生成 步骤一：  先随机生成一些数据，数据截图如下：   步骤二  通过两个相交的函数将数据分为4类，分类结果如下：  分割函数如下设计：  y = \fra">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1567940707870.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1567941617881.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568103449464.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568103068271.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568103046579.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568277152338.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568277480315.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1568279408867.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569916569792.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569916581238.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569916619250.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/GIF1.gif">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569921299111.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569921393259.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569921707270.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922126225.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569915681058.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569158120051.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922390272.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922374960.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922451971.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922440344.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1569922217382.png">
+<meta property="og:image" content="https://www.zwenc.cn/4013bb9b/1570107719488.png">
+<meta property="og:updated_time" content="2019-10-17T07:31:45.825Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手写数字识别画板（qt）">
+<meta name="twitter:description" content="一、前言 环境介绍 系统：win10 语言：python3.7 框架：pytorch1.1   内容概要 神经网络分类实验（对应于机器学习的聚类算法Kmeans） 手写数字集识别（神经网络+工程）    二、神经网络对数据分类2.1 网络数据生成 步骤一：  先随机生成一些数据，数据截图如下：   步骤二  通过两个相交的函数将数据分为4类，分类结果如下：  分割函数如下设计：  y = \fra">
+<meta name="twitter:image" content="https://www.zwenc.cn/4013bb9b/1567940707870.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/4013bb9b/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>手写数字识别画板（qt） | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/4013bb9b/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">手写数字识别画板（qt）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 17:18:11" itemprop="dateCreated datePublished" datetime="2019-09-08T17:18:11+08:00">2019-09-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-10-17 15:31:45" itemprop="dateModified" datetime="2019-10-17T15:31:45+08:00">2019-10-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/作品/" itemprop="url" rel="index"><span itemprop="name">作品</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ul>
+<li>环境介绍<ul>
+<li>系统：win10</li>
+<li>语言：python3.7</li>
+<li>框架：pytorch1.1</li>
+</ul>
+</li>
+<li>内容概要<ul>
+<li>神经网络分类实验（对应于机器学习的聚类算法Kmeans）</li>
+<li>手写数字集识别（神经网络+工程）</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、神经网络对数据分类"><a href="#二、神经网络对数据分类" class="headerlink" title="二、神经网络对数据分类"></a>二、神经网络对数据分类</h3><h4 id="2-1-网络数据生成"><a href="#2-1-网络数据生成" class="headerlink" title="2.1 网络数据生成"></a>2.1 网络数据生成</h4><ul>
+<li>步骤一：</li>
+</ul>
+<p>先随机生成一些数据，数据截图如下：</p>
+<p><img src="/4013bb9b/1567940707870.png" alt="1567940707870"></p>
+<ul>
+<li>步骤二</li>
+</ul>
+<p>通过两个相交的函数将数据分为4类，分类结果如下：</p>
+<p><img src="/4013bb9b/1567941617881.png" alt="1567941617881"></p>
+<p>分割函数如下设计：</p>
+<script type="math/tex; mode=display">
+y = \frac{1}{10}x^2 \\ 
+y = \frac{1}{10}{(x - 10)}^2</script><p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrainData</span><span class="params">(data.Dataset)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(TrainData,self).__init__()</span><br><span class="line">        self.TrainData = self.generateTrainData()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> torch.Tensor(self.TrainData[item,<span class="number">0</span>:<span class="number">2</span>]), torch.Tensor([self.TrainData[item, <span class="number">2</span>]])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.TrainData)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generateTrainData</span><span class="params">(self)</span>:</span></span><br><span class="line">        outData = []</span><br><span class="line">        centerPoint = [[<span class="number">3</span>,<span class="number">3</span>],[<span class="number">8</span>,<span class="number">5</span>],[<span class="number">2</span>,<span class="number">7</span>]]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">300</span>):</span><br><span class="line">            rand_x = np.random.random_sample(<span class="number">1</span>)[<span class="number">0</span>] * <span class="number">10</span></span><br><span class="line">            rand_y = np.random.random_sample(<span class="number">1</span>)[<span class="number">0</span>] * <span class="number">10</span></span><br><span class="line">            <span class="comment"># label = 3</span></span><br><span class="line">            <span class="comment"># for index,(x,y) in enumerate(centerPoint):</span></span><br><span class="line">            <span class="comment">#     if np.sqrt(np.power(rand_x - x,2) + np.power(rand_y-y,2)) &lt;= 1.5:</span></span><br><span class="line">            <span class="comment">#         label = index</span></span><br><span class="line"></span><br><span class="line">            x1 = <span class="number">0.1</span> * np.power(rand_x, <span class="number">2</span>)</span><br><span class="line">            x2 = <span class="number">0.1</span> * np.power(rand_x - <span class="number">10</span>, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (rand_y &lt;= x2) <span class="keyword">and</span> (rand_y &gt;= x1):</span><br><span class="line">                label = <span class="number">0</span></span><br><span class="line">            <span class="keyword">elif</span> (rand_y &lt;= x2) <span class="keyword">and</span> (rand_y &lt;= x1):</span><br><span class="line">                label = <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> (rand_y &gt;= x2) <span class="keyword">and</span> (rand_y &lt;= x1):</span><br><span class="line">                label = <span class="number">2</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                label = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">            outData.append([rand_x, rand_y, label])</span><br><span class="line"></span><br><span class="line">        outData = np.array(outData)</span><br><span class="line"></span><br><span class="line">        plt.scatter(outData[outData[:, <span class="number">2</span>] == <span class="number">0</span>, <span class="number">0</span>], outData[outData[:, <span class="number">2</span>] == <span class="number">0</span>, <span class="number">1</span>], c=<span class="string">"r"</span>)</span><br><span class="line">        plt.scatter(outData[outData[:, <span class="number">2</span>] == <span class="number">1</span>, <span class="number">0</span>], outData[outData[:, <span class="number">2</span>] == <span class="number">1</span>, <span class="number">1</span>], c=<span class="string">"g"</span>)</span><br><span class="line">        plt.scatter(outData[outData[:, <span class="number">2</span>] == <span class="number">2</span>, <span class="number">0</span>], outData[outData[:, <span class="number">2</span>] == <span class="number">2</span>, <span class="number">1</span>], c=<span class="string">"b"</span>)</span><br><span class="line">        plt.scatter(outData[outData[:, <span class="number">2</span>] == <span class="number">3</span>, <span class="number">0</span>], outData[outData[:, <span class="number">2</span>] == <span class="number">3</span>, <span class="number">1</span>])</span><br><span class="line">        plt.show()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> outData</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-2-网络设计"><a href="#2-2-网络设计" class="headerlink" title="2.2 网络设计"></a>2.2 网络设计</h4><p>网络分为4层，为什么要4层！！随意吧，反正越多效果越好，越多学习速率越慢。网络层数3层也行，重要是激励函数，激励函数我使用了4种：</p>
+<ul>
+<li>无激励函数：函数学习速度快，但是不理想，因为没有激励函数，输出只不过是输入的线性组合，发挥不出网络的威力。</li>
+<li>Sigmoid激励函数：按道理这里应该使用<code>Sigmoid</code>或者<code>softmax</code>激励函数，他们的输出都是<code>0~1</code>，适合用于处理分类问题（逻辑回归），但是这里为了熟悉线性回归，使用了以下两个激励函数，可以看出需要的神经元数量还是相当的多。</li>
+<li>relu激励函数：学习速度快，学习的结果不错。他和无激励函数的区别就是它可以选择性的使得一些神经元失去活性，更加类似于人的大脑。函数表示为：<code>return max(x,0)</code></li>
+<li>Softplus激励函数：学习速度略慢与relu，学习结果比relu更加圆滑。数学表达式为：$log(1+e^x)$</li>
+</ul>
+<p>既然relu和Softplus都可以，选择就出现了。如果面对比较深的网络选择使用relu，浅的网络选择使用Softplus。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(net,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.layer1 = nn.Linear(<span class="number">2</span>,<span class="number">200</span>)</span><br><span class="line">        self.active1 = nn.Softplus()</span><br><span class="line"></span><br><span class="line">        self.layer2 = nn.Linear(<span class="number">200</span>,<span class="number">200</span>)</span><br><span class="line">        self.active2 = nn.Softplus()</span><br><span class="line"></span><br><span class="line">        self.layer3 = nn.Linear(<span class="number">200</span>,<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        <span class="comment"># x = F.relu(x)</span></span><br><span class="line"></span><br><span class="line">        x = self.active1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        <span class="comment"># x = F.relu(x)</span></span><br><span class="line">        x = self.active2(x)</span><br><span class="line">        x = self.layer3(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-训练数据"><a href="#2-3-训练数据" class="headerlink" title="2.3 训练数据"></a>2.3 训练数据</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setparamsLr</span><span class="params">(model,lr)</span>:</span>  <span class="comment"># 修改学习速率</span></span><br><span class="line">    params = []</span><br><span class="line">    params_dict = dict(model.named_parameters())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> key,value <span class="keyword">in</span> params_dict.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"weight"</span> <span class="keyword">in</span> key:</span><br><span class="line">            params.append(&#123;<span class="string">'params'</span>: value, <span class="string">'lr'</span>: lr&#125;)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">"bias"</span> <span class="keyword">in</span> key:</span><br><span class="line">            params.append(&#123;<span class="string">'params'</span>: value,<span class="string">'lr'</span>: lr&#125;)</span><br><span class="line">    <span class="keyword">return</span> params</span><br><span class="line"></span><br><span class="line">learning_rate = <span class="number">0.005</span><span class="comment"># 学习速率</span></span><br><span class="line">num_epoches = <span class="number">1000</span>     <span class="comment"># 迭代次数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 网络构建</span></span><br><span class="line">    module = net()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 数据生成</span></span><br><span class="line">    allData = TrainData()</span><br><span class="line">    trainData = DataLoader(allData, batch_size = <span class="number">5</span>, shuffle = <span class="keyword">True</span>)</span><br><span class="line">    dataLen = trainData.__len__()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 损失函数设计, 默认会对batch求平均</span></span><br><span class="line">    Loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">    optimizer = torch.optim.SGD(setparamsLr(module, learning_rate), lr=learning_rate)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epoches):</span><br><span class="line">        loss_avg = <span class="number">0</span></span><br><span class="line">        num = <span class="number">0</span>   <span class="comment"># 记录数据匹配的个数，可以判断网络是否可以学习，大致判断学习效果</span></span><br><span class="line">        module.train()</span><br><span class="line">        <span class="keyword">for</span> index, (testData, label) <span class="keyword">in</span> enumerate(trainData):</span><br><span class="line">            data = torch.tensor(testData, requires_grad=<span class="keyword">True</span>).float()</span><br><span class="line">            label = torch.tensor(label[:,<span class="number">0</span>]).long()</span><br><span class="line"></span><br><span class="line">            out = module(data)</span><br><span class="line">            loss = Loss_func(out, label)</span><br><span class="line"></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            loss.backward()</span><br><span class="line">            optimizer.step()</span><br><span class="line"></span><br><span class="line">            loss_avg = loss_avg + loss.data.numpy()</span><br><span class="line">            <span class="keyword">if</span> label[<span class="number">0</span>] == torch.max(out.data[<span class="number">0</span>],<span class="number">0</span>)[<span class="number">1</span>]:</span><br><span class="line">                num = num + <span class="number">1</span></span><br><span class="line">        print(num)</span><br><span class="line">        print(<span class="string">"epoch is :"</span>,epoch, <span class="string">" loss_avg is : "</span>, loss_avg / dataLen)</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-测试结果"><a href="#2-4-测试结果" class="headerlink" title="2.4 测试结果"></a>2.4 测试结果</h4><p>测试代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">module.eval()</span><br><span class="line">test = []</span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">50</span>):</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> range(<span class="number">50</span>):</span><br><span class="line">        out = module(torch.tensor([x/<span class="number">5</span>,y/<span class="number">5</span>]).float())  <span class="comment">#</span></span><br><span class="line">        outindex = torch.max(out.data, <span class="number">0</span>)[<span class="number">1</span>]</span><br><span class="line">        test.append([x/<span class="number">5</span>,y/<span class="number">5</span>,outindex])</span><br><span class="line"></span><br><span class="line">test = np.array(test)</span><br><span class="line"></span><br><span class="line">plt.clf()</span><br><span class="line">plt.axis([<span class="number">-1</span>,<span class="number">11</span>,<span class="number">-1</span>,<span class="number">11</span>])</span><br><span class="line">plt.scatter(test[test[:, <span class="number">2</span>] == <span class="number">0</span>, <span class="number">0</span>], test[test[:, <span class="number">2</span>] == <span class="number">0</span>, <span class="number">1</span>], c=<span class="string">"r"</span>)</span><br><span class="line">plt.scatter(test[test[:, <span class="number">2</span>] == <span class="number">1</span>, <span class="number">0</span>], test[test[:, <span class="number">2</span>] == <span class="number">1</span>, <span class="number">1</span>], c=<span class="string">"g"</span>)</span><br><span class="line">plt.scatter(test[test[:, <span class="number">2</span>] == <span class="number">2</span>, <span class="number">0</span>], test[test[:, <span class="number">2</span>] == <span class="number">2</span>, <span class="number">1</span>], c=<span class="string">"b"</span>)</span><br><span class="line">plt.scatter(test[test[:, <span class="number">2</span>] == <span class="number">3</span>, <span class="number">0</span>], test[test[:, <span class="number">2</span>] == <span class="number">3</span>, <span class="number">1</span>])</span><br><span class="line">plt.pause(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p>从下图可以看出，学校效果不错</p>
+<p><img src="/4013bb9b/1568103449464.png" alt="1568103449464"></p>
+<p>再随机生成一些数据，测试网络</p>
+<p><img src="/4013bb9b/1568103068271.png" alt="1568103068271"></p>
+<p><img src="/4013bb9b/1568103046579.png" alt="1568103046579"></p>
+<h4 id="2-5-思考"><a href="#2-5-思考" class="headerlink" title="2.5 思考"></a>2.5 思考</h4><p>神经网络分类的网络搭建和神经网络拟合在设计上面的区别</p>
+<h3 id="三、卷积神经网络"><a href="#三、卷积神经网络" class="headerlink" title="三、卷积神经网络"></a>三、卷积神经网络</h3><p>这里不讲图片卷积的基础原理，推荐看《数字图像处理》——冈萨雷斯。本章以对图片去噪为例子。</p>
+<h4 id="3-1-传统去噪方法"><a href="#3-1-传统去噪方法" class="headerlink" title="3.1 传统去噪方法"></a>3.1 传统去噪方法</h4><p>这里使用椒盐噪声为例，什么是椒盐噪声，就是图片上面被纯黑色和纯白色干扰的图片。</p>
+<p>原图片如下：</p>
+<p><img src="/4013bb9b/1568277152338.png" alt="1568277152338"></p>
+<p>加上椒盐噪声：</p>
+<p><img src="/4013bb9b/1568277480315.png" alt="1568277480315"></p>
+<p>使用中值滤波器滤波之后：</p>
+<p><img src="/4013bb9b/1568279408867.png" alt="1568279408867"></p>
+<p>仿真代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sp_noise</span><span class="params">(image,prob)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    添加椒盐噪声</span></span><br><span class="line"><span class="string">    prob:噪声比例</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    output = np.zeros(image.shape,np.uint8)</span><br><span class="line">    thres = <span class="number">1</span> - prob</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(image.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(image.shape[<span class="number">1</span>]):</span><br><span class="line">            rdn = np.random.random()</span><br><span class="line">            <span class="keyword">if</span> rdn &lt; prob:</span><br><span class="line">                output[i][j] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">elif</span> rdn &gt; thres:</span><br><span class="line">                output[i][j] = <span class="number">255</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                output[i][j] = image[i][j]</span><br><span class="line">    <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">m_filter</span><span class="params">(im, x, y, step = <span class="number">3</span>)</span>:</span></span><br><span class="line">    sum_s=[]</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(-int(step/<span class="number">2</span>),int(step/<span class="number">2</span>)+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> range(-int(step/<span class="number">2</span>),int(step/<span class="number">2</span>)+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> ((x + k) &lt; <span class="number">0</span>) <span class="keyword">or</span> ((y+m) &lt;= <span class="number">0</span>) <span class="keyword">or</span> ((x + k) &gt; (im.shape[<span class="number">0</span>] - <span class="number">1</span>)) <span class="keyword">or</span> ((y+m) &gt; (im.shape[<span class="number">1</span>] - <span class="number">1</span>)):</span><br><span class="line">                sum_s.append(<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                sum_s.append(im[x+k][y+m])</span><br><span class="line">    sum_s.sort()</span><br><span class="line">    <span class="keyword">return</span> sum_s[(int(step*step/<span class="number">2</span>)+<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">img = cv2.imread(<span class="string">"lena.bmp"</span>,cv2.IMREAD_GRAYSCALE)  <span class="comment"># 单色图</span></span><br><span class="line">img = sp_noise(img,<span class="number">0.02</span>)                            <span class="comment"># 加噪声</span></span><br><span class="line">im_copy = np.copy(img)                              <span class="comment"># 复制数组</span></span><br><span class="line"></span><br><span class="line">step= <span class="number">3</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,img.shape[<span class="number">0</span>]):                     <span class="comment"># 开始滤波</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,img.shape[<span class="number">1</span>]):</span><br><span class="line">        im_copy[i][j]=m_filter(img,i,j)</span><br><span class="line"></span><br><span class="line">cv2.imshow(<span class="string">"lena"</span>,im_copy)                          <span class="comment"># 显示图片</span></span><br><span class="line">cv2.imshow(<span class="string">"lena2"</span>,img)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>好像并不能很好的解释卷积，不管了，沾到一点边即可。</p>
+<h4 id="3-2-神经网络去噪方法"><a href="#3-2-神经网络去噪方法" class="headerlink" title="3.2 神经网络去噪方法"></a>3.2 神经网络去噪方法</h4><p>主要步骤如下：</p>
+<ul>
+<li>数据集（由于搜集数据集太过麻烦，所以。。。）</li>
+<li>网络设计（设计一个隐藏层就好）</li>
+<li>损失函数设计（应该没有自带的损失函数了）</li>
+</ul>
+<p>开始实现：</p>
+<p>具体：略</p>
+<h3 id="四、手写数字集实现"><a href="#四、手写数字集实现" class="headerlink" title="四、手写数字集实现"></a>四、手写数字集实现</h3><p>已经写过了，详情请参考以下内容：</p>
+<p>主要步骤如下：</p>
+<ul>
+<li>数据集（官方有，pytorch直接通过网络下载）</li>
+<li>网络设计（使用成熟的2层卷积网络，3层线性网络，这是成熟的google网络好像）</li>
+<li>损失函数设计（使用自带的交叉损失函数）</li>
+</ul>
+<h4 id="4-1-数据集"><a href="#4-1-数据集" class="headerlink" title="4.1 数据集"></a>4.1 数据集</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"></span><br><span class="line">original_TrainData = torchvision.datasets.MNIST(</span><br><span class="line">    root=<span class="string">'./mnist/'</span>,</span><br><span class="line">    train=<span class="keyword">True</span>,</span><br><span class="line">    transform=torchvision.transforms.ToTensor(),</span><br><span class="line">    download=<span class="keyword">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获得测试数据，本地没有就会通过网络下载</span></span><br><span class="line">original_TestData = torchvision.datasets.MNIST(</span><br><span class="line">    root=<span class="string">'./mnist/'</span>,</span><br><span class="line">    train=<span class="keyword">False</span>,                                 <span class="comment"># 下载测试集</span></span><br><span class="line">    transform=torchvision.transforms.ToTensor(),  <span class="comment"># 输出转换为Tensor类型</span></span><br><span class="line">    download=<span class="keyword">True</span>,                                <span class="comment"># 如果本地没有，则下载</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>查看数据集代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">for</span> D,L <span class="keyword">in</span> train_data:</span><br><span class="line">    print(L[<span class="number">0</span>])</span><br><span class="line">    print(D[<span class="number">0</span>][<span class="number">0</span>])</span><br><span class="line">    plt.imshow(D[<span class="number">0</span>][<span class="number">0</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure></p>
+<p>训练数据截图</p>
+<p><img src="/4013bb9b/1569916569792.png" alt="1569916569792"></p>
+<p><img src="/4013bb9b/1569916581238.png" alt="1569916581238"></p>
+<p><img src="/4013bb9b/1569916619250.png" alt="1569916619250"></p>
+<h4 id="4-2-网络设计"><a href="#4-2-网络设计" class="headerlink" title="4.2 网络设计"></a>4.2 网络设计</h4><p>这里使用的是现有的网络模型LeNet<sup><a href="#fn_1" id="reffn_1">1</a></sup> ，注意每一层的输出尺寸，容易写错。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net,self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 卷积层，输入一张图片，输出6张，滤波器为5*5大小，cuda表示使用GPU计算</span></span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">6</span>,<span class="number">16</span>,<span class="number">5</span>)</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">16</span> * <span class="number">4</span> * <span class="number">4</span>,<span class="number">120</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">120</span>,<span class="number">84</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">84</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 继承来自nn.Module的接口，必须实现，不能改名。</span></span><br><span class="line">    <span class="comment"># max_pool2d，池化函数，用来把图像缩小一半</span></span><br><span class="line">    <span class="comment"># relu 神经元激励函数，y = max(x,0)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv1(x)),(<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv2(x)),(<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">        x = x.view(<span class="number">-1</span>, <span class="number">16</span> * <span class="number">4</span> * <span class="number">4</span>) <span class="comment"># 类似于reshape功能，重塑张量形状</span></span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.relu(self.fc2(x))</span><br><span class="line">        x = self.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-开始训练并测试"><a href="#4-3-开始训练并测试" class="headerlink" title="4.3 开始训练并测试"></a>4.3 开始训练并测试</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模块</span></span><br><span class="line">model = Net().cuda()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义损失函数，其实就是一个计算公式</span></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义梯度下降算法,把model内的参数交给他</span></span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(),lr=<span class="number">0.01</span>,momentum = <span class="number">0.9</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> num_epoche <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">    train_data = DataLoader(dataset=original_TrainData,batch_size = <span class="number">20</span>,shuffle = <span class="keyword">True</span>) <span class="comment"># 打乱数据，处理格式</span></span><br><span class="line"></span><br><span class="line">    model.train(mode=<span class="keyword">True</span>)  <span class="comment"># 设置为训练模式</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> index, (data,lable) <span class="keyword">in</span> enumerate(train_data):</span><br><span class="line">        <span class="comment"># data torch.Size([60, 1, 28, 28])</span></span><br><span class="line">        D = torch.tensor(data,requires_grad=<span class="keyword">True</span>).cuda()  <span class="comment"># cuda表示放在GPU计算</span></span><br><span class="line">        L = torch.tensor(lable).cuda()                    <span class="comment"># cuda表示放在GPU计算</span></span><br><span class="line"></span><br><span class="line">        out = model(D)</span><br><span class="line">        loss = criterion(out,L)  <span class="comment"># loss 是一个值，不是向量</span></span><br><span class="line">        optimizer.zero_grad()    <span class="comment"># 清除上一次的梯度，不然这次就会叠加</span></span><br><span class="line">        loss.backward()          <span class="comment"># 进行反向梯度计算</span></span><br><span class="line">        optimizer.step()         <span class="comment"># 更新参数</span></span><br><span class="line"></span><br><span class="line">    model.eval()  <span class="comment"># 设置网络为评估模式</span></span><br><span class="line">    eval_loss = <span class="number">0</span> <span class="comment"># 保存平均损失</span></span><br><span class="line">    num_count = <span class="number">0</span> <span class="comment"># 保存正确识别到的图片数量</span></span><br><span class="line">    test_data = DataLoader(dataset=original_TestData,batch_size = <span class="number">20</span>,shuffle = <span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">for</span> index, (data,lable) <span class="keyword">in</span> enumerate(test_data):</span><br><span class="line">        D = torch.tensor(data).cuda()</span><br><span class="line">        L = torch.tensor(lable).cuda()</span><br><span class="line"></span><br><span class="line">        out = model(D)</span><br><span class="line">        loss = criterion(out,L)   <span class="comment"># 计算损失，可以使用print输出</span></span><br><span class="line">        eval_loss += loss.data.item() * L.size(<span class="number">0</span>)  <span class="comment"># loss.data.item()是mini-batch平均值</span></span><br><span class="line"></span><br><span class="line">        pred = torch.max(out,<span class="number">1</span>)[<span class="number">1</span>] <span class="comment"># 返回每一行中最大值的那个元素，且返回其索引。如果是0，则返回每列最大值</span></span><br><span class="line">        num_count += (pred == L).sum() <span class="comment"># 计算有多少个,这种方法只支持troch.tensor类型</span></span><br><span class="line"></span><br><span class="line">    acc = num_count.float() / <span class="number">10000</span></span><br><span class="line">    eval_loss = eval_loss / <span class="number">10000</span></span><br><span class="line">    print(<span class="string">"num_epoche:%2d，num_count:%5d, acc: %6.4f, eval_loss:%6.4f"</span>%(num_epoche,num_count,acc,eval_loss))</span><br></pre></td></tr></table></figure>
+<p>运行，从打印结果可以看出，准确率可以达到98%左右。</p>
+<h3 id="五、制作手写窗口"><a href="#五、制作手写窗口" class="headerlink" title="五、制作手写窗口"></a>五、制作手写窗口</h3><p>第四章写的是学习手写数字，这一章写应用，目标设计如下图所示：</p>
+<p><img src="/4013bb9b/GIF1.gif" alt=""></p>
+<h4 id="5-1-程序结构"><a href="#5-1-程序结构" class="headerlink" title="5.1 程序结构"></a>5.1 程序结构</h4><p>整个程序设计分为三个部分：</p>
+<ul>
+<li>界面设计（略讲，我也不懂）<ul>
+<li>画板功能实现<ul>
+<li>重写widget内的paintEvent函数</li>
+<li>图层管理</li>
+</ul>
+</li>
+<li>按键功能实现（信号与槽）</li>
+<li>界面排版</li>
+<li>界面渲染</li>
+</ul>
+</li>
+<li>图像分割<ul>
+<li>简单分割<ul>
+<li>获取X坐标</li>
+<li>获取Y坐标</li>
+<li>添加Padding（因为训练集有Padding，没办法）</li>
+</ul>
+</li>
+<li>精确分割<ul>
+<li>图像二值化</li>
+<li>宽度优先遍历</li>
+<li>深度优先遍历</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图像识别<ul>
+<li>数据集获取</li>
+<li>网络搭建</li>
+<li>训练部分</li>
+<li>测试部分</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-2-界面设计"><a href="#5-2-界面设计" class="headerlink" title="5.2 界面设计"></a>5.2 界面设计</h4><p>代码已经上传至<a href="https://github.com/zwenc/HandwrittenNumRecognition" target="_blank" rel="noopener">github</a></p>
+<h5 id="5-2-1-基础入门知识"><a href="#5-2-1-基础入门知识" class="headerlink" title="5.2.1 基础入门知识"></a>5.2.1 基础入门知识</h5><p>推荐视频教程</p>
+<p><div align="center"><iframe src="//player.bilibili.com/player.html?aid=61686342&cid=107279116&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe></div></p>
+<h5 id="5-2-2-画板功能实现"><a href="#5-2-2-画板功能实现" class="headerlink" title="5.2.2 画板功能实现"></a>5.2.2 画板功能实现</h5><p>Qt的窗口是有多个widget（小部件）组成的，widget里面可以放置另一个widget，不停的叠加下去。对于每一个widget来说，都会有一个<code>paintEvent</code>函数来负责绘制这个widget的样子，比如按钮、输入栏这些。<code>paintEvent</code>函数会在需要显示界面或者更新的时候被自动触发，比如初始化，和切换窗口的时候，也可以通过<code>self.update()</code>主动触发。</p>
+<p>所以我这里创建一个widget，通过<code>mouseMoveEvent</code>捕捉鼠标移动事件，记录移动的点。根据记录的点复写其<code>paintEvent</code>函数，实现画板功能。</p>
+<p>除此之外，在本程序中，还设置了三个图层，分别用来显示原始图像、处理的图像、标记信息，方便界面操作。</p>
+<h5 id="5-2-3-按键功能实现"><a href="#5-2-3-按键功能实现" class="headerlink" title="5.2.3 按键功能实现"></a>5.2.3 按键功能实现</h5><p>(只介绍按键功能，和本次项目无关，重新写时间太长了)</p>
+<ul>
+<li>界面创建一个按钮</li>
+<li>添加信号槽</li>
+<li>编写实现代码</li>
+<li>创建应用</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tempUI.untitled <span class="keyword">import</span>  Ui_Form</span><br><span class="line"><span class="keyword">from</span> PyQt5.QtWidgets <span class="keyword">import</span> QWidget,QApplication</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test</span><span class="params">(QWidget,Ui_Form)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(test,self).__init__()</span><br><span class="line">        self.setupUi(self)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">Button_test</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"hello word"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app = QApplication(sys.argv)   <span class="comment"># 必须创建一个应用空间，由它来负责程序的运行和信号的调用</span></span><br><span class="line">    ex = test()                    <span class="comment"># 创建一个widget</span></span><br><span class="line">    ex.show()                      <span class="comment"># 显示</span></span><br><span class="line">    sys.exit(app.exec_())          <span class="comment"># 捕捉程序退出信息</span></span><br></pre></td></tr></table></figure>
+<h5 id="5-2-4-界面的排版"><a href="#5-2-4-界面的排版" class="headerlink" title="5.2.4 界面的排版"></a>5.2.4 界面的排版</h5><p>(只介绍按键功能，和本次项目无关，重新写时间太长了)</p>
+<p>直接拖进去的空间不太好看，可以使用布局进行简单排版</p>
+<p>（这里应该有实际操作演示）</p>
+<p><img src="/4013bb9b/1569921299111.png" alt="1569921299111"></p>
+<p><img src="/4013bb9b/1569921393259.png" alt="1569921393259"></p>
+<p>可以看到控件在对齐方面已经没有问题</p>
+<h5 id="5-2-5-界面渲染"><a href="#5-2-5-界面渲染" class="headerlink" title="5.2.5 界面渲染"></a>5.2.5 界面渲染</h5><p>(只介绍按键功能，和本次项目无关，重新写时间太长了)</p>
+<p>这里操作类似于html的css语法，如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">QWidget</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="built_in">rgb</span>(237, 248, 255);</span><br><span class="line">    <span class="attribute">border</span>:<span class="number">1px</span> solid <span class="built_in">rgb</span>(180, 180, 180);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">QPushButton</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>:<span class="built_in">rgb</span>(0,0,0);</span><br><span class="line">    <span class="attribute">background-color</span>:<span class="number">#acffaf</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>:<span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">border</span>:<span class="number">0px</span> solid <span class="built_in">rgb</span>(180, 180, 180);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">QPushButton</span><span class="selector-pseudo">:hover</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>:<span class="number">#c4ffdf</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">QPushButton</span><span class="selector-pseudo">:pressed</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>:<span class="number">#84aeb4</span>;</span><br><span class="line">    <span class="attribute">border</span>: None;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">QCheckBox</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">border</span>:<span class="number">0px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">24px</span>;</span><br><span class="line">    <span class="attribute">font-size</span>:<span class="number">14px</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>:<span class="number">2px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">QComboBox</span>&#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">rgb</span>(230,230,230);</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">4px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">QComboBox</span><span class="selector-pseudo">::hover</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>:green;</span><br><span class="line">    <span class="attribute">border-color</span>:<span class="built_in">rgb</span>(50,180,40);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">QComboBox</span><span class="selector-pseudo">::drop-down</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">25px</span>;</span><br><span class="line">    <span class="attribute">border</span>: none;</span><br><span class="line">    <span class="attribute">background</span>: transparent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>python加载css语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">"css/mainwindow.css"</span>,<span class="string">"r"</span>) <span class="keyword">as</span> file_css:</span><br><span class="line">        self.setStyleSheet(file_css.read())</span><br></pre></td></tr></table></figure>
+<p>结果显示：</p>
+<p><img src="/4013bb9b/1569921707270.png" alt="1569921707270"></p>
+<p>根据上面的原理，优化后的界面如下：</p>
+<p><img src="/4013bb9b/1569922126225.png" alt="1569922126225"></p>
+<h4 id="5-3-数字分割"><a href="#5-3-数字分割" class="headerlink" title="5.3 数字分割"></a>5.3 数字分割</h4><h5 id="5-3-1-简单分割"><a href="#5-3-1-简单分割" class="headerlink" title="5.3.1 简单分割"></a>5.3.1 简单分割</h5><p>要实现数字识别，首先要对画板的数字进行分割，找到每个数字的位置。这里采用比较粗糙的识别方式，先对x方向的像素进行统计，统计图像如下，同理在对y方向进行统计，即可以得到每一个图像的位置。</p>
+<p><img src="/4013bb9b/1569915681058.png" alt="1569915681058"></p>
+<p><img src="/4013bb9b/1569158120051.png" alt="1569158120051"></p>
+<p>就是先确定x坐标，再确定y坐标，就可以定位数字的位置。定位到位置后添加padding后生成测试图片：</p>
+<p>未添加padding的图片：</p>
+<p><img src="/4013bb9b/1569922390272.png" alt="1569922390272"></p>
+<p><img src="/4013bb9b/1569922374960.png" alt="1569922374960"></p>
+<p>添加padding的图片：</p>
+<p><img src="/4013bb9b/1569922451971.png" alt="1569922451971"></p>
+<p><img src="/4013bb9b/1569922440344.png" alt="1569922440344"></p>
+<p>思考：为什么要添加padding</p>
+<p>但是这种方法当数字挨的比较近之后，就会显示识别失误的问题，如下：</p>
+<p><img src="/4013bb9b/1569922217382.png" alt="1569922217382"></p>
+<h5 id="5-3-2-精确分割"><a href="#5-3-2-精确分割" class="headerlink" title="5.3.2 精确分割"></a>5.3.2 精确分割</h5><ul>
+<li>图论遍历<br>类似于图论的遍历</li>
+<li>深度优先遍历<br>程序使用递归，结构简单，好理解。但是当碰到较大的图的时候，递归深度过高会导致堆栈溢出。故而对于未知深度的递归程序不建议使用。</li>
+<li>宽度优先遍历<br>可以解决深度优先遍历出现的问题。</li>
+</ul>
+<p>深度优先遍历代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(self, image, x, y)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> x &gt; self.width <span class="keyword">or</span> y &gt; self.heigh <span class="keyword">or</span> x &lt; <span class="number">0</span> <span class="keyword">or</span> y &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">if</span> image[y, x] != <span class="number">255</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    self.Spitmode_of_2_point.append([x, y])</span><br><span class="line">    image[y, x] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    self.dfs(image, x, y + <span class="number">1</span>)</span><br><span class="line">    self.dfs(image, x, y - <span class="number">1</span>)</span><br><span class="line">    self.dfs(image, x + <span class="number">1</span>, y)</span><br><span class="line">    self.dfs(image, x - <span class="number">1</span>, y)</span><br><span class="line">    self.dfs(image, x - <span class="number">1</span>, y - <span class="number">1</span>)</span><br><span class="line">    self.dfs(image, x + <span class="number">1</span>, y - <span class="number">1</span>)</span><br><span class="line">    self.dfs(image, x - <span class="number">1</span>, y + <span class="number">1</span>)</span><br><span class="line">    self.dfs(image, x + <span class="number">1</span>, y + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>宽度优先遍历代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">(self, image, x, y)</span>:</span></span><br><span class="line">    queue_point = []</span><br><span class="line"></span><br><span class="line">    queue_point.append([y, x])</span><br><span class="line">    <span class="keyword">while</span> queue_point != []:</span><br><span class="line">        y, x = queue_point.pop()</span><br><span class="line">        self.Spitmode_of_2_point.append([x, y])</span><br><span class="line">        image[y, x] = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> y_index <span class="keyword">in</span> [<span class="number">-1</span>,<span class="number">0</span>,<span class="number">1</span>]:</span><br><span class="line">            <span class="keyword">for</span> x_index <span class="keyword">in</span> [<span class="number">-1</span>,<span class="number">0</span>,<span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">if</span> (y + y_index) &gt;= <span class="number">0</span> <span class="keyword">and</span> (y + y_index) &lt;= self.heigh <span class="keyword">and</span> (x + x_index) &gt;= <span class="number">0</span> <span class="keyword">and</span> (</span><br><span class="line">                    x + x_index) &lt;= self.width:</span><br><span class="line">                    <span class="keyword">if</span> image[y + y_index, x + x_index] == <span class="number">255</span>:</span><br><span class="line">                        queue_point.append([y + y_index, x + x_index])</span><br></pre></td></tr></table></figure>
+<p>数字书写不再受到从左到右的限制</p>
+<p><img src="/4013bb9b/1570107719488.png" alt="1570107719488"></p>
+<h4 id="5-4-图像识别"><a href="#5-4-图像识别" class="headerlink" title="5.4 图像识别"></a>5.4 图像识别</h4><p>见第4章</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://cuijiahua.com/blog/2018/01/dl_3.html" target="_blank" rel="noopener">LeNet-5详解</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/3a23387e/" rel="next" title="通用算法-递归入门到放弃">
+                <i class="fa fa-chevron-left"></i> 通用算法-递归入门到放弃
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/dd15fbc0/" rel="prev" title="作业-计算机视觉1">
+                作业-计算机视觉1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、神经网络对数据分类"><span class="nav-text">二、神经网络对数据分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-网络数据生成"><span class="nav-text">2.1 网络数据生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-网络设计"><span class="nav-text">2.2 网络设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-训练数据"><span class="nav-text">2.3 训练数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-测试结果"><span class="nav-text">2.4 测试结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-思考"><span class="nav-text">2.5 思考</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、卷积神经网络"><span class="nav-text">三、卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-传统去噪方法"><span class="nav-text">3.1 传统去噪方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-神经网络去噪方法"><span class="nav-text">3.2 神经网络去噪方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、手写数字集实现"><span class="nav-text">四、手写数字集实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-数据集"><span class="nav-text">4.1 数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-网络设计"><span class="nav-text">4.2 网络设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-开始训练并测试"><span class="nav-text">4.3 开始训练并测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、制作手写窗口"><span class="nav-text">五、制作手写窗口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-程序结构"><span class="nav-text">5.1 程序结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-界面设计"><span class="nav-text">5.2 界面设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-1-基础入门知识"><span class="nav-text">5.2.1 基础入门知识</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-2-画板功能实现"><span class="nav-text">5.2.2 画板功能实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-3-按键功能实现"><span class="nav-text">5.2.3 按键功能实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-4-界面的排版"><span class="nav-text">5.2.4 界面的排版</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-5-界面渲染"><span class="nav-text">5.2.5 界面渲染</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-数字分割"><span class="nav-text">5.3 数字分割</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-3-1-简单分割"><span class="nav-text">5.3.1 简单分割</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-3-2-精确分割"><span class="nav-text">5.3.2 精确分割</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-图像识别"><span class="nav-text">5.4 图像识别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

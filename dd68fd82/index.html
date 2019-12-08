@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言&amp;emsp;&amp;emsp;之前学过，没有留下笔记，现在忘记的差不多了，现在重新学习，并记录下来。 二、使用库的好处2.1 为什么要使用库 封装底层代码，只保留使用接口，供上层使用，用户无需关注具体实现方式 方便开发部门间合作，只需要传递库文件（.dll或者.lib文件） 使得工程更加简洁（除了自己的代码，其他的全是库文件） 等  2.2 动态库和静态库的区别 静态库随程序一起加载。 优点：是">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VS动静态库之封装-使用（1）">
+<meta property="og:url" content="https://www.zwenc.cn/dd68fd82/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言&amp;emsp;&amp;emsp;之前学过，没有留下笔记，现在忘记的差不多了，现在重新学习，并记录下来。 二、使用库的好处2.1 为什么要使用库 封装底层代码，只保留使用接口，供上层使用，用户无需关注具体实现方式 方便开发部门间合作，只需要传递库文件（.dll或者.lib文件） 使得工程更加简洁（除了自己的代码，其他的全是库文件） 等  2.2 动态库和静态库的区别 静态库随程序一起加载。 优点：是">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/dd68fd82/1.png">
+<meta property="og:image" content="https://www.zwenc.cn/dd68fd82/2.png">
+<meta property="og:image" content="https://www.zwenc.cn/dd68fd82/3.png">
+<meta property="og:image" content="https://www.zwenc.cn/dd68fd82/4.png">
+<meta property="og:updated_time" content="2019-04-16T13:52:09.496Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VS动静态库之封装-使用（1）">
+<meta name="twitter:description" content="一、前言&amp;emsp;&amp;emsp;之前学过，没有留下笔记，现在忘记的差不多了，现在重新学习，并记录下来。 二、使用库的好处2.1 为什么要使用库 封装底层代码，只保留使用接口，供上层使用，用户无需关注具体实现方式 方便开发部门间合作，只需要传递库文件（.dll或者.lib文件） 使得工程更加简洁（除了自己的代码，其他的全是库文件） 等  2.2 动态库和静态库的区别 静态库随程序一起加载。 优点：是">
+<meta name="twitter:image" content="https://www.zwenc.cn/dd68fd82/1.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/dd68fd82/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>VS动静态库之封装-使用（1） | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/dd68fd82/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">VS动静态库之封装-使用（1）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-02-24 14:50:09" itemprop="dateCreated datePublished" datetime="2019-02-24T14:50:09+08:00">2019-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-16 21:52:09" itemprop="dateModified" datetime="2019-04-16T21:52:09+08:00">2019-04-16</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/工具/" itemprop="url" rel="index"><span itemprop="name">工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>&emsp;&emsp;之前学过，没有留下笔记，现在忘记的差不多了，现在重新学习，并记录下来。</p>
+<h3 id="二、使用库的好处"><a href="#二、使用库的好处" class="headerlink" title="二、使用库的好处"></a>二、使用库的好处</h3><h4 id="2-1-为什么要使用库"><a href="#2-1-为什么要使用库" class="headerlink" title="2.1 为什么要使用库"></a>2.1 为什么要使用库</h4><ul>
+<li>封装底层代码，只保留使用接口，供上层使用，用户无需关注具体实现方式</li>
+<li>方便开发部门间合作，只需要传递库文件（.dll或者.lib文件）</li>
+<li>使得工程更加简洁（除了自己的代码，其他的全是库文件）</li>
+<li>等</li>
+</ul>
+<h4 id="2-2-动态库和静态库的区别"><a href="#2-2-动态库和静态库的区别" class="headerlink" title="2.2 动态库和静态库的区别"></a>2.2 动态库和静态库的区别</h4><ul>
+<li><p>静态库随程序一起加载。</p>
+<p>优点：是发布项目文件少，只有一个运行文件。</p>
+<p>缺点：更新不方便，每次更新需要更新全部内容。</p>
+</li>
+<li><p>动态库在程序启动后，被调用才加载。</p>
+<p>优点：更新方便，只需要替换对应的组件，无需全部更新，现在程序发布的主流方式。</p>
+<p>缺点：发布文件过多。</p>
+</li>
+</ul>
+<h4 id="2-3-完整库的一般组成"><a href="#2-3-完整库的一般组成" class="headerlink" title="2.3 完整库的一般组成"></a>2.3 完整库的一般组成</h4><ul>
+<li>一个库文件</li>
+<li>一个或多个头文件</li>
+<li>依赖库，无需头文件，因为已经被编译到主库之中。</li>
+</ul>
+<h4 id="2-4-一般查看工具"><a href="#2-4-一般查看工具" class="headerlink" title="2.4 一般查看工具"></a>2.4 一般查看工具</h4><ul>
+<li><p><a href="http://www.dependencywalker.com/" target="_blank" rel="noopener">depends 动态库查看工具</a></p>
+</li>
+<li><p>vs自带工具，在命令行输入以下命令，即可查看动态库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Program Files (x86)\Microsoft Visual Studio 10.0\VC&gt;dumpbin /exports D:\WorkSpace\DLLTutorial\Debug\DLLTutorial.dll</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>vs自带工具，在命令行输入以下命令，即可查看静态库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpbin   /LINKERMEMBER   vpxmtd.lib</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="三、库的生成"><a href="#三、库的生成" class="headerlink" title="三、库的生成"></a>三、库的生成</h3><ul>
+<li>系统：win10</li>
+<li>工具：vs2013</li>
+</ul>
+<h4 id="3-1-静态库的生成与测试"><a href="#3-1-静态库的生成与测试" class="headerlink" title="3.1 静态库的生成与测试"></a>3.1 静态库的生成与测试</h4><h5 id="3-1-1-建立工程"><a href="#3-1-1-建立工程" class="headerlink" title="3.1.1 建立工程"></a>3.1.1 建立工程</h5><ul>
+<li><p>文件-&gt;新建-&gt;项目-&gt;win32项目</p>
+<p><img src="/dd68fd82/1.png" alt=""></p>
+</li>
+</ul>
+<h5 id="3-1-2-编写代码"><a href="#3-1-2-编写代码" class="headerlink" title="3.1.2 编写代码"></a>3.1.2 编写代码</h5><ul>
+<li><p>建立文件LibTest.h，写入以下代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> LIBTEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LIBTEST_H</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立文件LibTest.cpp，写入以下代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"LibTest.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x - y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成解决方案，成功和失败都会有提示，生成文件为：</p>
+<p>test.lib 内容实体，导入即可使用</p>
+<p>test.pdb 调试文件，内含源码</p>
+</li>
+<li><p>其他说明</p>
+<p>在cpp文件中一定要包含stdafx.h头文件，这个文件里面包含了生成lib文件的配置信息，一般不需要修改。注：只有接口.cpp才需要包含。</p>
+</li>
+</ul>
+<h5 id="3-1-3-工具测试"><a href="#3-1-3-工具测试" class="headerlink" title="3.1.3 工具测试"></a>3.1.3 工具测试</h5><ul>
+<li><p>使用VS自带工具进行测试，测试结果如下图。</p>
+<p><img src="/dd68fd82/2.png" alt=""></p>
+<p>出现接口，则表示成功。</p>
+</li>
+</ul>
+<h5 id="3-1-4-github工程代码"><a href="#3-1-4-github工程代码" class="headerlink" title="3.1.4 github工程代码"></a>3.1.4 github工程代码</h5><p>&emsp;&emsp;链接附上：<a href="https://github.com/coldspace/VSDllLib/tree/master/test" target="_blank" rel="noopener">https://github.com/coldspace/VSDllLib/tree/master/test</a></p>
+<h4 id="3-2-动态库生成与测试"><a href="#3-2-动态库生成与测试" class="headerlink" title="3.2 动态库生成与测试"></a>3.2 动态库生成与测试</h4><h5 id="3-2-1-建立工程"><a href="#3-2-1-建立工程" class="headerlink" title="3.2.1 建立工程"></a>3.2.1 建立工程</h5><ul>
+<li><p>文件-&gt;新建-&gt;项目-&gt;win32项目</p>
+<p><img src="/dd68fd82/3.png" alt=""></p>
+</li>
+</ul>
+<h5 id="3-2-2-编写代码"><a href="#3-2-2-编写代码" class="headerlink" title="3.2.2 编写代码"></a>3.2.2 编写代码</h5><ul>
+<li><p>建立文件dlltest.h，并写入以下内容</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> DLLTEST_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DLLTEST_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> dll_export</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> dll_export</span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CALL_Dll extern <span class="meta-string">"C"</span> __declspec(dllexport)  <span class="comment">// 此时为生成dll，为保证兼容，限制以C的方式</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">	<span class="meta">#<span class="meta-keyword">define</span> CALL_Dll extern <span class="meta-string">"C"</span> __declspec(dllimport)  <span class="comment">// 此时为导入dll，为保证兼容，限制以C的方式</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function">CALL_Dll <span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="function">CALL_Dll <span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立文件dlltest.cpp，并写如以下内容</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"dlltest.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span> x, <span class="keyword">const</span> <span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> x - y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成解决方案，生成文件为</p>
+<p>dlltest.dll  内容函数实体</p>
+<p>dlltest.lib  函数地址，以供编译器使用</p>
+<p>dlltest.pdb 调试使用，内含源码信息</p>
+<p>使用时，需要将dlltest.dll和dlltest.lib放入同一文件夹，编译时只需导入dlltest.lib即可。</p>
+</li>
+<li><p>其他说明</p>
+<p>C++允许重载，C不允许。限制以C的方式导出，可以防止生成dll时，函数名重复编码。</p>
+</li>
+</ul>
+<h5 id="3-2-3-工具测试"><a href="#3-2-3-工具测试" class="headerlink" title="3.2.3 工具测试"></a>3.2.3 工具测试</h5><ul>
+<li><p>使用vs自带的工具进行测试，测试结果如下图</p>
+<p><img src="/dd68fd82/4.png" alt=""></p>
+<p>出现红框框部分，说明成功</p>
+</li>
+</ul>
+<h5 id="3-2-4-github工程代码"><a href="#3-2-4-github工程代码" class="headerlink" title="3.2.4 github工程代码"></a>3.2.4 github工程代码</h5><p>&emsp;&emsp;链接附上：<a href="https://github.com/coldspace/VSDllLib/tree/master/dlltest" target="_blank" rel="noopener">https://github.com/coldspace/VSDllLib/tree/master/dlltest</a></p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>&emsp;&emsp;静态库生成使用的是向导，系统自带了一些文件，虽然功能全面，但不是很喜欢，没有dll生成方式简洁，后期找找其他方法，库的使用见下文。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/8554565b/" rel="next" title="AD采集-高速存储至SD卡">
+                <i class="fa fa-chevron-left"></i> AD采集-高速存储至SD卡
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cfdd526c/" rel="prev" title="VS动静态库之封装-使用（2）">
+                VS动静态库之封装-使用（2） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、使用库的好处"><span class="nav-text">二、使用库的好处</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-为什么要使用库"><span class="nav-text">2.1 为什么要使用库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-动态库和静态库的区别"><span class="nav-text">2.2 动态库和静态库的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-完整库的一般组成"><span class="nav-text">2.3 完整库的一般组成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-一般查看工具"><span class="nav-text">2.4 一般查看工具</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、库的生成"><span class="nav-text">三、库的生成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-静态库的生成与测试"><span class="nav-text">3.1 静态库的生成与测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-1-建立工程"><span class="nav-text">3.1.1 建立工程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-2-编写代码"><span class="nav-text">3.1.2 编写代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-3-工具测试"><span class="nav-text">3.1.3 工具测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-4-github工程代码"><span class="nav-text">3.1.4 github工程代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-动态库生成与测试"><span class="nav-text">3.2 动态库生成与测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-建立工程"><span class="nav-text">3.2.1 建立工程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-编写代码"><span class="nav-text">3.2.2 编写代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-3-工具测试"><span class="nav-text">3.2.3 工具测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-4-github工程代码"><span class="nav-text">3.2.4 github工程代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-text">四、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

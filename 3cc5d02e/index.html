@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、模块特点 24位AD采集 SPI输出 采样速率可调 可通过$\overline{\rm{SYNC}}$引脚结合多个AD7764实现48、72等精度的采集 提供差分输入（可以选择不用他的差分输入） 超程报警（overrange引脚）  二、模块简介 78.125K输出，115db信噪比。 312K输出，109db信噪比。 输出速率由外部时钟控制。 基于奈奎斯特采样的全频带的FIR滤波器，防止出现">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AD7764">
+<meta property="og:url" content="https://www.zwenc.cn/3cc5d02e/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、模块特点 24位AD采集 SPI输出 采样速率可调 可通过$\overline{\rm{SYNC}}$引脚结合多个AD7764实现48、72等精度的采集 提供差分输入（可以选择不用他的差分输入） 超程报警（overrange引脚）  二、模块简介 78.125K输出，115db信噪比。 312K输出，109db信噪比。 输出速率由外部时钟控制。 基于奈奎斯特采样的全频带的FIR滤波器，防止出现">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-31T09:42:36.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AD7764">
+<meta name="twitter:description" content="一、模块特点 24位AD采集 SPI输出 采样速率可调 可通过$\overline{\rm{SYNC}}$引脚结合多个AD7764实现48、72等精度的采集 提供差分输入（可以选择不用他的差分输入） 超程报警（overrange引脚）  二、模块简介 78.125K输出，115db信噪比。 312K输出，109db信噪比。 输出速率由外部时钟控制。 基于奈奎斯特采样的全频带的FIR滤波器，防止出现">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/3cc5d02e/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>AD7764 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/3cc5d02e/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AD7764
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-07 10:00:37" itemprop="dateCreated datePublished" datetime="2019-01-07T10:00:37+08:00">2019-01-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-03-31 17:42:36" itemprop="dateModified" datetime="2019-03-31T17:42:36+08:00">2019-03-31</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/嵌入式/" itemprop="url" rel="index"><span itemprop="name">嵌入式</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/嵌入式/AD模块/" itemprop="url" rel="index"><span itemprop="name">AD模块</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、模块特点"><a href="#一、模块特点" class="headerlink" title="一、模块特点"></a>一、模块特点</h3><ul>
+<li>24位AD采集</li>
+<li>SPI输出</li>
+<li>采样速率可调</li>
+<li>可通过$\overline{\rm{SYNC}}$引脚结合多个AD7764实现48、72等精度的采集</li>
+<li>提供差分输入（可以选择不用他的差分输入）</li>
+<li>超程报警（overrange引脚）</li>
+</ul>
+<h3 id="二、模块简介"><a href="#二、模块简介" class="headerlink" title="二、模块简介"></a>二、模块简介</h3><ul>
+<li>78.125K输出，115db信噪比。</li>
+<li>312K输出，109db信噪比。</li>
+<li>输出速率由外部时钟控制。</li>
+<li>基于奈奎斯特采样的全频带的FIR滤波器，防止出现混叠失真<strong>（采样出来的信号可以根据采样定理直接恢复成原信号）</strong> ,笔者暂时用不上此功能。</li>
+<li>提供的参考电压决定了输出范围，例如4V参考电压，输入电压范围为$\pm 3.2768V$</li>
+</ul>
+<h3 id="三、模块外部电路配置方案"><a href="#三、模块外部电路配置方案" class="headerlink" title="三、模块外部电路配置方案"></a>三、模块外部电路配置方案</h3><ul>
+<li>方案一、参考数据手册图37，将获取到的信号输入到芯片内提供的差分放大器中，再将差分放大器输出的信号输入到调制器中。<div align="center">![参考电路](figure37.jpg) </div></li>
+<li>方案二、使用自己设计的差分放大器，直接输入到芯片内部的调制器中，将$V_{in}A \pm​$和$V_{out}A \pm​$引脚悬空</li>
+</ul>
+<h3 id="四、模块-STM32控制方案"><a href="#四、模块-STM32控制方案" class="headerlink" title="四、模块-STM32控制方案"></a>四、模块-STM32控制方案</h3><p>&emsp;&emsp;没有找到STM32的AD7764驱动，只能自己写，内心充满的崩溃，当然是选择<del>放弃</del>自己写了。</p>
+<h4 id="4-1-实现步骤"><a href="#4-1-实现步骤" class="headerlink" title="4.1 实现步骤"></a>4.1 实现步骤</h4><ul>
+<li>SPI通信配置与测试</li>
+<li>DMA传输配置与测试</li>
+</ul>
+<h4 id="4-2-SPI配置和说明"><a href="#4-2-SPI配置和说明" class="headerlink" title="4.2 SPI配置和说明"></a>4.2 SPI配置和说明</h4><p>&emsp;&emsp;本不打算写这部分的，但是已经一年没有写程序了，还是详细介绍，熟悉一下。</p>
+<h5 id="4-2-1-SPI基础介绍"><a href="#4-2-1-SPI基础介绍" class="headerlink" title="4.2.1 SPI基础介绍"></a>4.2.1 SPI基础介绍</h5><p>&emsp;&emsp;SPI的总线特点：</p>
+<ul>
+<li><p>4根总线</p>
+<p>| 引脚 | 功能                                                         |<br>| —— | —————————————————————————————— |<br>| NSS  | 片选端，当一个总线上面挂多个SPI设备时，用来选择哪个设备进行通信 |<br>| CLK  | 时钟脚                                                       |<br>| MISO | 数据接收脚                                                   |<br>| MOSI | 数据发送脚                                                   |</p>
+</li>
+<li><p>4种传输模式</p>
+<p>| SPI_CPOL | SPI_CPHA | 说明                                               |<br>| ———— | ———— | ————————————————————————— |<br>| 0        | 0        | 时钟CLK默认高电平，低电平写数据，上升沿传输数据。  |<br>| 0        | 1        | 时钟CLK默认高电平，高电平写数据，下降沿传输数据。  |<br>| 1        | 0        | 时钟信号默认低电平，高电平写数据，下降沿传输数据。 |<br>| 1        | 1        | 时钟信号默认低电平，低电平写数据，上升沿传输数据。 |</p>
+</li>
+<li><p>2种传输传输方向</p>
+<p>1、MSB：高位在前</p>
+<p>2、LSB：低位在前</p>
+</li>
+<li><p>2中模式</p>
+<p>1、主模式</p>
+<p>2、从模式</p>
+<p>注：像SPI、IIC、单总线都是主从模式，适合设备和模块通信。Usart无主从模式，适合两个设备间通信。</p>
+</li>
+</ul>
+<h5 id="4-2-2-STM32F103的SPI配置"><a href="#4-2-2-STM32F103的SPI配置" class="headerlink" title="4.2.2 STM32F103的SPI配置"></a>4.2.2 STM32F103的SPI配置</h5><p>&emsp;&emsp;以SPI 1位例，只有一个设备，多个设备的话需要软件控制NSS片选脚，这里采用硬件控制NSS，因为<del>懒</del>方便。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AD7764_SPI_Init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> 	GPIO_InitTypeDef GPIO_InitStructure;</span><br><span class="line">  	SPI_InitTypeDef  SPI_InitStructure;</span><br><span class="line"></span><br><span class="line">	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOA, ENABLE );<span class="comment">//PORTB时钟使能 </span></span><br><span class="line">	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_SPI1,  ENABLE );<span class="comment">//SPI1时钟使能 	</span></span><br><span class="line"> </span><br><span class="line">	GPIO_InitStructure.GPIO_Pin = SPI1_NSS | SPI1_SCK | SPI1_MISO | SPI1_MOSI;</span><br><span class="line">	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  <span class="comment">//复用推挽输出 </span></span><br><span class="line">	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;</span><br><span class="line">	GPIO_Init(SPI1_PORT, &amp;GPIO_InitStructure);<span class="comment">//初始化GPIOA</span></span><br><span class="line"></span><br><span class="line"> 	GPIO_SetBits(SPI1_PORT,SPI1_NSS | SPI1_SCK | SPI1_MISO | SPI1_MOSI);  <span class="comment">//PB13/14/15上拉</span></span><br><span class="line">    </span><br><span class="line">	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;  <span class="comment">//设置SPI单向或者双向的数据模式:SPI设置为双线双向全双工</span></span><br><span class="line">	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;		<span class="comment">//设置SPI工作模式:设置为主SPI</span></span><br><span class="line">	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;   <span class="comment">//设置SPI的数据大小:SPI发送接收8位帧结构</span></span><br><span class="line">	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		<span class="comment">//串行同步时钟的空闲状态为高电平</span></span><br><span class="line">	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;	<span class="comment">//串行同步时钟的第二个跳变沿（上升或下降）数据被采样</span></span><br><span class="line">	SPI_InitStructure.SPI_NSS = SPI_NSS_Hard;		<span class="comment">//只有一个设备，NSS让硬件自己控制</span></span><br><span class="line">	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;		<span class="comment">//定义波特率预分频的值:波特率预分频值为256</span></span><br><span class="line">	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	<span class="comment">//指定数据传输从MSB位还是LSB位开始:数据传输从MSB位开始</span></span><br><span class="line">	SPI_InitStructure.SPI_CRCPolynomial = <span class="number">7</span>;	<span class="comment">//CRC值计算的多项式，现在还不会生效</span></span><br><span class="line">	SPI_Init(SPI1, &amp;SPI_InitStructure);  <span class="comment">//根据SPI_InitStruct中指定的参数初始化外设SPIx寄存器</span></span><br><span class="line"> </span><br><span class="line">	SPI_Cmd(SPI1, ENABLE); <span class="comment">//使能SPI外设 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-DMA配置"><a href="#4-3-DMA配置" class="headerlink" title="4.3 DMA配置"></a>4.3 DMA配置</h4><h5 id="4-3-1-DMA简介"><a href="#4-3-1-DMA简介" class="headerlink" title="4.3.1 DMA简介"></a>4.3.1 DMA简介</h5><p>&emsp;&emsp;前面已有介绍</p>
+<h5 id="4-3-2-STM32F103的DMA配置"><a href="#4-3-2-STM32F103的DMA配置" class="headerlink" title="4.3.2 STM32F103的DMA配置"></a>4.3.2 STM32F103的DMA配置</h5><h5 id="4-3-3-在中断实现双缓存区功能"><a href="#4-3-3-在中断实现双缓存区功能" class="headerlink" title="4.3.3 在中断实现双缓存区功能"></a>4.3.3 在中断实现双缓存区功能</h5><h4 id="4-4-测试"><a href="#4-4-测试" class="headerlink" title="4.4 测试"></a>4.4 测试</h4><h5 id="4-4-1-SPI通信测试"><a href="#4-4-1-SPI通信测试" class="headerlink" title="4.4.1 SPI通信测试"></a>4.4.1 SPI通信测试</h5><h5 id="4-4-2-SPI-DMA测试"><a href="#4-4-2-SPI-DMA测试" class="headerlink" title="4.4.2 SPI+DMA测试"></a>4.4.2 SPI+DMA测试</h5><h5 id="4-4-3-双缓存区测试"><a href="#4-4-3-双缓存区测试" class="headerlink" title="4.4.3 双缓存区测试"></a>4.4.3 双缓存区测试</h5><h4 id="4-5-总结"><a href="#4-5-总结" class="headerlink" title="4.5 总结"></a>4.5 总结</h4>
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/b17aeabb/" rel="next" title="概率估计一些结论证明">
+                <i class="fa fa-chevron-left"></i> 概率估计一些结论证明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/710461d2/" rel="prev" title="STM32的DMA连接外设到外设">
+                STM32的DMA连接外设到外设 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、模块特点"><span class="nav-text">一、模块特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、模块简介"><span class="nav-text">二、模块简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、模块外部电路配置方案"><span class="nav-text">三、模块外部电路配置方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、模块-STM32控制方案"><span class="nav-text">四、模块-STM32控制方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-实现步骤"><span class="nav-text">4.1 实现步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-SPI配置和说明"><span class="nav-text">4.2 SPI配置和说明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-1-SPI基础介绍"><span class="nav-text">4.2.1 SPI基础介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-2-STM32F103的SPI配置"><span class="nav-text">4.2.2 STM32F103的SPI配置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-DMA配置"><span class="nav-text">4.3 DMA配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-1-DMA简介"><span class="nav-text">4.3.1 DMA简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-2-STM32F103的DMA配置"><span class="nav-text">4.3.2 STM32F103的DMA配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-3-在中断实现双缓存区功能"><span class="nav-text">4.3.3 在中断实现双缓存区功能</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-测试"><span class="nav-text">4.4 测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-1-SPI通信测试"><span class="nav-text">4.4.1 SPI通信测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-2-SPI-DMA测试"><span class="nav-text">4.4.2 SPI+DMA测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-3-双缓存区测试"><span class="nav-text">4.4.3 双缓存区测试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-总结"><span class="nav-text">4.5 总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

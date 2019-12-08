@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言 系统：win10 环境：python3.73 框架：torch  作为一个初学者，TSN的原始代码看的有点懵，代码注释太少了。这里以学习的角度，从熟悉torch框架开始复现TSN1算法。 二、相关原理介绍TSN1是一种基于双流（Two Stream）模型2的姿态识别方法。在原有的网络模型上，通过修改输入数据的采样方式，在样本量少的情况下，高效的实现了长视频的姿态识别。 在介绍TSN之前，">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-TSN代码复现">
+<meta property="og:url" content="https://www.zwenc.cn/3d661f8b/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言 系统：win10 环境：python3.73 框架：torch  作为一个初学者，TSN的原始代码看的有点懵，代码注释太少了。这里以学习的角度，从熟悉torch框架开始复现TSN1算法。 二、相关原理介绍TSN1是一种基于双流（Two Stream）模型2的姿态识别方法。在原有的网络模型上，通过修改输入数据的采样方式，在样本量少的情况下，高效的实现了长视频的姿态识别。 在介绍TSN之前，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1558803947029.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1558804168140.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1558804140704.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1558940877321.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/VDYH4GG826MORNXVFD%7DSOFH.png">
+<meta property="og:image" content="https://www.zwenc.cn/3d661f8b/1.png">
+<meta property="og:updated_time" content="2019-06-04T08:33:36.355Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-TSN代码复现">
+<meta name="twitter:description" content="一、前言 系统：win10 环境：python3.73 框架：torch  作为一个初学者，TSN的原始代码看的有点懵，代码注释太少了。这里以学习的角度，从熟悉torch框架开始复现TSN1算法。 二、相关原理介绍TSN1是一种基于双流（Two Stream）模型2的姿态识别方法。在原有的网络模型上，通过修改输入数据的采样方式，在样本量少的情况下，高效的实现了长视频的姿态识别。 在介绍TSN之前，">
+<meta name="twitter:image" content="https://www.zwenc.cn/3d661f8b/1.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/3d661f8b/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-TSN代码复现 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/3d661f8b/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-TSN代码复现
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-21 20:49:26" itemprop="dateCreated datePublished" datetime="2019-05-21T20:49:26+08:00">2019-05-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-04 16:33:36" itemprop="dateModified" datetime="2019-06-04T16:33:36+08:00">2019-06-04</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ul>
+<li>系统：win10</li>
+<li>环境：python3.73</li>
+<li>框架：torch</li>
+</ul>
+<p>作为一个初学者，TSN的<a href="https://github.com/yjxiong/tsn-pytorch" target="_blank" rel="noopener">原始代码</a>看的有点懵，代码注释太少了。这里以学习的角度，从熟悉torch框架开始复现TSN<sup><a href="#fn_1" id="reffn_1">1</a></sup>算法。</p>
+<h3 id="二、相关原理介绍"><a href="#二、相关原理介绍" class="headerlink" title="二、相关原理介绍"></a>二、相关原理介绍</h3><p>TSN<sup><a href="#fn_1" id="reffn_1">1</a></sup>是一种基于双流（Two Stream）模型<sup><a href="#fn_2" id="reffn_2">2</a></sup>的姿态识别方法。在原有的网络模型上，通过修改输入数据的采样方式，在样本量少的情况下，高效的实现了长视频的姿态识别。</p>
+<p>在介绍TSN之前，先介绍双流（Two Stream）模型<sup><a href="#fn_2" id="reffn_2">2</a></sup>的大致原理。Two Stream在单网络（可以是resnet<sup><a href="#fn_3" id="reffn_3">3</a></sup>、BNInception<sup><a href="#fn_4" id="reffn_4">4</a></sup>）的基础上提出了双网络结构，采用两种不同的Input数据，分别输入到两个相同的网络之中，并且在处理过程中这两个网络互不相干，在最后将两个网络输出进行简单融合的处理。这两个不同的Input分别是：</p>
+<ul>
+<li>RGB：视频里面随机提取的一帧图片</li>
+<li>Optical Flow(光流)<sup><a href="#fn_5" id="reffn_5">5</a></sup>或者RGB Diff(RGB 差分)<sup><a href="#fn_6" id="reffn_6">6</a></sup>：用连续两张及以上的图片通过对应算法计算出的和原图片大小一样的“图片”</li>
+</ul>
+<p>TSN的改进部分，双流（Two Stream）模型的输入是使用的<strong>连续帧</strong>进行姿态识别，而连续帧之间的冗余信息其实很高，而且识别长视频的时候，对计算资源和内存空间开销很大。TSN改进了这种采集方法，将一个动作视频等间隔分为3个部分，在每个部分中随机提取数据（RGB，Optical Flow），这样由于中间跳过了很多帧，降低了计算资源的开销，就可以实现对长视频的动作识别，并且速度更快。准确率从实验结果上看，并没有明显下降。除此之外，TSN还提出了一些方法，扩展了有限的样本数量，使得学习的精度更高。</p>
+<p>TSN的网络结构如下图1所示，主要分为了3个部分：</p>
+<ul>
+<li>Video（视频）：将一个视频分为3个部分（segment）</li>
+<li>Snippet（片段）：每个部分里面随机提取出一张RGB图像和一个Optical Flow或者RGB Diff信息。</li>
+<li>TSN网络：每个RGB图像单独使用一个空间网络（Spatial ConvNet），每个Optical Flow单独使用一个时间网络（Temporal ConvNet）。<strong>最后3个空间网络联合得到结果1（Segmental Consensus 绿色），时间网络联合得到结果2(Segmental Consensus 蓝色)，结果1和结果2联合分析得到最终结果（Class Score Fusion）</strong></li>
+</ul>
+<p>在本文中，也按照这三个部分的顺序来进行复现TSN代码</p>
+<p><img src="/3d661f8b/1.png" alt=""><div align="center" style="font-size:12px">图1 TSN网络结构<div></div></div></p>
+<p>根据图片，在实现过程中的误区指示：</p>
+<ul>
+<li>3个空间网络内权值共享，3个时间网络内部权值共享</li>
+<li>在每一个Snppet中，可以输入多个光流。一个光流由2张图片构成(x方向光流，y方向光流)</li>
+<li>Spatial ConvNet和Temporal的输出为图片的Lable，Segmental Consensus只是对3个网络做一个平均</li>
+<li>Class Score Fusion是对RGB、RGBDiff、FLow的输出做个平均。</li>
+</ul>
+<h3 id="三、数据集获取"><a href="#三、数据集获取" class="headerlink" title="三、数据集获取"></a>三、数据集获取</h3><p>这类视频数据集资源比较少，这里采用UCF101作为实验例子，实现以下功能：</p>
+<ul>
+<li>分段随机提取RGB</li>
+<li>分段随机提取光流</li>
+</ul>
+<p>简单介绍一下UCF101数据集。</p>
+<ul>
+<li>内含13320 个短视频</li>
+<li>视频来源：YouTube</li>
+<li>视频类别：101 种</li>
+<li>主要包括这5大类动作 ：人和物体交互,只有肢体动作，人与人交互，玩音乐器材，各类运动</li>
+<li>视频格式：.avi</li>
+</ul>
+<h4 id="3-1-数据集下载"><a href="#3-1-数据集下载" class="headerlink" title="3.1 数据集下载"></a>3.1 数据集下载</h4><p>下载下载是一个zip压缩包，解压后里面是各种动作的视频，下载速度较慢，建议使用IDM下载，开32线程同步下载。联通4G网速，大概下载了40分钟。</p>
+<p><a href="https://www.crcv.ucf.edu/data/UCF101.php" target="_blank" rel="noopener">下载地址</a></p>
+<p>需要下载两个，一个是数据，一个用来区分数据集和训练集的TXT文件。</p>
+<p><img src="/3d661f8b/1558803947029.png" alt="1558803947029"></p>
+<p>TXT压缩包和文件内容的截图如下：</p>
+<p><img src="/3d661f8b/1558804168140.png" alt="1558804168140"></p>
+<p><img src="/3d661f8b/1558804140704.png" alt="1558804140704"></p>
+<h4 id="3-2-数据制作"><a href="#3-2-数据制作" class="headerlink" title="3.2 数据制作"></a>3.2 数据制作</h4><p>根据7.5节数据集的制作原理，这里使用<a href="#7-5-1-方法一">7.5方案一</a>。为了得到TSN需要的训练数据，这里两个数据集</p>
+<ul>
+<li>数据集一：又可以称<strong>原始数据集</strong>，仅仅返回视频地址，不对视频本身做任何处理。输入为数据集根目录地址，可提取到每个视频的地址和Lable。</li>
+<li>数据集二：根据所需的数据，对每个视频进行处理，返回训练所需要的具体数据，如RGB，RGBDiff，Flow（光流）等需要的不同类型的数据。（这里只实现最简单的RGB作为例子，光流可以使用opencv内部的库实现）</li>
+</ul>
+<p>这么设计的理由是为了降低内存的开销，如果一下把全部视频分解成帧写入到内存，对计算机内存消耗太高。现在使用这种方法，只有在参与训练的数据会写入到内存中。</p>
+<h5 id="3-2-1-数据集一设计"><a href="#3-2-1-数据集一设计" class="headerlink" title="3.2.1 数据集一设计"></a>3.2.1 数据集一设计</h5><p>为了方便理解（加强我的记忆），把需要读取的7个文件列内容列出来。一个训练集对应一个测试集，有三组，每组训练测试集只是选取的数据不同，切不可把三个训练集和三个测试集全部同时读入。我使用的testlist01、trainlist01用作TSN复现。</p>
+<p><a href="classInd.txt">classInd.txt</a>、<a href="testlist01.txt">testlist01.txt</a>、<a href="testlist02.txt">testlist02.txt</a>、<a href="testlist03.txt">testlist03.txt</a>、<a href="trainlist01.txt">trainlist01.txt</a>、<a href="trainlist02.txt">trainlist02.txt</a>、<a href="trainlist03.txt">trainlist03.txt</a></p>
+<ul>
+<li>输入：数据集地址、加载训练集还是测试集，默认训练集</li>
+<li>输出：视频地址，lable</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># data.Dataset 继承父类，就可以加入到torch家族，使用它内部的其他功能</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListDataSet</span><span class="params">(data.Dataset)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, DataPath, Train = True)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :param DataPath: 数据集根目录地址</span></span><br><span class="line"><span class="string">        :param Train:    是否加载训练集，默认加载</span></span><br><span class="line"><span class="string">        :return:         Null</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        self.Train = Train</span><br><span class="line">        <span class="keyword">if</span> self.Train:</span><br><span class="line">            <span class="comment"># trainlist01文件里面自带ID信息</span></span><br><span class="line">            self._GetAllTrainData(DataPath + <span class="string">"/ucfTrainTestlist/trainlist01.txt"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 因为testlist01文件没有ID信息，所以需要先获取ClassID信息</span></span><br><span class="line">            self._GetClassID(DataPath + <span class="string">"/ucfTrainTestlist/classInd.txt"</span>)</span><br><span class="line">            self._GetAllTestData(DataPath + <span class="string">"/ucfTrainTestlist/testlist01.txt"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span> <span class="comment"># 来自继承的接口，必须实现，供上层调用</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :param item: 上层传入想要的index，类型为int</span></span><br><span class="line"><span class="string">        :return: DataPath,Lable</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">if</span> self.Train:</span><br><span class="line">            <span class="keyword">return</span> self.TrainData[item][<span class="number">0</span>],self.TrainData[item][<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> self.TestData[item][<span class="number">0</span>],self.TestData[item][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span>  <span class="comment"># 来自继承的接口，必须实现，供上层调用</span></span><br><span class="line">        <span class="keyword">if</span> self.Train:</span><br><span class="line">            <span class="keyword">return</span> len(self.TrainData)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> len(self.TestData)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_GetAllTrainData</span><span class="params">(self, TrainDataPath)</span>:</span></span><br><span class="line">        self.TrainData = list()</span><br><span class="line">        TrainDataFile1 = open(TrainDataPath,<span class="string">"r"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> TrainDataFile1:</span><br><span class="line">            temp = line.strip(<span class="string">"\n"</span>).split(<span class="string">" "</span>)</span><br><span class="line">            temp[<span class="number">1</span>] = int(temp[<span class="number">1</span>]) - <span class="number">1</span> <span class="comment"># 让lable从0开始计数，默认是1</span></span><br><span class="line">            <span class="comment"># temp: ['ApplyEyeMakeup/v_ApplyEyeMakeup_g08_c01.avi', 0]</span></span><br><span class="line">            self.TrainData.append(temp)</span><br><span class="line"></span><br><span class="line">        TrainDataFile1.close()</span><br><span class="line">        <span class="comment">#print(self.TrainData)</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_GetAllTestData</span><span class="params">(self, TestDataPath)</span>:</span></span><br><span class="line">        self.TestData = list()</span><br><span class="line">        TestDataFile1 = open(TestDataPath,<span class="string">"r"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> TestDataFile1:</span><br><span class="line">            linedata = line.strip(<span class="string">"\n"</span>) <span class="comment"># 去掉最后的换行符</span></span><br><span class="line">            <span class="comment"># linedata: ApplyEyeMakeup/v_ApplyEyeMakeup_g01_c01.avi</span></span><br><span class="line">            classid = self.ClassID[linedata.split(<span class="string">"/"</span>)[<span class="number">0</span>]] <span class="comment"># 获得该视频的分类</span></span><br><span class="line">            temp = [linedata,classid]   <span class="comment"># 制作成一个组</span></span><br><span class="line">            <span class="comment"># temp: ['ApplyEyeMakeup/v_ApplyEyeMakeup_g01_c01.avi', 0]</span></span><br><span class="line">            self.TestData.append(temp) <span class="comment"># 添加到list</span></span><br><span class="line"></span><br><span class="line">        TestDataFile1.close()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 由于Trainlist文件自带了ID，所以只有test数据才用的上查字典</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_GetClassID</span><span class="params">(self, ClassIDPath)</span>:</span></span><br><span class="line">        self.ClassID = dict()</span><br><span class="line">        classidfile = open(ClassIDPath,<span class="string">"r"</span>)</span><br><span class="line">        <span class="keyword">if</span> classidfile == <span class="keyword">None</span>:</span><br><span class="line">            print(<span class="string">"ClassPath"</span>+<span class="string">"文件打开失败"</span>)</span><br><span class="line">            <span class="keyword">raise</span> IOError</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> classidfile:</span><br><span class="line">            <span class="comment"># 读取文件的每一行，去掉字符，以空格分开数据</span></span><br><span class="line">            temp = line.strip(<span class="string">"\n"</span>).split(<span class="string">" "</span>)</span><br><span class="line">            <span class="comment"># temp: ['1', 'ApplyEyeMakeup']</span></span><br><span class="line">            temp[<span class="number">0</span>] = int(temp[<span class="number">0</span>]) <span class="comment"># 读出来的是str类型，强转为int类型</span></span><br><span class="line">            <span class="comment"># temp: [1, 'ApplyEyeMakeup']</span></span><br><span class="line">            <span class="comment"># 做成字典</span></span><br><span class="line">            self.ClassID[temp[<span class="number">1</span>]] = temp[<span class="number">0</span>] - <span class="number">1</span> <span class="comment"># -1是为了让lable从0开始计数，默认是1开始</span></span><br><span class="line">        classidfile.close()</span><br><span class="line">        <span class="comment">#print(self.ClassID)  # 可打印查看列表数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试部分</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    a = ListDataSet(<span class="string">"data"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 分组，并且打乱数据</span></span><br><span class="line">    b = data.DataLoader(dataset=a,batch_size=<span class="number">3</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">for</span> D,L <span class="keyword">in</span> b:</span><br><span class="line">        print(D)</span><br><span class="line">        print(L)</span><br></pre></td></tr></table></figure>
+<p>最后的输出结果<a href="output.txt">点击查看</a>，现在已经可以很方便的获得视频的地址和lable</p>
+<h5 id="3-2-2-数据集二设计"><a href="#3-2-2-数据集二设计" class="headerlink" title="3.2.2 数据集二设计"></a>3.2.2 数据集二设计</h5><p>这里用来输出对视频处理之后的数据</p>
+<ul>
+<li>输入：数据集地址、训练集/测试集、所需数据类型、视频分段数等</li>
+<li>输出：数据、Lable</li>
+</ul>
+<p>代码说明：功能查看注释就好，以下对一些参数说明。</p>
+<ul>
+<li>weight、height：resnet101网络默认输入的图片尺寸为224*224，所以这里输出的图片尺寸就得跟着</li>
+<li>self.data：一张表，里面有视频的地址和Lable，依赖3.2.1数据集一</li>
+<li>__getitem__：核心部分，看代码建议从这里作为入口</li>
+<li>_Change_to_RGB：将视频随机抽帧，转为一组RGB图片</li>
+<li>_generate_random：生成随机数，不需要仔细看</li>
+<li>_Image_ReShape：修改图片的shape形状，不改变数据</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myDataSet</span><span class="params">(data.Dataset)</span>:</span></span><br><span class="line">    <span class="comment"># 这里要把列表信息处理好</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, DataPath, Train=True, ModuleType=<span class="string">"RGB"</span>, Segments=<span class="number">3</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 DataLen = <span class="number">1</span>,Weight = <span class="number">224</span>, Height = <span class="number">224</span>)</span>:</span></span><br><span class="line">        self.DataPath = DataPath      <span class="comment"># 数据集的位置</span></span><br><span class="line">        self.Train = Train            <span class="comment"># 是否选择训练集</span></span><br><span class="line">        self.moduleType = ModuleType  <span class="comment"># 输出模式，RGB，RGBDff,光流</span></span><br><span class="line">        self.segments = Segments      <span class="comment"># 视频分为几段</span></span><br><span class="line">        self.weight = Weight          <span class="comment"># 需要输出视频的宽</span></span><br><span class="line">        self.height = Height          <span class="comment"># 需要输出视频的高</span></span><br><span class="line">        self.DataLen = DataLen        <span class="comment"># 每一个Segment提取多少张图片</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 不同类型的通道数不一样。光流通道数为2（x,y方向的矢量各一个图片）</span></span><br><span class="line">        <span class="keyword">if</span> self.moduleType == <span class="string">"RGB"</span>:</span><br><span class="line">            self.channel = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取视频列表数据信息</span></span><br><span class="line">        self.data = ListDataSet(self.DataPath,self.Train)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># item其实就是index数组下标，这里是数据的输出出口，__getitem__是内联函数</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        VideoDataPath = self.data[item][<span class="number">0</span>]</span><br><span class="line">        Label = self.data[item][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取数据的时候，开始对视频进行处理，这样虽然浪费的时间，但是节约了内存</span></span><br><span class="line">        <span class="keyword">if</span> self.moduleType == <span class="string">"RGB"</span>: <span class="comment"># 为了后期拓展，加个类型判断</span></span><br><span class="line">            images = self._Change_to_RGB(self.DataPath + <span class="string">"/UCF101/"</span> + VideoDataPath)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 转换为torch参数类型输出，torch网络只能使用torch内部的类型，输出多少张图片，就需要有多少个Lable，而同一个视频的lable是一样的，所以填充对应维度即可</span></span><br><span class="line">        <span class="keyword">return</span> torch.from_numpy(images), torch.full([self.segments*self.DataLen], Label)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_Change_to_RGB</span><span class="params">(self, VideoDataPath)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :param VideoDataPath:  视频地址   # F:/data/UCF101/PushUps/v_PushUps_g01_c01.avi</span></span><br><span class="line"><span class="string">        :return: RGB数据</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        cap = cv2.VideoCapture()  <span class="comment"># 初始化opencv</span></span><br><span class="line">        cap.open(VideoDataPath)   <span class="comment"># 打开视频文件</span></span><br><span class="line">        n_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))  <span class="comment"># 计算帧的数量</span></span><br><span class="line">        segment_length = int(n_frames / self.segments)     <span class="comment"># 计算没一段帧的数量</span></span><br><span class="line">        print(<span class="string">"n_frames "</span>,n_frames)</span><br><span class="line">        print(<span class="string">"segment_length "</span>,segment_length)</span><br><span class="line">        <span class="keyword">if</span> self.DataLen &gt; segment_length:</span><br><span class="line">            print(<span class="string">"所需要的数据长度大于每段所拥有的数据长度"</span>)</span><br><span class="line">            <span class="keyword">raise</span> IOError</span><br><span class="line"></span><br><span class="line">        <span class="comment"># dstimage 初始化为0，主要是开辟空间，初始化为1也没有问题</span></span><br><span class="line">        dstimage = np.zeros([self.DataLen*self.segments,self.channel,self.weight,self.height])</span><br><span class="line">        times = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.segments):</span><br><span class="line">            <span class="comment"># 对每个段都重新计算抽取帧的位置</span></span><br><span class="line">            temp = self._generate_random(segment_length,self.DataLen)  <span class="comment"># 在每一segment里面随机获得self.DataLen张图片，生成index</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> temp:</span><br><span class="line">                <span class="comment"># 抽取指定位置的图片</span></span><br><span class="line">                res,image = cap.read(k + i * segment_length)  <span class="comment"># image.shape : (240, 320, 3)</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> res: <span class="comment"># 判断是否抽取成功</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># 由于网络输入的图片尺寸是固定的，不方便修改，这里修改训练库图片尺寸（总不能为每个分辨率设计一个网络吧）</span></span><br><span class="line">                image = cv2.resize(image,(self.weight,self.height),interpolation = cv2.INTER_AREA)  <span class="comment"># 修改图片尺寸</span></span><br><span class="line">                <span class="comment"># shape: [224,224,3]</span></span><br><span class="line">                <span class="comment"># 网络无法使用上面的shape，所以修改至下面的</span></span><br><span class="line">                image = self._Image_ReShape(image)  <span class="comment"># shape: [3,224,224]</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># 添加到输出空间中</span></span><br><span class="line">                dstimage[times] = image</span><br><span class="line">                times += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 释放opencv空间</span></span><br><span class="line">        cap.release()</span><br><span class="line">        <span class="comment"># print(dstimage.shape)</span></span><br><span class="line">        <span class="keyword">return</span> dstimage</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_generate_random</span><span class="params">(self, num_range, nsize)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Args: 生成nsize个，0~num_range范围的不同随机数的list，且随机数不能重复</span></span><br><span class="line"><span class="string">            num_range: 需要的随机数范围</span></span><br><span class="line"><span class="string">            nsize:     需要的随机数数量</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns: 随机数组成的list</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        generate = <span class="keyword">True</span></span><br><span class="line">        temp = list()  <span class="comment"># type: list</span></span><br><span class="line">        <span class="keyword">while</span> generate:</span><br><span class="line">            temp = np.random.randint(num_range,size=nsize).tolist()  <span class="comment"># type: list</span></span><br><span class="line">            temp.sort()</span><br><span class="line">            <span class="keyword">if</span> nsize == <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 判断是否有重复的帧序号</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(nsize - <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> temp[i] == temp[i + <span class="number">1</span>]:</span><br><span class="line">                    generate = <span class="keyword">True</span></span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                generate = <span class="keyword">False</span></span><br><span class="line">        <span class="comment"># print(temp)</span></span><br><span class="line">        <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_Image_ReShape</span><span class="params">(self, image)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            image: 输入图片 [224,224,3]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns: reshape后的图片 [3,224,224]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        dstimage = np.zeros([self.channel,self.weight,self.height])</span><br><span class="line">        <span class="keyword">for</span> a <span class="keyword">in</span> range(self.channel):</span><br><span class="line">            dstimage[a] = image[:,:,a]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dstimage</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回长度</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.data.__len__()</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-数据使用"><a href="#3-3-数据使用" class="headerlink" title="3.3 数据使用"></a>3.3 数据使用</h4><p>对数据集的功能做一个简单的测试，输出数据集的size，并显示图片（因为图片的默认shape被修改，显示出来的单通道颜色比较奇怪），首先把数据集和数据集list文件放在一个路径下，就像这样：</p>
+<p><img src="/3d661f8b/1558940877321.png" alt="1558940877321"></p>
+<p>在和上述代码同一个文件最下面，添加以下代码，并运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    a = myDataSet(<span class="string">"F:/data"</span>,Train=<span class="keyword">False</span>,DataLen=<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 分组，并且打乱数据</span></span><br><span class="line">    b = data.DataLoader(dataset=a,batch_size=<span class="number">1</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">for</span> index,(D,L) <span class="keyword">in</span> enumerate(b):</span><br><span class="line">        print(D.size())</span><br><span class="line">        print(<span class="string">" "</span>)</span><br><span class="line">        plt.imshow(D[<span class="number">0</span>][<span class="number">0</span>][<span class="number">0</span>])</span><br><span class="line">        plt.show()</span><br><span class="line">        <span class="keyword">if</span> index == <span class="number">5</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">n_frames  56</span><br><span class="line">segment_length  18</span><br><span class="line">torch.Size([1, 15, 3, 224, 224])</span><br></pre></td></tr></table></figure>
+<p><img src="/3d661f8b/VDYH4GG826MORNXVFD}SOFH.png" alt="img"></p>
+<p>画重点了，仔细看这里将15张图片全部放在了一起，并没有分段，这是因为TSN网络里面看似是3个网络，但是这三个网络实际上是共享权重的，意味着其实只是一个网络。所以让一个网络同时学习15张图片，最后对loss进行一个求均值操作，完美。</p>
+<h4 id="3-4-总结"><a href="#3-4-总结" class="headerlink" title="3.4 总结"></a>3.4 总结</h4><p>TSN作者写的源代码数据集制作方法如下，他在数据集和网络里都对图片数据进行了操作，代码互耦程度教高</p>
+<ul>
+<li>提取全部帧保存（保存完后60多个G大小）</li>
+<li>在数据集里提取对应图片</li>
+<li>在网络里对图片进行差分</li>
+</ul>
+<p>我的方法</p>
+<ul>
+<li>提取全部视频地址和Lable。（无额外储存空间开销，总共大小6G）</li>
+<li>在数据集里处理视频（转RGB，差分，光流），提取对应图片（差分和光流还没有做）</li>
+<li>网络没有对数据集进行处理，纯粹只是训练网络功能</li>
+</ul>
+<p>我的方法优缺点：</p>
+<ul>
+<li>优点：没有额外储存空间，代码互耦低。不需要对视频进行预处理，方便实时监测视频动作。</li>
+<li>缺点：在训练网络的时候还需要进行额外的视频操作，延长了训练时间</li>
+</ul>
+<h3 id="四、网络搭建"><a href="#四、网络搭建" class="headerlink" title="四、网络搭建"></a>四、网络搭建</h3><p>在开始学习的时候，使用的是mnist数据集来做3层的卷积网络，很方便自己搭建模型，这里有<a href="https://github.com/coldspace/torch_HelloWord" target="_blank" rel="noopener">github</a>例子可以参考<sup><a href="#fn_8" id="reffn_8">8</a></sup>。但是如果面对<strong>100多层</strong>，并且是残差设计的深度学习网络，手动搭建起来就有点麻烦。Torch内部自带有一些常用的网络模型如resnet<sup><a href="#fn_3" id="reffn_3">3</a></sup>，vgg等模型，使用的时候只需要进行加载，并且进行一些简单的修改。这里可能会有问题，为什么可以修改？哪里需要修改？</p>
+<ul>
+<li>为什么可以修改？</li>
+</ul>
+<p>答：输入数据的尺寸大小是对卷积层没有影响的，卷积层只对输入数据的维度感兴趣。只有全连接层对输入数据尺度有影响。</p>
+<ul>
+<li>哪里需要修改？</li>
+</ul>
+<p>答：根据上一个问题的回答。只需要对网络模型修改<strong>第一层卷积</strong>conv1的输入维度和<strong>全连接层</strong>对应的数据大小即可。注：对于mnist实验来说，第一层卷积输入维度是1，而在本次实验中，其值可能为2,4,10。</p>
+<h4 id="4-1-加载模型"><a href="#4-1-加载模型" class="headerlink" title="4.1 加载模型"></a>4.1 加载模型</h4><p>torchvision库还有dataset等好用的东西，可以研究一下。以下代码粘贴复制即可直接使用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models</span><br><span class="line"></span><br><span class="line"><span class="comment"># True 表示有有预训练，本地没有的话，就会自动从网络中下载模型</span></span><br><span class="line">obase_model = torchvision.models.resnet101(<span class="keyword">True</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 会打印出网络的结构，太长了，结果不好贴</span></span><br><span class="line"><span class="comment"># print(obase_model)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获得模型网络的构成，如conv1卷积层结构等</span></span><br><span class="line">base_model = list(obase_model.modules())</span><br><span class="line"></span><br><span class="line">print(base_model[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">result:</span><br><span class="line"><span class="comment"># 输入3维，输出64维，卷积核维7*7，往左往下每次都是移动2个位子，填充大小为3*3</span></span><br><span class="line">Conv2d(<span class="number">3</span>, <span class="number">64</span>, kernel_size=(<span class="number">7</span>, <span class="number">7</span>), stride=(<span class="number">2</span>, <span class="number">2</span>), padding=(<span class="number">3</span>, <span class="number">3</span>), bias=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>为了方便理解，贴出obasemodel的打印，<a href="obasemodel.txt">点击查看</a></p>
+<h4 id="4-2-修改模型"><a href="#4-2-修改模型" class="headerlink" title="4.2 修改模型"></a>4.2 修改模型</h4><p>模型加载好了之后，有些并不能直接使用，可以对Conv2d的参数进行修改，一般来说，只需要修改维度值就好了，修改方法如下：(需要和上面代码联合使用)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 得到所有网络类型为Conv2d的下标，取第一个。前面有说为什么需要第一个</span></span><br><span class="line">first_conv_idx = list(filter(<span class="keyword">lambda</span> x: isinstance(base_model[x], nn.Conv2d), list(range(len(base_model)))))[<span class="number">0</span>]</span><br><span class="line">conv = base_model[first_conv_idx]</span><br><span class="line">container = base_model[first_conv_idx - <span class="number">1</span>] <span class="comment"># type: torchvision.models.resnet.ResNet</span></span><br><span class="line"><span class="comment"># &lt;class 'torchvision.models.resnet.ResNet'&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里讲输入通道in_channels 改成2，跳转到章节7.1会发现惊喜</span></span><br><span class="line">new_conv = nn.Conv2d(<span class="number">2</span>, conv.out_channels,conv.kernel_size,conv.stride,conv.padding,</span><br><span class="line">                     conv.dilation,conv.groups,conv.bias,conv.padding_mode)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 0表示的是第一个网络（conv1.weight），-7指的是字符串倒数第7个位置</span></span><br><span class="line">lay_name = list(container.state_dict().keys())[<span class="number">0</span>][:<span class="number">-7</span>]</span><br><span class="line"><span class="comment"># conv1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改container中lay_name的网络为new_conv，按道理修改list内的值是不会改变</span></span><br><span class="line"><span class="comment"># 原obase_model的，因为list会重新开辟一个空间，查看章节7.2。但这里的container</span></span><br><span class="line"><span class="comment"># 等于obase_model，就可以进行修改，第5行代码有注释。这里可以将container替换</span></span><br><span class="line"><span class="comment"># 成obase_model</span></span><br><span class="line">setattr(container,lay_name,new_conv)</span><br><span class="line"></span><br><span class="line">print(obase_model) <span class="comment"># 发现网络已经被修改</span></span><br></pre></td></tr></table></figure>
+<p>理论上这样就修改成功了，但是这里使用的是预训练的网络，更换了第一层网络后，其权重并没有跟着修改，接下来把权重也给复制上去，完整代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models</span><br><span class="line"></span><br><span class="line">obase_model = torchvision.models.resnet101(<span class="keyword">True</span>) </span><br><span class="line">base_model = list(obase_model.modules())</span><br><span class="line"></span><br><span class="line">first_conv_idx = list(filter(<span class="keyword">lambda</span> x: isinstance(base_model[x], nn.Conv2d), list(range(len(base_model)))))[<span class="number">0</span>]</span><br><span class="line">conv = base_model[first_conv_idx]</span><br><span class="line">container = base_model[first_conv_idx - <span class="number">1</span>] <span class="comment"># type: torchvision.models.resnet.ResNet</span></span><br><span class="line"></span><br><span class="line">new_conv = nn.Conv2d(<span class="number">2</span>, conv.out_channels,conv.kernel_size,conv.stride,conv.padding,</span><br><span class="line">                     conv.dilation,conv.groups,conv.bias,conv.padding_mode)</span><br><span class="line"></span><br><span class="line">lay_name = list(container.state_dict().keys())[<span class="number">0</span>][:<span class="number">-7</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意：从这里开始获取预训练的值</span></span><br><span class="line"><span class="comment"># 这里面都是weights</span></span><br><span class="line">params = [x.clone() <span class="keyword">for</span> x <span class="keyword">in</span> conv.parameters()]</span><br><span class="line"></span><br><span class="line">kernel_size = params[<span class="number">0</span>].size()</span><br><span class="line"><span class="comment"># torch.Size([64, 3, 7, 7])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这种语法仅仅支持torch.Size类型，torch.tensor类型都不支持</span></span><br><span class="line">new_kernel_size = kernel_size[:<span class="number">1</span>] + (<span class="number">2</span>, ) + kernel_size[<span class="number">2</span>:]</span><br><span class="line"><span class="comment"># torch.Size([64, 2, 7, 7])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># contiguous表示如果内存是连续的则返回原来的tensor，其他语法见7.3 7.4</span></span><br><span class="line">new_kernels = params[<span class="number">0</span>].data.mean(dim=<span class="number">1</span>, keepdim=<span class="keyword">True</span>).expand(new_kernel_size).contiguous()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对新网络的权重进行赋值</span></span><br><span class="line">new_conv.weight.data = new_kernels</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新到网络容器container之中</span></span><br><span class="line">setattr(container,lay_name,new_conv)</span><br></pre></td></tr></table></figure>
+<p>修改成功，最后一层的修改方式和第一层的修改方式一样。注：<strong>kernel_size[:1] + (2, ) + kernel_size[2:]这种神奇的用法只适用于torch.Size类型。</strong></p>
+<h4 id="4-3-TSN完整模型设计"><a href="#4-3-TSN完整模型设计" class="headerlink" title="4.3 TSN完整模型设计"></a>4.3 TSN完整模型设计</h4><p>TSN作者写的代码把三个网络写到一个Class里面，通过参数来选择不同的网络，虽然降低了代码冗余度，但是导致整个class太长，不方便阅读。这里我建立3个网络，方便阅读的同时，便于维护。</p>
+<p>仔细查看TSN网络的构成，我发现TSN三种不同的输入对于网络部分（Temporal Segment Networks）来说是<strong>独立的</strong>！！意味着我可以单独实现RGB、RGBDiff、Optical Flow。光流算法需要依赖OpenCv库，这里在最后进行实现<del>或者不实现</del>，先从最简单的RGB开始。由于完全介绍的篇幅太长，转至Github上查看，有丰富的代码注释。</p>
+<p><img src="/3d661f8b/1.png" alt=""><div align="center" style="font-size:12px">图1 TSN网络结构<div></div></div></p>
+<h5 id="4-3-RGB网络"><a href="#4-3-RGB网络" class="headerlink" title="4.3 RGB网络"></a>4.3 RGB网络</h5><p><a href="https://github.com/coldspace/TSN-RGB/tree/master" target="_blank" rel="noopener">点击传送</a></p>
+<h5 id="4-4-RGBDiff网络"><a href="#4-4-RGBDiff网络" class="headerlink" title="4.4 RGBDiff网络"></a>4.4 RGBDiff网络</h5><p><a href="">还未实现</a></p>
+<h5 id="4-5-Optical-Flow网络"><a href="#4-5-Optical-Flow网络" class="headerlink" title="4.5 Optical Flow网络"></a>4.5 Optical Flow网络</h5><p><a href="">还未实现</a></p>
+<h3 id="五、网络训练"><a href="#五、网络训练" class="headerlink" title="五、网络训练"></a>五、网络训练</h3><p>训练相对较慢，需要动态调整学习速率<sup><a href="#fn_ 10" id="reffn_ 10"> 10</a></sup></p>
+<h3 id="六、网络测试"><a href="#六、网络测试" class="headerlink" title="六、网络测试"></a>六、网络测试</h3><p>在损失降低到一定程度后，开始测试。将训练模式转为测试模式即可。</p>
+<h3 id="七、语法小技巧"><a href="#七、语法小技巧" class="headerlink" title="七、语法小技巧"></a>七、语法小技巧</h3><h4 id="7-1-代码自动补全"><a href="#7-1-代码自动补全" class="headerlink" title="7.1 代码自动补全"></a>7.1 代码自动补全</h4><p>python作为一门动态语言，在使用的过程中一般不需要注意变量类型。不过从实际使用角度上面来讲有点背道而驰了，因为变量类型必须要用到，但是在语法上面却没有了提示，这严重影响了写代码的体验（因为不知道类型，无法自动补全），以下提出一种方法，解决这个问题。（代码需要看前面的才看的懂，如果仅仅想了解如何指定类型，看参考文献<sup><a href="#fn_7" id="reffn_7">7</a></sup>）<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line">base_model = torchvision.models.resnet101(<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里因为使用了list，编辑器无法知道base_model里面参数的类型，必须要运行起来才知道</span></span><br><span class="line">base_model = list(base_model.modules())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里获取了第一个卷积的 index 下标</span></span><br><span class="line">first_conv_idx = list(filter(<span class="keyword">lambda</span> x: isinstance(base_model[x], nn.Conv2d), list(range(len(base_model)))))[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里通过type指定类型，这样编辑器就会知道了，就可以自动补全了</span></span><br><span class="line">conv = base_model[first_conv_idx] <span class="comment"># type: nn.Conv2d</span></span><br><span class="line"></span><br><span class="line">print(conv.kernel_size)  <span class="comment"># 舒服</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="7-2-list使用细节"><a href="#7-2-list使用细节" class="headerlink" title="7.2 list使用细节"></a>7.2 list使用细节</h4><p>list的会开辟新的储存空间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">print(a[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">b = list(a)</span><br><span class="line">b[<span class="number">1</span>] = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">print(a[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">result:</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-3-Torch-mean-用法"><a href="#7-3-Torch-mean-用法" class="headerlink" title="7.3 Torch.mean()用法"></a>7.3 Torch.mean()用法</h4><p>官方说明如下：</p>
+<p><strong>torch.mean(input, dim, keepdim=False, out=None)</strong></p>
+<p>返回新的张量，其中包含输入张量input指定维度dim中每行的平均值。</p>
+<p>若keepdim值为True，则在输出张量中，除了被操作的dim维度值降为1，其它维度与输入张量input相同。否则，dim维度相当于被执行torch.squeeze()维度压缩操作，导致此维度消失，最终输出张量会比输入张量少一个维度。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li>input (Tensor) - 输入张量</li>
+<li>dim (int) - 指定进行均值计算的维度</li>
+<li>keepdim (bool, optional) - 输出张量是否保持与输入张量有相同数量的维度，如果False，dim对应的那个维度消失，如果为True，dim对应的那个维度不会消失，大小变为1</li>
+<li>out (Tensor) - 结果张量</li>
+</ul>
+<p>他的具体算法结构是什么样子呢？先举个例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">a = torch.randn([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line"></span><br><span class="line">print(a.mean(dim=<span class="number">0</span>).size())</span><br><span class="line">print(a.mean(dim=<span class="number">1</span>).size())</span><br><span class="line">print(a.mean(dim=<span class="number">1</span>,keepdim=<span class="keyword">True</span>).size())</span><br><span class="line"></span><br><span class="line">result:</span><br><span class="line">torch.Size([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">torch.Size([<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">torch.Size([<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<p>从输出结果可以看见，dim等于多少，那一个维度就会消失（计算成为了均值），这样他的内部算法就比较好猜了，应该是如下这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b[][][] = (a[][<span class="number">0</span>][][] + a[][<span class="number">1</span>][][]) / <span class="number">2</span> <span class="comment"># 大致意思，应该运行不了，空括号内变量对应1,3,4维度不同值</span></span><br></pre></td></tr></table></figure>
+<p>其他max，min使用方法类似</p>
+<h4 id="7-4-torch-tensor-expand-用法"><a href="#7-4-torch-tensor-expand-用法" class="headerlink" title="7.4 torch.tensor.expand()用法"></a>7.4 torch.tensor.expand()用法</h4><p>官方介绍</p>
+<p><strong>expand(*sizes)</strong></p>
+<p>返回tensor的一个新视图，单个维度扩大为更大的尺寸。 tensor也可以扩大为更高维，新增加的维度将附在前面。 扩大tensor不需要分配新内存，只是仅仅新建一个tensor的视图，其中通过将<code>stride</code>设为0，一维将会扩展位更高维。任何一个一维的在不分配新内存情况下可扩展为任意的数值。</p>
+<p><strong>参数：</strong> - <strong>sizes</strong>(<em>torch.Size or int…</em>)-需要扩展的大小</p>
+<p>注意，只能对大小为1的那个维度进行扩展，扩展方法为复制原来的值，使用方法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]).float()</span><br><span class="line"></span><br><span class="line">print(a.expand((<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>)))</span><br><span class="line"></span><br><span class="line">result:</span><br><span class="line">tensor([[[ <span class="number">0.1812</span>, <span class="number">-2.6267</span>, <span class="number">-0.5700</span>],</span><br><span class="line">         [ <span class="number">0.1686</span>, <span class="number">-1.1026</span>, <span class="number">-0.0917</span>]],</span><br><span class="line"></span><br><span class="line">        [[ <span class="number">0.1812</span>, <span class="number">-2.6267</span>, <span class="number">-0.5700</span>],</span><br><span class="line">         [ <span class="number">0.1686</span>, <span class="number">-1.1026</span>, <span class="number">-0.0917</span>]]])</span><br></pre></td></tr></table></figure>
+<p>错误用法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]).float()</span><br><span class="line">print(a.expand((<span class="number">1</span>,<span class="number">4</span>,<span class="number">3</span>)))</span><br><span class="line"></span><br><span class="line">result:</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"F:/Users/Zever/Desktop/tsn-pytorch-master/tsn-pytorch/test.py"</span>, line <span class="number">38</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    print(a.expand((<span class="number">1</span>,<span class="number">4</span>,<span class="number">3</span>)))</span><br><span class="line">RuntimeError: The expanded size of the tensor (<span class="number">4</span>) must match the existing size (<span class="number">2</span>) at non-singleton dimension <span class="number">1.</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-5-数据集制作"><a href="#7-5-数据集制作" class="headerlink" title="7.5 数据集制作"></a>7.5 数据集制作</h4><h5 id="7-5-1-方法一"><a href="#7-5-1-方法一" class="headerlink" title="7.5.1 方法一"></a>7.5.1 方法一</h5><p>__getitem__是一个内建函数，它在什么时候被调用呢？下面用一个简单的例子来说明</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myDataSet</span><span class="params">(data.Dataset)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"__init__"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 该内建函数必须实现，返回值一般为data，Lable</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"__getitem__"</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>,<span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 该内建函数必须实现，返回值为全部数据的长度，DataLoader函数需要调用次功能</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">10</span></span><br><span class="line"></span><br><span class="line">dataset = myDataSet()</span><br><span class="line">data_loader_train = data.DataLoader(dataset = dataset, batch_size = <span class="number">2</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"start for"</span>)</span><br><span class="line"><span class="keyword">for</span> a,b <span class="keyword">in</span> data_loader_train:</span><br><span class="line">    print(a)</span><br></pre></td></tr></table></figure>
+<p>结果是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">__init__</span><br><span class="line">start for</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([1, 2])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([3, 4])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([5, 6])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([7, 8])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([ 9, 10])</span><br></pre></td></tr></table></figure>
+<p>说明只有在进行读取数据集的时候__getitem__才会运行，在使用data.DataLoader的时候，不会调用。探寻这个有什么意义？</p>
+<ul>
+<li>如果data.DataLoader会调用，那么只要使用了DataLoader函数，它就会将全部数据写入内存中，这种方法对计算机内存极为不友好。</li>
+<li>如果是使用的时候调用，那么可以自定义__getitem__的实现方式，实现每次只读batch_size大小的数据进入内存。</li>
+</ul>
+<p><strong>注意：</strong>在DataLoader中，我设置了shuffle=True，但是输出结果并没有被打乱。查了资料后，发现它打乱的是__getitem__函数的item参数，修改代码如下，可以看到数据已经被打乱。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myDataSet</span><span class="params">(data.Dataset)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.a = <span class="number">0</span></span><br><span class="line">        self.b = <span class="number">0</span></span><br><span class="line">        print(<span class="string">"__init__"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># item其实就是index数组下标</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, item)</span>:</span></span><br><span class="line">        print(<span class="string">"__getitem__"</span>)</span><br><span class="line">        self.a += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> item, self.a</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">9</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dataset = myDataSet()</span><br><span class="line">data_loader_train = data.DataLoader(dataset = dataset, batch_size = <span class="number">3</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"start for"</span>)</span><br><span class="line"><span class="keyword">for</span> a,b <span class="keyword">in</span> data_loader_train:</span><br><span class="line">    print(a)</span><br><span class="line">    print(b)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">__init__</span><br><span class="line">start for</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([4, 2, 5])</span><br><span class="line">tensor([1, 2, 3])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([7, 0, 1])</span><br><span class="line">tensor([4, 5, 6])</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">__getitem__</span><br><span class="line">tensor([8, 6, 3])</span><br><span class="line">tensor([7, 8, 9])</span><br></pre></td></tr></table></figure>
+<p>可以看到，数据被打乱。</p>
+<h5 id="7-5-2-方法二"><a href="#7-5-2-方法二" class="headerlink" title="7.5.2 方法二"></a>7.5.2 方法二</h5><p>使用TensorDataset实现对数据的封装，这种方法适用于比较简单的数据。其中enumerate是对数据加上index下边。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> TensorDataset</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>] <span class="comment"># Data</span></span><br><span class="line">b = [<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>] <span class="comment"># Lable</span></span><br><span class="line"></span><br><span class="line">c = TensorDataset(torch.tensor(a),torch.tensor(b))</span><br><span class="line"></span><br><span class="line">d = data.DataLoader(dataset=c,batch_size=<span class="number">2</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index,(D,L) <span class="keyword">in</span> enumerate(d):</span><br><span class="line">    print(<span class="string">"index:%d"</span>%index)</span><br><span class="line">    print(D)</span><br><span class="line">    print(L)</span><br></pre></td></tr></table></figure>
+<p>输出结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">index:0</span><br><span class="line">tensor([3, 4])</span><br><span class="line">tensor([8, 9])</span><br><span class="line">index:1</span><br><span class="line">tensor([1, 2])</span><br><span class="line">tensor([6, 7])</span><br></pre></td></tr></table></figure>
+<h3 id="八、调试问题"><a href="#八、调试问题" class="headerlink" title="八、调试问题"></a>八、调试问题</h3><h4 id="8-1-cuda-runtime-error-59"><a href="#8-1-cuda-runtime-error-59" class="headerlink" title="8.1 cuda runtime error (59)"></a>8.1 cuda runtime error (59)</h4><p>在计算loss的时候出现的错误，原因是lable没有从0开始计数<sup><a href="#fn_9" id="reffn_9">9</a></sup>。为什么非要从0开始计数，这要从误差函数的实现方式说起。为了方便理解，先抛出一个问题，看下面代码(运行正确的代码截断)：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># # output : torch.Size([3, 101])</span></span><br><span class="line"><span class="comment"># # OL      : torch.Size([3])</span></span><br><span class="line"></span><br><span class="line">loss = criterion(output,OL)  <span class="comment"># type: torch.Tensor</span></span><br></pre></td></tr></table></figure>
+<p>可以误差函数criterion输出的output的size和OL的size不一样，不一样就不能直接计算，必须要经过处理。本人猜测，criterion内部先求出了output最大值对应的下标index（0~100），这样就变成了OL一样的size，这样就可以和OL进行计算（我测试过，不是求最大值），所以label的值的范围也是0~100。而数据集默认给的范围是1~101，故而由于数组越界而报错，严重甚至蓝屏（显卡出问题容易蓝屏）。解决方法，从数据集返回的lable下手，第三章数据集修改已更新。</p>
+<p>接下来开始跟踪criterion内部的实现方式，<del>我困了，下次弄</del></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://arxiv.org/abs/1608.00859" target="_blank" rel="noopener">Temporal Segment Networks: Towards Good Practices for Deep Action Recognition</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="https://arxiv.org/abs/1406.2199v2" target="_blank" rel="noopener">Two-Stream Convolutional Networks for Action Recognition in Videos</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. <a href="https://blog.csdn.net/Jing_xian/article/details/78878966" target="_blank" rel="noopener">ResNet结构分析</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_4">
+<sup>4</sup>. <a href="https://arxiv.org/abs/1502.03167v3" target="_blank" rel="noopener">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a><a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_5">
+<sup>5</sup>. <a href="https://blog.csdn.net/qq_41368247/article/details/82562165" target="_blank" rel="noopener">计算机视觉—光流法(optical flow)简介</a><a href="#reffn_5" title="Jump back to footnote [5] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_6">
+<sup>6</sup>. <a href="https://blog.csdn.net/zhuason/article/details/52057667" target="_blank" rel="noopener">图像差分的方法</a><a href="#reffn_6" title="Jump back to footnote [6] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_7">
+<sup>7</sup>. <a href="https://blog.csdn.net/l460133921/article/details/80032447" target="_blank" rel="noopener">pyCharm中python对象的自动提示</a><a href="#reffn_7" title="Jump back to footnote [7] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_8">
+<sup>8</sup>. <a href="https://www.zwenc.cn/29043d8c/">torch 框架奇葩语法</a><a href="#reffn_8" title="Jump back to footnote [8] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_9">
+<sup>9</sup>. <a href="https://blog.csdn.net/qq_27292549/article/details/81084782" target="_blank" rel="noopener">cuda runtime error (59)</a><a href="#reffn_9" title="Jump back to footnote [9] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_ 10">
+<sup> 10</sup>. <a href="https://blog.csdn.net/u012436149/article/details/70666068" target="_blank" rel="noopener">pytorch学习笔记(十):learning rate decay(学习率衰减)</a><a href="#reffn_ 10" title="Jump back to footnote [ 10] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/29043d8c/" rel="next" title="torch框架奇葩语法">
+                <i class="fa fa-chevron-left"></i> torch框架奇葩语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/a036e862/" rel="prev" title="神经网络-Torch常用函数说明">
+                神经网络-Torch常用函数说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、相关原理介绍"><span class="nav-text">二、相关原理介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、数据集获取"><span class="nav-text">三、数据集获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-数据集下载"><span class="nav-text">3.1 数据集下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-数据制作"><span class="nav-text">3.2 数据制作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-数据集一设计"><span class="nav-text">3.2.1 数据集一设计</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-数据集二设计"><span class="nav-text">3.2.2 数据集二设计</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-数据使用"><span class="nav-text">3.3 数据使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-总结"><span class="nav-text">3.4 总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、网络搭建"><span class="nav-text">四、网络搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-加载模型"><span class="nav-text">4.1 加载模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-修改模型"><span class="nav-text">4.2 修改模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-TSN完整模型设计"><span class="nav-text">4.3 TSN完整模型设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-3-RGB网络"><span class="nav-text">4.3 RGB网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-4-RGBDiff网络"><span class="nav-text">4.4 RGBDiff网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-5-Optical-Flow网络"><span class="nav-text">4.5 Optical Flow网络</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、网络训练"><span class="nav-text">五、网络训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、网络测试"><span class="nav-text">六、网络测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、语法小技巧"><span class="nav-text">七、语法小技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-代码自动补全"><span class="nav-text">7.1 代码自动补全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-list使用细节"><span class="nav-text">7.2 list使用细节</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-Torch-mean-用法"><span class="nav-text">7.3 Torch.mean()用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-torch-tensor-expand-用法"><span class="nav-text">7.4 torch.tensor.expand()用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-数据集制作"><span class="nav-text">7.5 数据集制作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-5-1-方法一"><span class="nav-text">7.5.1 方法一</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-5-2-方法二"><span class="nav-text">7.5.2 方法二</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、调试问题"><span class="nav-text">八、调试问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-1-cuda-runtime-error-59"><span class="nav-text">8.1 cuda runtime error (59)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

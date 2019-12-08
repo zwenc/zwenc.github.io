@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言&amp;emsp;&amp;emsp;现在需要将ADC采集到的数据储存至SD卡中，ADC采用AD7764，处理器采用STM32F103ZET6。下面对设计过程进行记录。 1.1 AD7764介绍 312K输出，109db信噪比。 输出速率由外部时钟控制 DMA数据传输  1.2 SD卡储存方式介绍 SDIO协议 DMA数据传输 FatFs文件系统（传输速率最高1M）  1.3 控制方式 开始采集按钮 关">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AD采集-高速存储至SD卡">
+<meta property="og:url" content="https://www.zwenc.cn/8554565b/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言&amp;emsp;&amp;emsp;现在需要将ADC采集到的数据储存至SD卡中，ADC采用AD7764，处理器采用STM32F103ZET6。下面对设计过程进行记录。 1.1 AD7764介绍 312K输出，109db信噪比。 输出速率由外部时钟控制 DMA数据传输  1.2 SD卡储存方式介绍 SDIO协议 DMA数据传输 FatFs文件系统（传输速率最高1M）  1.3 控制方式 开始采集按钮 关">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-24T06:10:02.847Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AD采集-高速存储至SD卡">
+<meta name="twitter:description" content="一、前言&amp;emsp;&amp;emsp;现在需要将ADC采集到的数据储存至SD卡中，ADC采用AD7764，处理器采用STM32F103ZET6。下面对设计过程进行记录。 1.1 AD7764介绍 312K输出，109db信噪比。 输出速率由外部时钟控制 DMA数据传输  1.2 SD卡储存方式介绍 SDIO协议 DMA数据传输 FatFs文件系统（传输速率最高1M）  1.3 控制方式 开始采集按钮 关">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/8554565b/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>AD采集-高速存储至SD卡 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/8554565b/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AD采集-高速存储至SD卡
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-23 17:44:33" itemprop="dateCreated datePublished" datetime="2019-01-23T17:44:33+08:00">2019-01-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-02-24 14:10:02" itemprop="dateModified" datetime="2019-02-24T14:10:02+08:00">2019-02-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/嵌入式/" itemprop="url" rel="index"><span itemprop="name">嵌入式</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/嵌入式/STM32/" itemprop="url" rel="index"><span itemprop="name">STM32</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>&emsp;&emsp;现在需要将ADC采集到的数据储存至SD卡中，ADC采用AD7764，处理器采用STM32F103ZET6。下面对设计过程进行记录。</p>
+<h4 id="1-1-AD7764介绍"><a href="#1-1-AD7764介绍" class="headerlink" title="1.1 AD7764介绍"></a>1.1 AD7764介绍</h4><ul>
+<li>312K输出，109db信噪比。</li>
+<li>输出速率由外部时钟控制</li>
+<li>DMA数据传输</li>
+</ul>
+<h4 id="1-2-SD卡储存方式介绍"><a href="#1-2-SD卡储存方式介绍" class="headerlink" title="1.2 SD卡储存方式介绍"></a>1.2 SD卡储存方式介绍</h4><ul>
+<li>SDIO协议</li>
+<li>DMA数据传输</li>
+<li>FatFs文件系统（传输速率最高1M）</li>
+</ul>
+<h4 id="1-3-控制方式"><a href="#1-3-控制方式" class="headerlink" title="1.3 控制方式"></a>1.3 控制方式</h4><ul>
+<li>开始采集按钮</li>
+<li>关闭采集按钮</li>
+<li>屏幕刷新按钮（后期实现）</li>
+</ul>
+<h3 id="二、方案介绍"><a href="#二、方案介绍" class="headerlink" title="二、方案介绍"></a>二、方案介绍</h3><h4 id="2-1-方案一"><a href="#2-1-方案一" class="headerlink" title="2.1 方案一"></a>2.1 方案一</h4><ul>
+<li>AD7764采集数据存储到SRAM中，触发中断</li>
+<li>中断程序调用SD卡储存程序<br>注：这种方法比较容易实现，但是可能会引起数据保存速率的降低，先用这种方法作为测试。</li>
+</ul>
+<h4 id="2-2-方案二"><a href="#2-2-方案二" class="headerlink" title="2.2 方案二"></a>2.2 方案二</h4><ul>
+<li>开辟1024字节的储存空间BUFF。</li>
+<li>AD7764采集到的数据储存到这个BUFF中，储存一半后触发中断。</li>
+<li>在中断程序中调用存储程序，储存一半结束，等待下一次中断</li>
+</ul>
+<h4 id="2-3-控制方案"><a href="#2-3-控制方案" class="headerlink" title="2.3 控制方案"></a>2.3 控制方案</h4><p>&emsp;&emsp;功能比较简单，三个按钮对应三个功能，用传统方式就好。注：复杂的控制推荐使用状态机的方式。</p>
+<h3 id="三、实现步骤"><a href="#三、实现步骤" class="headerlink" title="三、实现步骤"></a>三、实现步骤</h3><h4 id="3-1-SD卡相关"><a href="#3-1-SD卡相关" class="headerlink" title="3.1 SD卡相关"></a>3.1 SD卡相关</h4><h5 id="3-1-1-SDIO-DMA基础驱动"><a href="#3-1-1-SDIO-DMA基础驱动" class="headerlink" title="3.1.1 SDIO+DMA基础驱动"></a>3.1.1 SDIO+DMA基础驱动</h5><p>&emsp;&emsp;采用官方的驱动，驱动下载链接附上：<a href="code/sdio_sdcard.c">sdio_sdcard.c</a> 和 <a href="code/sdio_sdcard.h">sdio_sdcard.h</a>。如果引脚对应上了，就不需要进行修改。如果没有对应上，需要修改引脚，中断，DMA设置。我运气好，对应上了[滑稽]。<br>&emsp;&emsp;测试方法可以使用SD_ReadBlock，和SD_WriteBlock两个函数进行测试，注：每次读可以的大小为：1~512，写的最小单位是512字节，对应不上则会出错。因为这个原因，我选择了<del>死亡</del>Fatfs文件系统。</p>
+<h5 id="3-1-2-Fatfs移植"><a href="#3-1-2-Fatfs移植" class="headerlink" title="3.1.2 Fatfs移植"></a>3.1.2 Fatfs移植</h5><p>&emsp;&emsp;由于文件比较多，可以去官网下载，在上一小节移植成功了后，只需要修改ff.c这一个文件，修改两个地方如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">DRESULT <span class="title">disk_read</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	BYTE drv,		<span class="comment">/* Physical drive nmuber (0..) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	BYTE *buff,		<span class="comment">/* Data buffer to store read data */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	DWORD sector,	<span class="comment">/* Sector address (LBA) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	BYTE count		<span class="comment">/* Number of sectors to read (1..255) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br><span class="line"><span class="function"></span>&#123;	 </span><br><span class="line">	<span class="keyword">if</span>(count==<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">          SD_ReadBlock((u32 *)(&amp;buff[<span class="number">0</span>]),sector &lt;&lt; <span class="number">9</span> ,SECTOR_SIZE);</span><br><span class="line">         </span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> RES_OK;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DRESULT <span class="title">disk_write</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	BYTE drv,			<span class="comment">/* Physical drive nmuber (0..) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	<span class="keyword">const</span> BYTE *buff,	<span class="comment">/* Data to be written */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	DWORD sector,		<span class="comment">/* Sector address (LBA) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">	BYTE count			<span class="comment">/* Number of sectors to write (1..255) */</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(count==<span class="number">1</span>)</span><br><span class="line">    &#123;     </span><br><span class="line">          SD_WriteBlock((u32 *)(&amp;buff[<span class="number">0</span>]),sector &lt;&lt; <span class="number">9</span> ,SECTOR_SIZE);</span><br><span class="line">	&#125;         </span><br><span class="line">  	<span class="keyword">return</span> RES_OK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;移植成功后，先进行测试。测试代码如下（要是代码可折叠显示就好了）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">SD_Check();  <span class="comment">//挂载SD卡，测试是否成功</span></span><br><span class="line"><span class="keyword">if</span> (f_open(&amp;fsrc,path,FA_OPEN_ALWAYS | FA_WRITE) != FR_OK) <span class="comment">//如果不存在则新建文件，只写模式</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"file open failed \r\n"</span>);</span><br><span class="line">f_lseek(&amp;fsrc,fsrc.fsize);    <span class="comment">//跳转到文件末尾，进行添加</span></span><br><span class="line">a = f_write(&amp;fsrc,<span class="string">"hello worlasdfas"</span>,<span class="number">20</span>,&amp;br);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d \r\n"</span>,a);  <span class="comment">//打印返回数据，用于测试</span></span><br><span class="line">f_close(&amp;fsrc);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (f_open(&amp;fsrc,path,FA_READ) != FR_OK)</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"file open failed2 \r\n"</span>);</span><br><span class="line"></span><br><span class="line">a = f_read(&amp;fsrc,buffsd,<span class="number">40</span>,&amp;br);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d \r\n"</span>,a);</span><br><span class="line">f_close(&amp;fsrc);</span><br><span class="line"></span><br><span class="line">str_print((<span class="keyword">const</span> <span class="keyword">char</span>*)buffsd,<span class="number">40</span>);</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;至此，SD卡驱动已经全部移植成功。</p>
+<h4 id="3-2-AD7764电压采集"><a href="#3-2-AD7764电压采集" class="headerlink" title="3.2 AD7764电压采集"></a>3.2 AD7764电压采集</h4><p>&emsp;&emsp;目标实现功能如下：</p>
+<h5 id="3-2-1-SPI配置相关"><a href="#3-2-1-SPI配置相关" class="headerlink" title="3.2.1 SPI配置相关"></a>3.2.1 SPI配置相关</h5><h5 id="3-2-2-DMA配置相关"><a href="#3-2-2-DMA配置相关" class="headerlink" title="3.2.2 DMA配置相关"></a>3.2.2 DMA配置相关</h5><h5 id="3-3-3-中断配置相关"><a href="#3-3-3-中断配置相关" class="headerlink" title="3.3.3 中断配置相关"></a>3.3.3 中断配置相关</h5><h5 id="3-3-4-双缓存结构"><a href="#3-3-4-双缓存结构" class="headerlink" title="3.3.4 双缓存结构"></a>3.3.4 双缓存结构</h5><p>&emsp;&emsp;为了实现一边采集数据，一边储存至SD卡中，采用双缓存结构实现，<a href="https://www.jianshu.com/p/35b457492b72" target="_blank" rel="noopener">可参考文章</a></p>
+<h5 id="3-2-5-读取控制程序相关"><a href="#3-2-5-读取控制程序相关" class="headerlink" title="3.2.5 读取控制程序相关"></a>3.2.5 读取控制程序相关</h5><h5 id="3-2-6-SPI从机模拟"><a href="#3-2-6-SPI从机模拟" class="headerlink" title="3.2.6 SPI从机模拟"></a>3.2.6 SPI从机模拟</h5><p>&emsp;&emsp;由于手上没有AD7764的板子，需要用STM32模拟一个，<a href="https://blog.csdn.net/lushoumin/article/details/78986299" target="_blank" rel="noopener">可参考文章</a>。</p>
+<h4 id="3-3-控制功能实现"><a href="#3-3-控制功能实现" class="headerlink" title="3.3 控制功能实现"></a>3.3 控制功能实现</h4><p>&emsp;&emsp;按键实现以下功能：</p>
+<ul>
+<li>按下按键后有效，只会生效一次，再次有效需要松开再按</li>
+<li>支持多个按键同时按下</li>
+<li>不阻塞</li>
+<li>软件消抖</li>
+<li>每个按键对应一个功能<br>实现代码如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">u8 <span class="title">Get_key</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">static</span> u8 preKey = <span class="number">0x00</span>;</span><br><span class="line">	u8 temp;</span><br><span class="line">	temp = KEY_Scan();</span><br><span class="line">	</span><br><span class="line">	delay_ms(<span class="number">20</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (temp == KEY_Scan())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (preKey != temp)</span><br><span class="line">		&#123;</span><br><span class="line">			preKey = temp;</span><br><span class="line">			<span class="keyword">return</span> preKey;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Key_Control</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	u8 a = Get_key();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">switch</span>(a)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x80</span>:<span class="built_in">printf</span>(<span class="string">"wk_up"</span>);<span class="keyword">break</span>;  <span class="comment">// wk_up</span></span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x40</span>:<span class="built_in">printf</span>(<span class="string">"key0"</span>);<span class="keyword">break</span>;   <span class="comment">// key0</span></span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x20</span>:<span class="built_in">printf</span>(<span class="string">"key1"</span>);<span class="keyword">break</span>;   <span class="comment">// key1</span></span><br><span class="line">		<span class="keyword">default</span>:;<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;担心有小伙伴不能理解KEY_Scan()的实现方式，他这个函数和硬件相关，不同硬件编写有些不一样，下面也附上代码作为参考：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">u8 <span class="title">KEY_Scan</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;	 </span><br><span class="line">	u8 temp = <span class="number">0</span>;</span><br><span class="line">	u8 i;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>;i &lt; <span class="number">2</span>;i ++)</span><br><span class="line">	&#123;</span><br><span class="line">		temp &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (!PEin(i + <span class="number">3</span>))</span><br><span class="line">			temp |= <span class="number">0x80</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	temp &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">if</span> (PAin(<span class="number">0</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		temp |= <span class="number">0x80</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-显示功能实现"><a href="#3-4-显示功能实现" class="headerlink" title="3.4 显示功能实现"></a>3.4 显示功能实现</h4><p>&emsp;&emsp;功能暂时用不上保留，后期有需求在补上</p>
+<h3 id="四、测试"><a href="#四、测试" class="headerlink" title="四、测试"></a>四、测试</h3><h4 id="4-1-ADC测试"><a href="#4-1-ADC测试" class="headerlink" title="4.1 ADC测试"></a>4.1 ADC测试</h4><h4 id="4-2-SD卡测试"><a href="#4-2-SD卡测试" class="headerlink" title="4.2 SD卡测试"></a>4.2 SD卡测试</h4><h4 id="4-3-储存速度测试"><a href="#4-3-储存速度测试" class="headerlink" title="4.3 储存速度测试"></a>4.3 储存速度测试</h4><h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h3><p>&emsp;&emsp;虽然还没有做完，但是牛批！！！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/d4f05fba/" rel="next" title="git使用教程">
+                <i class="fa fa-chevron-left"></i> git使用教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/dd68fd82/" rel="prev" title="VS动静态库之封装-使用（1）">
+                VS动静态库之封装-使用（1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-AD7764介绍"><span class="nav-text">1.1 AD7764介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-SD卡储存方式介绍"><span class="nav-text">1.2 SD卡储存方式介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-控制方式"><span class="nav-text">1.3 控制方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、方案介绍"><span class="nav-text">二、方案介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-方案一"><span class="nav-text">2.1 方案一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-方案二"><span class="nav-text">2.2 方案二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-控制方案"><span class="nav-text">2.3 控制方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、实现步骤"><span class="nav-text">三、实现步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-SD卡相关"><span class="nav-text">3.1 SD卡相关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-1-SDIO-DMA基础驱动"><span class="nav-text">3.1.1 SDIO+DMA基础驱动</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-2-Fatfs移植"><span class="nav-text">3.1.2 Fatfs移植</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-AD7764电压采集"><span class="nav-text">3.2 AD7764电压采集</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-SPI配置相关"><span class="nav-text">3.2.1 SPI配置相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-DMA配置相关"><span class="nav-text">3.2.2 DMA配置相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-3-中断配置相关"><span class="nav-text">3.3.3 中断配置相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-4-双缓存结构"><span class="nav-text">3.3.4 双缓存结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-5-读取控制程序相关"><span class="nav-text">3.2.5 读取控制程序相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-6-SPI从机模拟"><span class="nav-text">3.2.6 SPI从机模拟</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-控制功能实现"><span class="nav-text">3.3 控制功能实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-显示功能实现"><span class="nav-text">3.4 显示功能实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、测试"><span class="nav-text">四、测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-ADC测试"><span class="nav-text">4.1 ADC测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-SD卡测试"><span class="nav-text">4.2 SD卡测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-储存速度测试"><span class="nav-text">4.3 储存速度测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、总结"><span class="nav-text">五、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

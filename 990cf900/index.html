@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、tf.nn.softmax1.1 含义Softmax简单的说就是把一个N*1的向量归一化为（0，1）之间的值，由于其中采用指数运算，使得向量中数值较大的量特征更加明显 12345678910111213141516import  tensorflow as tfimport  numpy as npver = tf.Variable([[1,2,3],[4,5,6]],dtype=np.flo">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-TensorFlow常用函数说明">
+<meta property="og:url" content="https://www.zwenc.cn/990cf900/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、tf.nn.softmax1.1 含义Softmax简单的说就是把一个N*1的向量归一化为（0，1）之间的值，由于其中采用指数运算，使得向量中数值较大的量特征更加明显 12345678910111213141516import  tensorflow as tfimport  numpy as npver = tf.Variable([[1,2,3],[4,5,6]],dtype=np.flo">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/990cf900/1.png">
+<meta property="og:image" content="https://www.zwenc.cn/990cf900/2.png">
+<meta property="og:image" content="https://www.zwenc.cn/990cf900/3.png">
+<meta property="og:image" content="https://www.zwenc.cn/990cf900/4.png">
+<meta property="og:updated_time" content="2019-05-08T08:03:20.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-TensorFlow常用函数说明">
+<meta name="twitter:description" content="一、tf.nn.softmax1.1 含义Softmax简单的说就是把一个N*1的向量归一化为（0，1）之间的值，由于其中采用指数运算，使得向量中数值较大的量特征更加明显 12345678910111213141516import  tensorflow as tfimport  numpy as npver = tf.Variable([[1,2,3],[4,5,6]],dtype=np.flo">
+<meta name="twitter:image" content="https://www.zwenc.cn/990cf900/1.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/990cf900/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-TensorFlow常用函数说明 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/990cf900/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-TensorFlow常用函数说明
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-08 13:20:24 / 修改时间：16:03:20" itemprop="dateCreated datePublished" datetime="2019-05-08T13:20:24+08:00">2019-05-08</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、tf-nn-softmax"><a href="#一、tf-nn-softmax" class="headerlink" title="一、tf.nn.softmax"></a>一、tf.nn.softmax</h3><h4 id="1-1-含义"><a href="#1-1-含义" class="headerlink" title="1.1 含义"></a>1.1 含义</h4><p>Softmax简单的说就是把一个N*1的向量归一化为（0，1）之间的值，由于其中采用指数运算，使得向量中数值较大的量特征更加明显</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>  tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span>  numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">ver = tf.Variable([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]],dtype=np.float32)</span><br><span class="line"></span><br><span class="line">a = tf.nn.softmax(ver)</span><br><span class="line"></span><br><span class="line">init = tf.initialize_all_variables()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    print(sess.run(a))</span><br><span class="line">    </span><br><span class="line">result:</span><br><span class="line">[[<span class="number">0.09003057</span> <span class="number">0.24472848</span> <span class="number">0.66524094</span>]</span><br><span class="line"> [<span class="number">0.09003057</span> <span class="number">0.24472848</span> <span class="number">0.66524094</span>]]</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-计算公式"><a href="#1-2-计算公式" class="headerlink" title="1.2 计算公式"></a>1.2 计算公式</h4><p>对于输入的一维向量（有N个数据），采用以下公式进行归一化：</p>
+<script type="math/tex; mode=display">
+y_i = \frac{e^{x_i}}{\sum_0^N{e^{x_k}}}</script><p>如果输入多维是什么情况，如上述代码结果所示，按照每一维进行单独运算。</p>
+<h4 id="1-3-优点"><a href="#1-3-优点" class="headerlink" title="1.3 优点"></a>1.3 优点</h4><ul>
+<li>优点一：输出值加起来为1，有点类似于概率，结果简单直观</li>
+<li>优点二：大多数代价函数使用$C = - \sum_i y_k ln y_i$，其中目标$y_k$为1，其余的$y_k$为0。所以对于代价函数，只有当概率接近于1时，代价函数才接近于0。</li>
+<li>优点三：求导方便(具体推导，可以查其他博客) <sup><a href="#fn_1" id="reffn_1">1</a></sup></li>
+</ul>
+<script type="math/tex; mode=display">
+\frac{\nabla C}{\nabla x_i} = y_i - 1</script><h4 id="1-4-使用方法"><a href="#1-4-使用方法" class="headerlink" title="1.4 使用方法"></a>1.4 使用方法</h4><p>一般放在全连接层到输出层，方便最后计算代价函数使用</p>
+<h3 id="二、tf-nn-dropout"><a href="#二、tf-nn-dropout" class="headerlink" title="二、tf.nn.dropout"></a>二、tf.nn.dropout</h3><h4 id="2-1-含义"><a href="#2-1-含义" class="headerlink" title="2.1 含义"></a>2.1 含义</h4><p>在机器学习的模型中，如果模型的参数太多，而训练样本又太少，训练出来的模型很容易产生过拟合的现象。在训练神经网络的时候经常会遇到过拟合的问题，过拟合具体表现在：模型在训练数据上损失函数较小，预测准确率较高；但是在测试数据上损失函数比较大，预测准确率较低。</p>
+<p>过拟合是很多机器学习的通病。如果模型过拟合，那么得到的模型几乎不能用。为了解决过拟合问题，一般会采用模型集成的方法，即训练多个模型进行组合。此时，训练模型费时就成为一个很大的问题，不仅训练多个模型费时，测试多个模型也是很费时。</p>
+<p>综上所述，训练深度神经网络的时候，总是会遇到两大缺点：</p>
+<ul>
+<li>容易过拟合</li>
+<li>费时</li>
+</ul>
+<p>Dropout可以比较有效的缓解过拟合的发生，在一定程度上达到正则化的效果。过程其实很简单，如下两幅图所示，对中间层进行dropout，可以看到使得一般的神经元失效。</p>
+<p><img src="/990cf900/1.png" alt=""></p>
+<p><img src="/990cf900/2.png" alt=""></p>
+<p>注意这里并不是却掉了神经元，而是把这个位置的神经元的输出值置0。</p>
+<h4 id="2-2-函数功能"><a href="#2-2-函数功能" class="headerlink" title="2.2 函数功能"></a>2.2 函数功能</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dropout(x, keep_prob=<span class="keyword">None</span>, noise_shape=<span class="keyword">None</span>, seed=<span class="keyword">None</span>, name=<span class="keyword">None</span>,</span><br><span class="line">            rate=<span class="keyword">None</span>):  <span class="comment"># pylint: disable=invalid-name</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>x：一个张量</li>
+<li>keep_prob：神经元被选中的概率，选中则置零</li>
+<li>noise_shape： 一个1维的int32张量，代表了随机产生“保留/丢弃”标志的shape。</li>
+<li>name：操作名字</li>
+</ul>
+<p>参考代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(tf.global_variables_initializer())</span><br><span class="line">    d = tf.constant([[<span class="number">1.</span>,<span class="number">2.</span>,<span class="number">3.</span>,<span class="number">4.</span>],[<span class="number">5.</span>,<span class="number">6.</span>,<span class="number">7.</span>,<span class="number">8.</span>],[<span class="number">9.</span>,<span class="number">10.</span>,<span class="number">11.</span>,<span class="number">12.</span>],[<span class="number">13.</span>,<span class="number">14.</span>,<span class="number">15.</span>,<span class="number">16.</span>]])</span><br><span class="line">    print(sess.run(tf.shape(d)))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#由于[4,4] == [4,4] 行和列都为独立</span></span><br><span class="line">    dropout_a44 = tf.nn.dropout(d, <span class="number">0.5</span>, noise_shape = [<span class="number">4</span>,<span class="number">4</span>])</span><br><span class="line">    result_dropout_a44 = sess.run(dropout_a44)</span><br><span class="line">    print(result_dropout_a44)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#noise_shpae[0]=4 == tf.shape(d)[0]=4  </span></span><br><span class="line">    <span class="comment">#noise_shpae[1]=4 != tf.shape(d)[1]=1</span></span><br><span class="line">    <span class="comment">#所以[0]即行独立，[1]即列相关，每个行同为0或同不为0</span></span><br><span class="line">    dropout_a41 = tf.nn.dropout(d, <span class="number">0.5</span>, noise_shape = [<span class="number">4</span>,<span class="number">1</span>])</span><br><span class="line">    result_dropout_a41 = sess.run(dropout_a41)</span><br><span class="line">    print(result_dropout_a41)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#noise_shpae[0]=1 ！= tf.shape(d)[0]=4  </span></span><br><span class="line">    <span class="comment">#noise_shpae[1]=4 == tf.shape(d)[1]=4</span></span><br><span class="line">    <span class="comment">#所以[1]即列独立，[0]即行相关，每个列同为0或同不为0</span></span><br><span class="line">    dropout_a24 = tf.nn.dropout(d, <span class="number">0.5</span>, noise_shape = [<span class="number">1</span>,<span class="number">4</span>])</span><br><span class="line">    result_dropout_a24 = sess.run(dropout_a24)</span><br><span class="line">    print(result_dropout_a24)</span><br><span class="line">    <span class="comment">#不相等的noise_shape只能为1</span></span><br><span class="line">    </span><br><span class="line">result:</span><br><span class="line">[<span class="number">4</span>,<span class="number">4</span>]</span><br><span class="line">[[  <span class="number">0.</span>   <span class="number">4.</span>   <span class="number">0.</span>   <span class="number">8.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">14.</span>   <span class="number">0.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">22.</span>   <span class="number">0.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">30.</span>   <span class="number">0.</span>]]</span><br><span class="line">[[  <span class="number">2.</span>   <span class="number">4.</span>   <span class="number">6.</span>   <span class="number">8.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>   <span class="number">0.</span>   <span class="number">0.</span>]</span><br><span class="line"> [ <span class="number">18.</span>  <span class="number">20.</span>  <span class="number">22.</span>  <span class="number">24.</span>]</span><br><span class="line"> [ <span class="number">26.</span>  <span class="number">28.</span>  <span class="number">30.</span>  <span class="number">32.</span>]]</span><br><span class="line">[[  <span class="number">0.</span>   <span class="number">0.</span>   <span class="number">6.</span>   <span class="number">0.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">14.</span>   <span class="number">0.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">22.</span>   <span class="number">0.</span>]</span><br><span class="line"> [  <span class="number">0.</span>   <span class="number">0.</span>  <span class="number">30.</span>   <span class="number">0.</span>]]</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-优缺点"><a href="#2-3-优缺点" class="headerlink" title="2.3 优缺点"></a>2.3 优缺点</h4><ul>
+<li>优点：防止过拟合</li>
+<li>缺点：学习速度下降</li>
+</ul>
+<h3 id="三、tf-nn-relu"><a href="#三、tf-nn-relu" class="headerlink" title="三、tf.nn.relu"></a>三、tf.nn.relu</h3><h4 id="3-1-含义"><a href="#3-1-含义" class="headerlink" title="3.1 含义"></a>3.1 含义</h4><p>这是一个线性整流函数（修正线性单元），通常情况下线性整流函数是一个斜坡函数，即：</p>
+<script type="math/tex; mode=display">
+f(x) = max(0,x)</script><p>函数图像如下：</p>
+<p><img src="/990cf900/3.png" alt=""></p>
+<h4 id="3-2-函数功能"><a href="#3-2-函数功能" class="headerlink" title="3.2 函数功能"></a>3.2 函数功能</h4><p>输入小于0的数置0，大于0的数不变。输入参数为一个张量<sup><a href="#fn_2" id="reffn_2">2</a></sup>，示例代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span>  tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span>  numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">ver = tf.Variable([[<span class="number">1</span>,<span class="number">-2</span>,<span class="number">3</span>],[<span class="number">-4</span>,<span class="number">5</span>,<span class="number">6</span>]],dtype=np.float32)</span><br><span class="line"></span><br><span class="line">a = tf.nn.relu(ver)</span><br><span class="line"></span><br><span class="line">init = tf.initialize_all_variables()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    print(sess.run(a))</span><br><span class="line">    </span><br><span class="line">result:</span><br><span class="line">[[ <span class="number">1.</span> <span class="number">-0.</span>  <span class="number">3.</span>]</span><br><span class="line"> [<span class="number">-0.</span>  <span class="number">5.</span>  <span class="number">6.</span>]]</span><br></pre></td></tr></table></figure>
+<h4 id="3-3-相似函数3"><a href="#3-3-相似函数3" class="headerlink" title="3.3 相似函数3"></a>3.3 相似函数<sup><a href="#fn_3" id="reffn_3">3</a></sup></h4><ul>
+<li>PReLU<br><img src="/990cf900/4.png" alt=""><br>其中$a_i$是可以学习的，TensorFlow对应于：（没有找到）</li>
+<li>LReLU<br>图片和PReLU一样，但是$a_i$是固定值，TensorFlow对应于：tf.nn.leaky_relu(features, alpha=0.2, name=None)</li>
+</ul>
+<h4 id="3-4-Relu和sigmoid、tanh的异同"><a href="#3-4-Relu和sigmoid、tanh的异同" class="headerlink" title="3.4 Relu和sigmoid、tanh的异同"></a>3.4 Relu和sigmoid、tanh的异同</h4><p>参考文章<sup><a href="#fn_4" id="reffn_4">4</a></sup></p>
+<h3 id="四、tf-nn-conv2d"><a href="#四、tf-nn-conv2d" class="headerlink" title="四、tf.nn.conv2d"></a>四、tf.nn.conv2d</h3><h4 id="4-1-含义"><a href="#4-1-含义" class="headerlink" title="4.1 含义"></a>4.1 含义</h4><p>是TensorFlow里面实现卷积的函数</p>
+<h4 id="4-2-函数功能"><a href="#4-2-函数功能" class="headerlink" title="4.2 函数功能"></a>4.2 函数功能</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.nn.conv2d(input, filter, strides, padding, use_cudnn_on_gpu=<span class="keyword">None</span>, name=<span class="keyword">None</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>第一个参数input：指需要做卷积的输入图像，它要求是一个Tensor，具有[batch, in_height, in_width, in_channels]这样的shape，具体含义是[训练时一个batch的图片数量, 图片高度, 图片宽度, 图像通道数]，注意这是一个4维的Tensor，要求类型为float32和float64其中之一。batch参数的存在表示可以同时卷积多个图片，并且互不干扰。</p>
+</li>
+<li><p>第二个参数filter：相当于CNN中的卷积核，它要求是一个Tensor，具有[filter_height, filter_width, in_channels, out_channels]这样的shape，具体含义是[卷积核的高度，卷积核的宽度，图像通道数，卷积核个数]，要求类型与参数input相同，有一个地方需要注意，第三维in_channels，就是参数input的第四维</p>
+</li>
+<li><p>第三个参数strides：卷积时在图像每一维的步长，这是一个一维的向量，长度4</p>
+</li>
+<li><p>第四个参数padding：string类型的量，只能是”SAME”,”VALID”其中之一，这个值决定了不同的卷积方式（后面会介绍）</p>
+</li>
+<li><p>第五个参数：use_cudnn_on_gpu:bool类型，是否使用cudnn加速，默认为true</p>
+</li>
+<li><p>结果返回一个Tensor，这个输出，就是我们常说的feature map</p>
+</li>
+</ul>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://blog.csdn.net/bitcarmanlee/article/details/82320853" target="_blank" rel="noopener">https://blog.csdn.net/bitcarmanlee/article/details/82320853</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. 一个二维的向量<a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. <a href="http://www.cnblogs.com/rgvb178/p/6055213.html" target="_blank" rel="noopener">http://www.cnblogs.com/rgvb178/p/6055213.html</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_4">
+<sup>4</sup>. <a href="https://blog.csdn.net/lwc5411117/article/details/83620184" target="_blank" rel="noopener">https://blog.csdn.net/lwc5411117/article/details/83620184</a><a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/e00d40f8/" rel="next" title="神经网络-CNN反向传播">
+                <i class="fa fa-chevron-left"></i> 神经网络-CNN反向传播
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/29043d8c/" rel="prev" title="torch框架奇葩语法">
+                torch框架奇葩语法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、tf-nn-softmax"><span class="nav-text">一、tf.nn.softmax</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-含义"><span class="nav-text">1.1 含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-计算公式"><span class="nav-text">1.2 计算公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-优点"><span class="nav-text">1.3 优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-使用方法"><span class="nav-text">1.4 使用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、tf-nn-dropout"><span class="nav-text">二、tf.nn.dropout</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-含义"><span class="nav-text">2.1 含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-函数功能"><span class="nav-text">2.2 函数功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-优缺点"><span class="nav-text">2.3 优缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、tf-nn-relu"><span class="nav-text">三、tf.nn.relu</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-含义"><span class="nav-text">3.1 含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-函数功能"><span class="nav-text">3.2 函数功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-相似函数3"><span class="nav-text">3.3 相似函数3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-Relu和sigmoid、tanh的异同"><span class="nav-text">3.4 Relu和sigmoid、tanh的异同</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、tf-nn-conv2d"><span class="nav-text">四、tf.nn.conv2d</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-含义"><span class="nav-text">4.1 含义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-函数功能"><span class="nav-text">4.2 函数功能</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

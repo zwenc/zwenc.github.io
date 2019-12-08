@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、代价函数的形式二次代价函数如下：  C = \frac{1}{2n} \sum_x (y(x)-a^L(x))^2其中$x$为输入数据对应的正确输出，$a^L(x)$为输出节点对应的输出。将其简化为对单个$x$输出的误差公式如下：  C_x = \frac{(y(x)-a^L(x))^2}{2}可以看出$C$就是对众多$C_x$求平均。接下来对$C_x$做单独分析。 二、根据输出误差对b，w求">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-bp反向传播">
+<meta property="og:url" content="https://www.zwenc.cn/a0c0c739/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、代价函数的形式二次代价函数如下：  C = \frac{1}{2n} \sum_x (y(x)-a^L(x))^2其中$x$为输入数据对应的正确输出，$a^L(x)$为输出节点对应的输出。将其简化为对单个$x$输出的误差公式如下：  C_x = \frac{(y(x)-a^L(x))^2}{2}可以看出$C$就是对众多$C_x$求平均。接下来对$C_x$做单独分析。 二、根据输出误差对b，w求">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-05T16:12:02.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-bp反向传播">
+<meta name="twitter:description" content="一、代价函数的形式二次代价函数如下：  C = \frac{1}{2n} \sum_x (y(x)-a^L(x))^2其中$x$为输入数据对应的正确输出，$a^L(x)$为输出节点对应的输出。将其简化为对单个$x$输出的误差公式如下：  C_x = \frac{(y(x)-a^L(x))^2}{2}可以看出$C$就是对众多$C_x$求平均。接下来对$C_x$做单独分析。 二、根据输出误差对b，w求">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/a0c0c739/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-bp反向传播 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/a0c0c739/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-bp反向传播
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-19 10:41:08" itemprop="dateCreated datePublished" datetime="2019-04-19T10:41:08+08:00">2019-04-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-06 00:12:02" itemprop="dateModified" datetime="2019-05-06T00:12:02+08:00">2019-05-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、代价函数的形式"><a href="#一、代价函数的形式" class="headerlink" title="一、代价函数的形式"></a>一、代价函数的形式</h3><p>二次代价函数如下：</p>
+<script type="math/tex; mode=display">
+C = \frac{1}{2n} \sum_x (y(x)-a^L(x))^2</script><p>其中$x$为输入数据对应的正确输出，$a^L(x)$为输出节点对应的输出。将其简化为对单个$x$输出的误差公式如下：</p>
+<script type="math/tex; mode=display">
+C_x = \frac{(y(x)-a^L(x))^2}{2}</script><p>可以看出$C$就是对众多$C_x$求平均。接下来对$C_x$做单独分析。</p>
+<h3 id="二、根据输出误差对b，w求导"><a href="#二、根据输出误差对b，w求导" class="headerlink" title="二、根据输出误差对b，w求导"></a>二、根据输出误差对b，w求导</h3><blockquote>
+<p>数学符号定义<br>$a^L$：输出向量（第三节定义会改）<br>$w^L$：输出层的权重<br>$b^L$：输出层偏置</p>
+</blockquote>
+<h4 id="2-1-定义神经元"><a href="#2-1-定义神经元" class="headerlink" title="2.1 定义神经元"></a>2.1 定义神经元</h4><hr>
+<p>首先确定神经元形状，这里确定为s型神经元，公式如下：</p>
+<script type="math/tex; mode=display">
+sigmoid(z) = \frac{1}{1+e^{-z}}</script><p>对其求导得：（后面用得上）</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+\nabla sigmoid(z) &= \frac{e^{-z}}{(1+e^{-z})^2}z' \\
+& = (\frac{1}{1+e^{-z}})(1-\frac{1}{1+e^{-z}})z' \\
+& = sigmoid(z)(1-sigmoid(z))z'
+\end{array}
+\end{equation}</script><h4 id="2-2-误差函数说明"><a href="#2-2-误差函数说明" class="headerlink" title="2.2 误差函数说明"></a>2.2 误差函数说明</h4><hr>
+<p>输出节点的误差为：</p>
+<script type="math/tex; mode=display">
+C_x = \frac{(a^L-y)^2}{2}</script><p>其中$a^L(x)$为：（对于$w，a，b$均是向量）</p>
+<script type="math/tex; mode=display">
+a^L(x) = sigmoid(w^{L}a^{L-1} + b^L)</script><p>对$a^L(x)$求w偏导为：（后面2.3用的上）</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+\frac{\partial a^L(x)}{\partial w^{L}} &= sigmoid(z)(1-sigmoid(z))a^{L-1}  \\
+&= a^L(1-a^L)a^{L-1}
+\end{array}
+\end{equation}</script><p>对$a^L$求b偏导为：（后面2.3用的上）</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+\frac{\partial a^L(x)}{\partial b^{L}} &= sigmoid(z)(1-sigmoid(z))  \\
+&= a^L(1-a^L)
+\end{array}
+\end{equation}</script><h4 id="2-3-使用输出误差函数对w-b偏导"><a href="#2-3-使用输出误差函数对w-b偏导" class="headerlink" title="2.3 使用输出误差函数对w,b偏导"></a>2.3 使用输出误差函数对w,b偏导</h4><hr>
+<p>$C_x^L$对w求偏导得：</p>
+<script type="math/tex; mode=display">
+\frac{\partial C_x}{\partial w^{L}} = (a^{L}-y)(a^L(1-a^L))a^{L-1}</script><p>$C_x^L$对b求偏导得：</p>
+<script type="math/tex; mode=display">
+\frac{\partial C_x}{\partial b^{L}} = (a^{L}-y)(a^L(1-a^L))</script><p>这里仅仅求出了输出层的w,b偏导，那如何求出其他层的w,b偏导呢？使用反向传播公式推导。</p>
+<h3 id="三、反向传播公式推导"><a href="#三、反向传播公式推导" class="headerlink" title="三、反向传播公式推导"></a>三、反向传播公式推导</h3><blockquote>
+<p>数学符定义<br>$a^L$：第L层的输出向量<br>$z^L$：第L层的输入向量<br>$w^L$：输出层的权重<br>$b^L$：输出层偏置<br>$C_x^L$：第L层误差向量，一般只有输出层用的上<br>$y$：正确的输出向量</p>
+</blockquote>
+<h4 id="3-1-正常的推导方法"><a href="#3-1-正常的推导方法" class="headerlink" title="3.1 正常的推导方法"></a>3.1 正常的推导方法</h4><hr>
+<p>假设当前L层误差定义为：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+&C_x^L = \frac{(a^L-y)^2}{2} \\
+&a^L = sigmoid(z^L) \\ 
+&z^L = w^{L}a^{L-1} + b^L \\
+&a^{L-1} = sigmoid(z^{L-1}) \\
+&z^{L-1} = w^{L-1}a^{L-2} + b^{L-1}
+\end{array}
+\end{equation}</script><p>$C_x^L$对w求偏导得：</p>
+<script type="math/tex; mode=display">
+\frac{\partial C_x^L}{\partial w^{L-1}} = (a^{L}-y)(a^L(1-a^L))w^{L}a^{L-1}(1-a^{L-1})a^{L-2}</script><p>$C_x^L$对b求偏导得：</p>
+<script type="math/tex; mode=display">
+\frac{\partial C_x^L}{\partial b^{L-1}} = (a^{L}-y)(a^L(1-a^L))w^{L}a^{L-1}(1-a^{L-1})</script><p>这样一层一层传递，就可以计算出每一个w，b的偏导数。但是公式会越来越长，计算量越来越大，接下来提出一种简化计算的方法。</p>
+<h4 id="3-2-优化的推导方法"><a href="#3-2-优化的推导方法" class="headerlink" title="3.2 优化的推导方法"></a>3.2 优化的推导方法</h4><h5 id="3-2-1-当L前层对b-w求导"><a href="#3-2-1-当L前层对b-w求导" class="headerlink" title="3.2.1 当L前层对b,w求导"></a>3.2.1 当L前层对b,w求导</h5><hr>
+<p>令$\delta ^ L$为第L层的误差，公式为：（这里还没有和w，b关联起来）</p>
+<script type="math/tex; mode=display">
+\delta ^ L = (a^{L}-y)(a^L(1-a^L))</script><p>则此时根据2.3节可以得出如下结果：</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+\frac{\partial C_x^L}{\partial w^{L}} &= \delta^L a^{L-1}  \\
+\frac{\partial C_x^L}{\partial b^{L}} &= \delta^L
+\end{array}
+\end{equation}</script><p>由此可以，当前L层的b偏导向量等于当前层的误差向量，w偏导向量等于误差向量乘L-1层的输出向量，后面我们只需到得到每一层的误差向量就好。这里可能会有问题，这个$\delta ^ L$看不懂啊？可以理解为没有意义，为了简化计算。（实际上有其物理意义）</p>
+<p>由于上式只适用于s型神经元，和二元误差，修改为更加通用的：</p>
+<script type="math/tex; mode=display">
+\delta ^ L = \nabla_a C \odot \sigma'(z^L)</script><p>其中$\nabla_a C$对应于$(a^{L}-y)$，$\sigma’(z^L)$对应于$(a^L(1-a^L))$</p>
+<h5 id="3-2-2-L-1前层对b-w求导"><a href="#3-2-2-L-1前层对b-w求导" class="headerlink" title="3.2.2 L-1前层对b,w求导"></a>3.2.2 L-1前层对b,w求导</h5><hr>
+<p>接下来推导下一节点的误差$\delta ^ {L-1}$，仔细观察$\frac{\partial C_x^L}{\partial b^{L-1}}$，根据上面的结论它其实等于L-1层的误差值，表达式如下：</p>
+<script type="math/tex; mode=display">
+\delta ^{L-1} = (w^L)^T\delta^L \odot \sigma'(z^{L-1})</script><p>则此时</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+\begin{array}{}
+\frac{\partial C_x^L}{\partial w^{L-1}} &= \delta^{L-1} a^{L-2}  \\
+\frac{\partial C_x^L}{\partial b^{L-1}} &= \delta^{L-1}
+\end{array}
+\end{equation}</script><p>可以验证，和提出$\delta ^L$误差向量之前的证明结果一样，优点是计算量固定，由前一层的误差推倒后一层的误差，每次的计算量相差不大。</p>
+<h5 id="3-2-3-四大公式汇总"><a href="#3-2-3-四大公式汇总" class="headerlink" title="3.2.3 四大公式汇总"></a>3.2.3 四大公式汇总</h5><hr>
+<script type="math/tex; mode=display">
+\begin{array}{}
+\delta ^ L &= \nabla_a C \odot \sigma'(z^L) \\
+\delta ^{L-1} &= (w^L)^T\delta^L \odot \sigma'(z^{L-1}) \\
+\frac{\partial C_x^L}{\partial w^{L}} &= \delta^{L} a^{L-1}  \\
+\frac{\partial C_x^L}{\partial b^{L}} &= \delta^{L}
+\end{array}</script><p>其中：$\nabla_a C$为输出层的求导，然后经过第二个公式层层推导，推导出每一层的$\delta ^ L$，最后两个公式根据每一层的误差对w，b求导。</p>
+<h3 id="四、python算法实现"><a href="#四、python算法实现" class="headerlink" title="四、python算法实现"></a>四、python算法实现</h3><p>直接上程序，注：是不能直接运行的，为了更好理解：</p>
+<blockquote>
+<p>符号说明：<br>delta对应于符号$\delta$<br>nabla对应于符号$\nabla$</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">backprop</span><span class="params">(self,x,y)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    :param x: 输入训练数据</span></span><br><span class="line"><span class="string">    :param y: 正确是数据</span></span><br><span class="line"><span class="string">    :return:NULL</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 开辟新的b,w储存空间，类似于new一个空间</span></span><br><span class="line">    nabla_b = [np.zeros(b.shape) <span class="keyword">for</span> b <span class="keyword">in</span> self.biases]  </span><br><span class="line">    nabla_w = [np.zeros(w.shape) <span class="keyword">for</span> w <span class="keyword">in</span> self.weights]</span><br><span class="line"></span><br><span class="line">    activation = x      <span class="comment">#做一个变量存，先暂时保存了x的值</span></span><br><span class="line">    activations = [x]   <span class="comment">#这是一个list，先保存了x的，放在最前面</span></span><br><span class="line">    zs = []             <span class="comment">#这是一个list，用来保存s型神经元计算后的值</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 正序输出</span></span><br><span class="line">    <span class="keyword">for</span> b, w <span class="keyword">in</span> zip(self.biases, self.weights):</span><br><span class="line">        <span class="comment"># w是一个二维向量,每一维表示一个目标神经元，activation一维向量（动态变化）,dot表示向量乘</span></span><br><span class="line">        z = np.dot(w, activation)+b</span><br><span class="line">        <span class="comment"># z保存到zs之中,后面bp要用到</span></span><br><span class="line">        zs.append(z)</span><br><span class="line">        <span class="comment"># s型神经元的输出</span></span><br><span class="line">        activation = sigmoid(z)</span><br><span class="line">        <span class="comment"># a保存到activations中，后面bp要用到</span></span><br><span class="line">        activations.append(activation)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#activations[-1]位置储存的是输出向量，向量对应元素相乘，一定要是np.array创建的数组才可以这么乘</span></span><br><span class="line">    delta = self.cost_derivative(activations[<span class="number">-1</span>], y) * sigmoid_prime(zs[<span class="number">-1</span>])</span><br><span class="line">    <span class="comment">#只要有\delta函数，根据4大公式后两个，直接得到b</span></span><br><span class="line">    nabla_b[<span class="number">-1</span>] = delta </span><br><span class="line">    <span class="comment">#只要有\delta函数，根据4大公式后两个，直接得到w</span></span><br><span class="line">    nabla_w[<span class="number">-1</span>] = np.dot(delta, activations[<span class="number">-2</span>].transpose())   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">#反向传播开始，主要使用到4大公式中的第二个</span></span><br><span class="line">    <span class="keyword">for</span> L <span class="keyword">in</span> range(<span class="number">2</span>, self.num_layers):</span><br><span class="line">        <span class="comment">#表示为当前层每个神经元的输入，是一个向量。在第一次循环里表示倒数第二层</span></span><br><span class="line">    	z = zs[-L]</span><br><span class="line">        <span class="comment">#查看该函数的注释</span></span><br><span class="line">        sp = sigmoid_prime(z) </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 使用反向传播规则，在第一次循环中推导倒数第二层的误差</span></span><br><span class="line">        delta = np.dot(self.weights[-L + <span class="number">1</span>].transpose(), delta) * sp  </span><br><span class="line">        <span class="comment">#只要有\delta函数，根据4大公式后两个，直接得到b</span></span><br><span class="line">        nabla_b[-L] = delta    </span><br><span class="line">        <span class="comment">#只要有\delta函数，根据4大公式后两个，直接得到w</span></span><br><span class="line">        nabla_w[-L] = np.dot(delta, activations[-L - <span class="number">1</span>].transpose()) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 求输出和输入的误差</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cost_derivative</span><span class="params">(self, output_activations, y)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (output_activations - y)</span><br></pre></td></tr></table></figure>
+<div align="center">反向传播主程序</div>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 定义S型函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(z)</span>:</span></span><br><span class="line">	<span class="comment"># 1.0而不是1，就很有讲究，表示计算方式为浮点型</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1.0</span> + np.exp(-z))  </span><br><span class="line"></span><br><span class="line"><span class="comment"># S型函数对z求导</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid_prime</span><span class="params">(z)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sigmoid(z) * (<span class="number">1</span> - sigmoid(z))</span><br></pre></td></tr></table></figure>
+<div align="center">s型神经元函数</div>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/75cb128a/" rel="next" title="Python3的奇葩语法">
+                <i class="fa fa-chevron-left"></i> Python3的奇葩语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/459d7d0/" rel="prev" title="神经网络-bp代码详解">
+                神经网络-bp代码详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、代价函数的形式"><span class="nav-text">一、代价函数的形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、根据输出误差对b，w求导"><span class="nav-text">二、根据输出误差对b，w求导</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-定义神经元"><span class="nav-text">2.1 定义神经元</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-误差函数说明"><span class="nav-text">2.2 误差函数说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-使用输出误差函数对w-b偏导"><span class="nav-text">2.3 使用输出误差函数对w,b偏导</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、反向传播公式推导"><span class="nav-text">三、反向传播公式推导</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-正常的推导方法"><span class="nav-text">3.1 正常的推导方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-优化的推导方法"><span class="nav-text">3.2 优化的推导方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-当L前层对b-w求导"><span class="nav-text">3.2.1 当L前层对b,w求导</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-L-1前层对b-w求导"><span class="nav-text">3.2.2 L-1前层对b,w求导</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-3-四大公式汇总"><span class="nav-text">3.2.3 四大公式汇总</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、python算法实现"><span class="nav-text">四、python算法实现</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

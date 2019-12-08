@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>个人简历</title>
+		<link rel="shortcut icon" href="img/1.jpg" />
+		<link href="css/test.css" type="text/css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/xiaomai.css" />
+			
+		<script src="js/jquery.min.js"></script>
+		<script src="js/xiaomai.js"></script>
+		<script src="js/test.js"></script>
+	</head>
+
+	<body>
+		<div class="ct">
+			<div style="float: right;width: 125px;">
+				<div style="float: right;">
+					<table>
+						<a class="DownButtonNormal" name="DownLoadHistEvent" style="color:#ffffff;background: #AFC1DC;color: #696B83;TEXT-DECORATION: none" download="resume.zip" href="source/resume.zip">Download Code</a>
+					</table>
+				</div>
+			</div>
+			<div style="float: left;width: 730px;">&emsp;</div>
+			<!--<div style="float: left;width: 125px;">
+				<div style="float: left;">
+					<table>
+						<a class="DownButtonNormal" name="DownLoadHistEvent" style="color:#ffffff;background: #AFC1DC;color: #696B83;TEXT-DECORATION: none" download="郑文简历.pdf" href="source/郑文简历.pdf">Download PDF</a>
+					</table>
+				</div>
+			</div>-->
+		</div>
+
+		<div class="divhead">
+			<div class="container">
+				<div class="header">
+					<div style="width: 500px; float: left;">
+						<h1 style="color: #0D95E8;"><strong>Zwen</strong></h1>
+						<table border="0">
+							<tr>
+								<td style="color: #0D95E8;"><strong>联系方式：</strong></td>
+								<td>1851****6164</td>
+							</tr>
+							<tr>
+								<td style="color: #0D95E8;"><strong>电子邮箱：</strong></td>
+								<td>
+									<a id="mymail" onclick="copyUrl2()" href="">1005714267@qq.com</a>
+								</td>
+							</tr>
+							<tr>
+								<td style="color: #0D95E8;"><strong>个人博客：</strong></td>
+								<td>
+									<a href="https://www.zwenc.cn">www.zwenc.cn</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div style="float: right; margin-right: 30px;margin-top: 20px;">
+						<img src="img/HandsomeBoy.jpg" width="100px" />
+					</div>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">教育经历</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0">
+						<tr>
+							<td style="width: 150px;font-weight: bold;">2013.09-2017.06</td>
+							<td style="width: 150px;font-weight: bold;">成都理工大学</td>
+							<td style="width: 150px;font-weight: bold;">信息工程</td>
+							<td style="width: 150px;font-weight: bold;">本科</td>
+						</tr>
+						<tr>
+							<td style="width: 150px;font-weight: bold;">▪ &emsp; 主修课程</td>
+							<td style="width: 150px;font-weight: bold;">GPA： 3.6（ 5）</td>
+							<td style="width: 200px;font-weight: bold;">专业成绩排名： 4（ 120人）</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="4" style="font-size: small;">▪ &emsp; C语言程序设计，数据结构, 嵌入式， 数字电子技术基础，模拟电子技术基础，电路分析基础，微机原理，信号与系统等。
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">专业技能</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<th>熟练：</th>
+							<td style="width: 330px;">C语言</td>
+							<td>Mp4、 Flv等视频封装、解析</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td>51， Msp430， STM32单片机，</td>
+							<td>AD/DA、 DMA等外设，</td>
+						</tr>
+						<tr>
+							<th>熟悉：</th>
+							<td>C++， Python语言，</td>
+							<td>Altium designer（可以绘制双层板）</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td>Qt Creator的使用，</td>
+							<td>Ucos2、 Fatfs、 Zigbee的使用</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td>linux系统、 了解嵌入式驱动开发</td>
+							<td>Raspberry Pi的使用（搭建个人SVN服务器）</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">奖项证书</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<th>证书：</th>
+							<td style="width: 330px;">英语CET-4、 全国计算机二级、 开源硬件协会会长聘书</td>
+						</tr>
+						<tr>
+							<th>奖项：</th>
+							<td>2016.08 全国大学生电子设计大赛二等奖（ TI杯）</td>
+							<td>2016.05 校内电子设计大赛一等奖</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td>2016.04 四川省通信比赛一等奖</td>
+							<td>2016.03 蓝桥杯省赛一等奖</td>
+						</tr>
+						<tr>
+							<th>学术：</th>
+							<td>国家级创新创业项目 2 项</td>
+							<td>科技核心1篇</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">工作经验</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table class="expericece">
+						<tr>
+							<td style="width: 200px;">▪ &emsp; 2017.07-2018.01</td>
+							<td style="width: 300px;">浙江大华股份科技有限责任公司</td>
+							<td style="width: 200px;">嵌入式软件工程师</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table>
+						<tr>
+							<td style="font-weight: bold; width: 70px; text-align: left; vertical-align: top;">工作任务：</td>
+							<td style="height: 10px;"> 1、对视频的解析、封装、转换库出现的Bug进行定位和修复</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="height: 10px;"> 2、用Python和Robot Framework搭建自动化测试框架，实现对目标库的自动测试。</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="height: 10px;"> 3、修复多视频同时显示在长时间运转后出现的显卡崩溃问题</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="" ; class="expericece">
+						<tr>
+							<td style="width: 200px;">▪ &emsp; 2016.09-2016.12</td>
+							<td style="width: 300px;">杭州氦氪科技（ 智能硬件公司）</td>
+							<td style="width: 200px;">实习生</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<td style="font-weight: bold; width: 70px; text-align: left; vertical-align: top;">工作任务：</td>
+							<td style="height: 10px;">1、对现有的通信协议进行解析，并移植到Arduino、 STM32硬件平台上。</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td style="height: 10px;">2、编写产品硬件的Demo模板， 提高编程效率。</td>
+						</tr>
+						<tr>
+							<th></th>
+							<td style="height: 10px;">3、参与到儿童教育计划，开发对应的硬件平台以便于儿童使用学习。</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">项目经验</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="" ; class="expericece">
+						<tr>
+							<td style="width: 200px;">▪ &emsp; 2016.08-2016.09</td>
+							<td style="width: 300px;">指纹邮件管理系统</td>
+							<td style="width: 200px;">独立完成</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<td style="font-weight: bold; width: 70px; text-align: left; vertical-align: top;">项目描述：</td>
+							<td style="height: 10px;"> 通过生物特征指纹来签收快递。</td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; vertical-align: top;">具体实现： </td>
+							<td style="word-wrap:break-word;word-break:break-all;" height="10px">
+								上位机Qt实现控制界面， STM32结合UCOS操作系统、 Fatfs文件系统、 UCGUI管理用户界面实现对指纹采集和识别，包裹签收和确认，并将最终的结果上传至上位机记录。（入选校内百篇优秀论文提名）
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="" ; class="expericece">
+						<tr>
+							<td style="width: 200px;">▪ &emsp; 2014.04-2015.05</th>
+								<td style="width: 300px;">基于单片机的3D贪吃蛇设计</th>
+									<td style="width: 200px;">独立完成</th>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<td style="font-weight: bold; width: 70px; text-align: left; vertical-align: top;">项目描述：</td>
+							<td style="height: 10px;"> 一个拥有x， y， z三个自由度的贪吃蛇，使用自制无线遥控器控制， 视频可在<a href="http://www.zwenc.cn/3DSnake">博客</a>中看到。</td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; vertical-align: top;">具体实现： </td>
+							<td style="word-wrap:break-word;word-break:break-all;" height="10px">
+								使用51单片机结合8*8*8立体结构光立方、无线控制模块等完成，具体包含PCB绘制，电路焊接，程序编写。（本项目获得省级比赛一等奖）
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="MyItem">
+					<table>
+						<tr>
+							<td class="myTd">自我评价</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="subDiv">
+					<table border="0" cellspacing="" cellpadding="">
+						<tr>
+							<td style="font-weight: bold; width: 60px; text-align: left; vertical-align: top;">学习上：</td>
+							<td style="height: 10px;"> 在校有丰富的项目经验，以及较强的自学能力。（ 自学STM32，装系统，修电脑等）</td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; vertical-align: top;">工作上：</td>
+							<td style="word-wrap:break-word;word-break:break-all;" height="10px">
+								懂团队合作， 可以良好的和队友进行相处。（在校担任开源硬件协会会长，并多次参加团队竞赛）</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div id="spig" class="spig">
+			<div id="message"></div>
+			<div id="xiaomai"></div>
+		</div>
+		<div class="fixed-xm">
+			<img src="img/xm.png">
+			<audio src="/images/xiaomai/xm.mp3" id="xm_audio" preload="auto" style="display:none;"></audio>
+		</div>
+
+	</body>
+
+</html>

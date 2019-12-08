@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言&amp;emsp;&amp;emsp;说实话，没什么内容可写的，网络上面资料太多了，下面是整理：  tensorFlow社区：http://www.tensorfly.cn/ ，这个直接上神经网络有点看不懂。知乎大佬：https://www.zhihu.com/question/49909565TensorFlow入门：https://zhuanlan.zhihu.com/p/30487008 ，对Te">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-tensorFlow入门">
+<meta property="og:url" content="https://www.zwenc.cn/187b9e90/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言&amp;emsp;&amp;emsp;说实话，没什么内容可写的，网络上面资料太多了，下面是整理：  tensorFlow社区：http://www.tensorfly.cn/ ，这个直接上神经网络有点看不懂。知乎大佬：https://www.zhihu.com/question/49909565TensorFlow入门：https://zhuanlan.zhihu.com/p/30487008 ，对Te">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/187b9e90/1.png">
+<meta property="og:image" content="https://www.zwenc.cn/187b9e90/2.png">
+<meta property="og:updated_time" content="2019-05-02T16:26:24.962Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-tensorFlow入门">
+<meta name="twitter:description" content="一、前言&amp;emsp;&amp;emsp;说实话，没什么内容可写的，网络上面资料太多了，下面是整理：  tensorFlow社区：http://www.tensorfly.cn/ ，这个直接上神经网络有点看不懂。知乎大佬：https://www.zhihu.com/question/49909565TensorFlow入门：https://zhuanlan.zhihu.com/p/30487008 ，对Te">
+<meta name="twitter:image" content="https://www.zwenc.cn/187b9e90/1.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/187b9e90/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-tensorFlow入门 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/187b9e90/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-tensorFlow入门
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-01 18:29:30" itemprop="dateCreated datePublished" datetime="2019-05-01T18:29:30+08:00">2019-05-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-03 00:26:24" itemprop="dateModified" datetime="2019-05-03T00:26:24+08:00">2019-05-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>&emsp;&emsp;说实话，没什么内容可写的，网络上面资料太多了，下面是整理：</p>
+<blockquote>
+<p>tensorFlow社区：<a href="http://www.tensorfly.cn/" target="_blank" rel="noopener">http://www.tensorfly.cn/</a> ，这个直接上神经网络有点看不懂。<br>知乎大佬：<a href="https://www.zhihu.com/question/49909565" target="_blank" rel="noopener">https://www.zhihu.com/question/49909565</a><br>TensorFlow入门：<a href="https://zhuanlan.zhihu.com/p/30487008" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30487008</a> ，对TensorFlow基础知识讲解了一下</p>
+</blockquote>
+<h4 id="二、环境配置"><a href="#二、环境配置" class="headerlink" title="二、环境配置"></a>二、环境配置</h4><p>&emsp;&emsp;有没有在为python的各种版本，各种库之间的依赖关系头痛不已。电脑上要同时按照python2.0~python3.* ，头不头痛，使用软件<a href="https://www.anaconda.com/" target="_blank" rel="noopener">anaconda</a>告别烦恼。 快速下载方法，参考工具目录IDM。</p>
+<p>&emsp;&emsp;<del>配置细节是：</del>算了，太简单，不想写。</p>
+<h4 id="三、tensorFlow奇葩语法"><a href="#三、tensorFlow奇葩语法" class="headerlink" title="三、tensorFlow奇葩语法"></a>三、tensorFlow奇葩语法</h4><p>&emsp;&emsp;tensorFlow其实不只是可以用来做神经网络，只要可以把数据转成流（不好形容）的形式，都可以使用tensorFlow帮你加速计算，从一些简单的例子开始。</p>
+<h5 id="3-1-定义变量"><a href="#3-1-定义变量" class="headerlink" title="3.1 定义变量"></a>3.1 定义变量</h5><p>tensorFlow定义变量使用的是tf.Variable，从输出结果可以看到，w只是一个4字节的ref类型，在C语言上应该称之为指针，是一个引用，数据其实保存在tf内部。下面实现定义一个变量并且输出。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">w = tf.Variable(<span class="number">2</span>,name=<span class="string">"weight"</span>)</span><br><span class="line">print(w)</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">&lt;tf.Variable <span class="string">'weight:0'</span> shape=() dtype=int32_ref&gt;</span><br></pre></td></tr></table></figure>
+<p>如果要把我定义的2打印出来怎么需要怎么操作？tensorFlow的使用机制和其他库有点不同，它把所有执行操作全部放在了tf.Session().run()里面，想要有实际运行/操作，全部靠这个run。那么接下来试试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">w = tf.Variable(<span class="number">2</span>,name=<span class="string">"weight"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    print(sess.run(w))</span><br><span class="line">    </span><br><span class="line">结果：</span><br><span class="line">tensorflow.python.framework.errors_impl.FailedPreconditionError: Attempting to use uninitialized value weight</span><br></pre></td></tr></table></figure>
+<p>结果表明你在使用一个未初始化的变量，说明前面定义变量时，只是设置了一个句柄，下面还需要初始化操作。<br>注：使用with语法的好处是，它会自动调用tf.Session()的__enter__和__exit__，类似于C++的构造函数和析构函数，无需用户手动调用。<br>正确方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">w = tf.Variable(<span class="number">2</span>,name=<span class="string">"weight"</span>)</span><br><span class="line"></span><br><span class="line">init = tf.initialize_all_variables()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)</span><br><span class="line">    print(sess.run(w))</span><br><span class="line"></span><br><span class="line">结果：<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>下面是不使用with的写法是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">w = tf.Variable(<span class="number">2</span>,name=<span class="string">"weight"</span>)</span><br><span class="line"></span><br><span class="line">init = tf.initialize_all_variables()</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    sess = tf.Session()</span><br><span class="line">    sess.run(init)</span><br><span class="line">    print(sess.run(w))</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    print(<span class="string">"error"</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    sess.close()</span><br><span class="line"></span><br><span class="line">结果：<span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="3-2-线性回归代码详解"><a href="#3-2-线性回归代码详解" class="headerlink" title="3.2 线性回归代码详解"></a>3.2 线性回归代码详解</h5><p>对所给值做线性回归，神经元是下面这个样子<br><img src="/187b9e90/1.png" alt=""><br>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf  <span class="comment"># 神经网络库</span></span><br><span class="line"><span class="keyword">import</span> numpy   <span class="comment">#矩阵运算</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt <span class="comment"># 用来绘图</span></span><br><span class="line"></span><br><span class="line">rng = numpy.random</span><br><span class="line"></span><br><span class="line"><span class="comment"># Parameters</span></span><br><span class="line">learning_rate = <span class="number">0.01</span>        <span class="comment">#设置学习速率</span></span><br><span class="line">training_epochs = <span class="number">2000</span>      <span class="comment">#设置迭代次数</span></span><br><span class="line">display_step = <span class="number">50</span>           <span class="comment">#迭代50次，输出一次训练结果</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Training Data</span></span><br><span class="line">train_X = numpy.asarray([<span class="number">3.3</span>,<span class="number">4.4</span>,<span class="number">5.5</span>,<span class="number">6.71</span>,<span class="number">6.93</span>,<span class="number">4.168</span>,<span class="number">9.779</span>,<span class="number">6.182</span>,<span class="number">7.59</span>,<span class="number">2.167</span>,<span class="number">7.042</span>,<span class="number">10.791</span>,<span class="number">5.313</span>,<span class="number">7.997</span>,<span class="number">5.654</span>,<span class="number">9.27</span>,<span class="number">3.1</span>])</span><br><span class="line">train_Y = numpy.asarray([<span class="number">1.7</span>,<span class="number">2.76</span>,<span class="number">2.09</span>,<span class="number">3.19</span>,<span class="number">1.694</span>,<span class="number">1.573</span>,<span class="number">3.366</span>,<span class="number">2.596</span>,<span class="number">2.53</span>,<span class="number">1.221</span>,<span class="number">2.827</span>,<span class="number">3.465</span>,<span class="number">1.65</span>,<span class="number">2.904</span>,<span class="number">2.42</span>,<span class="number">2.94</span>,<span class="number">1.3</span>])</span><br><span class="line">n_samples = train_X.shape[<span class="number">0</span>]  <span class="comment"># 数据个数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># tf Graph Input</span></span><br><span class="line">X = tf.placeholder(<span class="string">"float"</span>)   <span class="comment"># 定义浮点型变量X，在这里并没有初始化，X其实是一个类似于句柄的东西</span></span><br><span class="line">Y = tf.placeholder(<span class="string">"float"</span>)   <span class="comment"># 定义浮点型变量Y，在这里并没有初始化</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Set model weights</span></span><br><span class="line">W = tf.Variable(rng.randn(), name=<span class="string">"weight"</span>)   <span class="comment"># 定义变量W，在这里并没有初始化</span></span><br><span class="line">b = tf.Variable(rng.randn(), name=<span class="string">"bias"</span>)     <span class="comment"># 定义变量b，在这里并没有初始化</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Construct a linear model</span></span><br><span class="line">activation = tf.add(tf.mul(X, W), b)      <span class="comment"># 定义神经元计算方式X*W + b</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Minimize the squared errors</span></span><br><span class="line">cost = tf.reduce_sum(tf.pow(activation-Y, <span class="number">2</span>))/(<span class="number">2</span>*n_samples) <span class="comment">#L2 loss   # 定义代价函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用梯度下降算法，GradientDescentOptimizer，当然还有其他方法，minimize这个一般固定不变</span></span><br><span class="line">optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost) <span class="comment"># 使用梯度下降算法</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Initializing the variables</span></span><br><span class="line">init = tf.initialize_all_variables()  <span class="comment"># 定义初始化变量句柄，在这里其实还是没有开始初始化</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Launch the graph</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(init)   <span class="comment"># 初始化之前设置的全部变量, (前面tf.Variable只是定义，没有初始化)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Fit all training data</span></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(training_epochs):    <span class="comment"># 循环迭代次数</span></span><br><span class="line">        <span class="keyword">for</span> (x, y) <span class="keyword">in</span> zip(train_X, train_Y):  <span class="comment"># 取出数据</span></span><br><span class="line">            sess.run(optimizer, feed_dict=&#123;X: x, Y: y&#125;) <span class="comment"># 开始学习，注意optimizer是之前定义好的方法</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#Display logs per epoch step</span></span><br><span class="line">        <span class="keyword">if</span> epoch % display_step == <span class="number">0</span>:   <span class="comment"># 没隔display_step次数，打印一次学习结果</span></span><br><span class="line">            <span class="keyword">print</span> (<span class="string">"Epoch:"</span>, <span class="string">'%04d'</span> % (epoch+<span class="number">1</span>), <span class="string">"cost="</span>, \</span><br><span class="line">                <span class="string">"&#123;:.9f&#125;"</span>.format(sess.run(cost, feed_dict=&#123;X: train_X, Y:train_Y&#125;)), \</span><br><span class="line">                <span class="string">"W="</span>, sess.run(W), <span class="string">"b="</span>, sess.run(b))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"Optimization Finished!"</span>)  <span class="comment"># 学习结束后输出结果</span></span><br><span class="line">    <span class="keyword">print</span> (<span class="string">"cost="</span>, sess.run(cost, feed_dict=&#123;X: train_X, Y: train_Y&#125;), \</span><br><span class="line">          <span class="string">"W="</span>, sess.run(W), <span class="string">"b="</span>, sess.run(b))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#画图</span></span><br><span class="line">    plt.plot(train_X, train_Y, <span class="string">'ro'</span>, label=<span class="string">'Original data'</span>)</span><br><span class="line">    plt.plot(train_X, sess.run(W) * train_X + sess.run(b), label=<span class="string">'Fitted line'</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure></p>
+<p>运行结束后效果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">Epoch: <span class="number">0001</span> cost= <span class="number">5.042386055</span> W= <span class="number">0.93521166</span> b= <span class="number">-0.74453074</span></span><br><span class="line">Epoch: <span class="number">0051</span> cost= <span class="number">0.219054163</span> W= <span class="number">0.46031615</span> b= <span class="number">-0.71445704</span></span><br><span class="line">Epoch: <span class="number">0101</span> cost= <span class="number">0.202640787</span> W= <span class="number">0.44778362</span> b= <span class="number">-0.6242984</span></span><br><span class="line">Epoch: <span class="number">0151</span> cost= <span class="number">0.188122705</span> W= <span class="number">0.43599635</span> b= <span class="number">-0.5395013</span></span><br><span class="line">Epoch: <span class="number">0201</span> cost= <span class="number">0.175281152</span> W= <span class="number">0.42491</span> b= <span class="number">-0.45974758</span></span><br><span class="line">Epoch: <span class="number">0251</span> cost= <span class="number">0.163922593</span> W= <span class="number">0.4144832</span> b= <span class="number">-0.3847373</span></span><br><span class="line">Epoch: <span class="number">0301</span> cost= <span class="number">0.153875872</span> W= <span class="number">0.40467644</span> b= <span class="number">-0.3141882</span></span><br><span class="line">Epoch: <span class="number">0351</span> cost= <span class="number">0.144989431</span> W= <span class="number">0.3954529</span> b= <span class="number">-0.24783495</span></span><br><span class="line">Epoch: <span class="number">0401</span> cost= <span class="number">0.137129351</span> W= <span class="number">0.38677794</span> b= <span class="number">-0.1854279</span></span><br><span class="line">Epoch: <span class="number">0451</span> cost= <span class="number">0.130177155</span> W= <span class="number">0.3786189</span> b= <span class="number">-0.12673245</span></span><br><span class="line">Epoch: <span class="number">0501</span> cost= <span class="number">0.124028035</span> W= <span class="number">0.37094513</span> b= <span class="number">-0.071528085</span></span><br><span class="line">Epoch: <span class="number">0551</span> cost= <span class="number">0.118589230</span> W= <span class="number">0.3637278</span> b= <span class="number">-0.01960695</span></span><br><span class="line">Epoch: <span class="number">0601</span> cost= <span class="number">0.113778725</span> W= <span class="number">0.35693976</span> b= <span class="number">0.029226175</span></span><br><span class="line">Epoch: <span class="number">0651</span> cost= <span class="number">0.109524004</span> W= <span class="number">0.3505553</span> b= <span class="number">0.07515496</span></span><br><span class="line">Epoch: <span class="number">0701</span> cost= <span class="number">0.105760820</span> W= <span class="number">0.3445507</span> b= <span class="number">0.118352175</span></span><br><span class="line">Epoch: <span class="number">0751</span> cost= <span class="number">0.102432482</span> W= <span class="number">0.3389031</span> b= <span class="number">0.15898035</span></span><br><span class="line">Epoch: <span class="number">0801</span> cost= <span class="number">0.099488728</span> W= <span class="number">0.33359143</span> b= <span class="number">0.19719209</span></span><br><span class="line">Epoch: <span class="number">0851</span> cost= <span class="number">0.096885182</span> W= <span class="number">0.32859573</span> b= <span class="number">0.23313099</span></span><br><span class="line">Epoch: <span class="number">0901</span> cost= <span class="number">0.094582528</span> W= <span class="number">0.3238971</span> b= <span class="number">0.26693237</span></span><br><span class="line">Epoch: <span class="number">0951</span> cost= <span class="number">0.092546031</span> W= <span class="number">0.31947792</span> b= <span class="number">0.298724</span></span><br><span class="line">Epoch: <span class="number">1001</span> cost= <span class="number">0.090744928</span> W= <span class="number">0.3153215</span> b= <span class="number">0.32862446</span></span><br><span class="line">Epoch: <span class="number">1051</span> cost= <span class="number">0.089152046</span> W= <span class="number">0.31141236</span> b= <span class="number">0.3567465</span></span><br><span class="line">Epoch: <span class="number">1101</span> cost= <span class="number">0.087743275</span> W= <span class="number">0.30773562</span> b= <span class="number">0.3831967</span></span><br><span class="line">Epoch: <span class="number">1151</span> cost= <span class="number">0.086497456</span> W= <span class="number">0.30427757</span> b= <span class="number">0.40807357</span></span><br><span class="line">Epoch: <span class="number">1201</span> cost= <span class="number">0.085395716</span> W= <span class="number">0.3010253</span> b= <span class="number">0.43147007</span></span><br><span class="line">Epoch: <span class="number">1251</span> cost= <span class="number">0.084421404</span> W= <span class="number">0.29796642</span> b= <span class="number">0.4534753</span></span><br><span class="line">Epoch: <span class="number">1301</span> cost= <span class="number">0.083559766</span> W= <span class="number">0.29508942</span> b= <span class="number">0.4741724</span></span><br><span class="line">Epoch: <span class="number">1351</span> cost= <span class="number">0.082797796</span> W= <span class="number">0.29238352</span> b= <span class="number">0.49363872</span></span><br><span class="line">Epoch: <span class="number">1401</span> cost= <span class="number">0.082124040</span> W= <span class="number">0.28983864</span> b= <span class="number">0.51194614</span></span><br><span class="line">Epoch: <span class="number">1451</span> cost= <span class="number">0.081528224</span> W= <span class="number">0.28744513</span> b= <span class="number">0.5291656</span></span><br><span class="line">Epoch: <span class="number">1501</span> cost= <span class="number">0.081001379</span> W= <span class="number">0.28519377</span> b= <span class="number">0.54536104</span></span><br><span class="line">Epoch: <span class="number">1551</span> cost= <span class="number">0.080535494</span> W= <span class="number">0.28307635</span> b= <span class="number">0.5605937</span></span><br><span class="line">Epoch: <span class="number">1601</span> cost= <span class="number">0.080123581</span> W= <span class="number">0.28108492</span> b= <span class="number">0.5749203</span></span><br><span class="line">Epoch: <span class="number">1651</span> cost= <span class="number">0.079759359</span> W= <span class="number">0.27921176</span> b= <span class="number">0.58839536</span></span><br><span class="line">Epoch: <span class="number">1701</span> cost= <span class="number">0.079437353</span> W= <span class="number">0.2774501</span> b= <span class="number">0.6010679</span></span><br><span class="line">Epoch: <span class="number">1751</span> cost= <span class="number">0.079152651</span> W= <span class="number">0.27579325</span> b= <span class="number">0.6129879</span></span><br><span class="line">Epoch: <span class="number">1801</span> cost= <span class="number">0.078900956</span> W= <span class="number">0.27423516</span> b= <span class="number">0.62419647</span></span><br><span class="line">Epoch: <span class="number">1851</span> cost= <span class="number">0.078678481</span> W= <span class="number">0.27276975</span> b= <span class="number">0.63473856</span></span><br><span class="line">Epoch: <span class="number">1901</span> cost= <span class="number">0.078481756</span> W= <span class="number">0.27139154</span> b= <span class="number">0.644654</span></span><br><span class="line">Epoch: <span class="number">1951</span> cost= <span class="number">0.078307875</span> W= <span class="number">0.27009517</span> b= <span class="number">0.6539794</span></span><br><span class="line">Optimization Finished!</span><br><span class="line">cost= <span class="number">0.07815707</span> W= <span class="number">0.26889977</span> b= <span class="number">0.6625798</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/187b9e90/2.png" alt=""></p>
+<h4 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h4><p>&emsp;&emsp;<del>感谢室友旺旺做的晚饭！！！</del>居然还要我洗碗！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/459d7d0/" rel="next" title="神经网络-bp代码详解">
+                <i class="fa fa-chevron-left"></i> 神经网络-bp代码详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cbf2cdd4/" rel="prev" title="神经网络-minist数据集">
+                神经网络-minist数据集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、环境配置"><span class="nav-text">二、环境配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、tensorFlow奇葩语法"><span class="nav-text">三、tensorFlow奇葩语法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-定义变量"><span class="nav-text">3.1 定义变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-线性回归代码详解"><span class="nav-text">3.2 线性回归代码详解</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#致谢"><span class="nav-text">致谢</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

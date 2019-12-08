@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、环境之前写过，但是因为作业再写一遍。  系统：win10 语言：python3.7  二、各种排序算法2.1 冒泡排序原理如下图：  代码实现: 12345678910111213141516def maopao(arr):    n = len(arr)    if n == 0:        raise Exception    for i in range(n):        for">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用算法-排序">
+<meta property="og:url" content="https://www.zwenc.cn/84466ae2/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、环境之前写过，但是因为作业再写一遍。  系统：win10 语言：python3.7  二、各种排序算法2.1 冒泡排序原理如下图：  代码实现: 12345678910111213141516def maopao(arr):    n = len(arr)    if n == 0:        raise Exception    for i in range(n):        for">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/GIF.gif">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/GIF-1575639431584.gif">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/GIF-1575640233726.gif">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/GIF-1575640826325.gif">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/GIF-1575641153974.gif">
+<meta property="og:image" content="https://www.zwenc.cn/84466ae2/heapSort.gif">
+<meta property="og:updated_time" content="2019-12-08T06:31:48.876Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通用算法-排序">
+<meta name="twitter:description" content="一、环境之前写过，但是因为作业再写一遍。  系统：win10 语言：python3.7  二、各种排序算法2.1 冒泡排序原理如下图：  代码实现: 12345678910111213141516def maopao(arr):    n = len(arr)    if n == 0:        raise Exception    for i in range(n):        for">
+<meta name="twitter:image" content="https://www.zwenc.cn/84466ae2/GIF.gif">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/84466ae2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>通用算法-排序 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/84466ae2/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">通用算法-排序
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-06 12:35:18" itemprop="dateCreated datePublished" datetime="2019-12-06T12:35:18+08:00">2019-12-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-12-08 14:31:48" itemprop="dateModified" datetime="2019-12-08T14:31:48+08:00">2019-12-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/通用算法/" itemprop="url" rel="index"><span itemprop="name">通用算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、环境"><a href="#一、环境" class="headerlink" title="一、环境"></a>一、环境</h3><p>之前写过，但是因为作业再写一遍。</p>
+<ul>
+<li>系统：win10</li>
+<li>语言：python3.7</li>
+</ul>
+<h3 id="二、各种排序算法"><a href="#二、各种排序算法" class="headerlink" title="二、各种排序算法"></a>二、各种排序算法</h3><h4 id="2-1-冒泡排序"><a href="#2-1-冒泡排序" class="headerlink" title="2.1 冒泡排序"></a>2.1 冒泡排序</h4><p>原理如下图：</p>
+<p><img src="/84466ae2/GIF.gif" alt="GIF"></p>
+<p>代码实现:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maopao</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(n - i - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> arr[k] &gt; arr[k + <span class="number">1</span>]:</span><br><span class="line">                temp = arr[k]</span><br><span class="line">                arr[k] = arr[k + <span class="number">1</span>]</span><br><span class="line">                arr[k + <span class="number">1</span>] = temp</span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    print(maopao(arr))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-选择排序"><a href="#2-2-选择排序" class="headerlink" title="2.2 选择排序"></a>2.2 选择排序</h4><p>原理如下图：</p>
+<p><img src="/84466ae2/GIF-1575639431584.gif" alt="GIF"></p>
+<p>效果比冒泡优秀一点点，冒泡每次都需要交换，而选择排序只需要交换一次。</p>
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SelectSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        minIndex = i</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i+<span class="number">1</span>, n):</span><br><span class="line">            <span class="keyword">if</span> arr[minIndex] &gt; arr[j]:</span><br><span class="line">                minIndex = j</span><br><span class="line"></span><br><span class="line">        temp = arr[i]</span><br><span class="line">        arr[i] = arr[minIndex]</span><br><span class="line">        arr[minIndex] = temp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    print(SelectSort(arr))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-直接插入排序"><a href="#2-3-直接插入排序" class="headerlink" title="2.3 直接插入排序"></a>2.3 直接插入排序</h4><p>原理如下图：</p>
+<p><img src="/84466ae2/GIF-1575640233726.gif" alt="GIF"></p>
+<p>代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">InsertSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,n):</span><br><span class="line">        <span class="keyword">if</span> arr[i]&lt;arr[i<span class="number">-1</span>]:</span><br><span class="line">            temp=arr[i]</span><br><span class="line">            j=i<span class="number">-1</span></span><br><span class="line">            <span class="keyword">while</span> arr[j]&gt;temp <span class="keyword">and</span> j&gt;=<span class="number">0</span>:</span><br><span class="line">                arr[j+<span class="number">1</span>]=arr[j]</span><br><span class="line">                j = j<span class="number">-1</span></span><br><span class="line">            arr[j+<span class="number">1</span>]=temp</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    print(InsertSort(arr))</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-折半插入排序"><a href="#2-4-折半插入排序" class="headerlink" title="2.4 折半插入排序"></a>2.4 折半插入排序</h4><p>原理说明：</p>
+<p>主要是在直接插入的基础上，增加了一个二分查找算法，更快的找到插入数据的位置。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">HalfSort</span><span class="params">(arrData, target, mi, ma)</span>:</span></span><br><span class="line">    i = (mi + ma) // <span class="number">2</span>  <span class="comment"># 中间索引</span></span><br><span class="line">    c = arrData[target] - arrData[i]</span><br><span class="line">    <span class="keyword">if</span> mi == ma <span class="keyword">or</span> i == ma <span class="keyword">or</span> i == mi:</span><br><span class="line">        d = arrData[target] - arrData[ma]</span><br><span class="line">        <span class="keyword">if</span> c &gt;= <span class="number">0</span> <span class="keyword">and</span> d &lt; <span class="number">0</span>:</span><br><span class="line">            Insert(arrData, target, i + <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> c &lt; <span class="number">0</span>:</span><br><span class="line">            Insert(arrData, target, i)</span><br><span class="line">        <span class="keyword">elif</span> d &gt;= <span class="number">0</span>:</span><br><span class="line">            Insert(arrData, target, ma + <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">if</span> c &gt; <span class="number">0</span>:</span><br><span class="line">        HalfSort(arrData, target, i + <span class="number">1</span>, ma)</span><br><span class="line">    <span class="keyword">elif</span> c == <span class="number">0</span>:</span><br><span class="line">        Insert(arrData, target, i + <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        HalfSort(arrData, target, mi, i - <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Insert</span><span class="params">(arrData, target, dest)</span>:</span></span><br><span class="line">    tmp = arrData[target]</span><br><span class="line">    i = target - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> i &gt;= dest:</span><br><span class="line">        arrData[i + <span class="number">1</span>] = arrData[i]</span><br><span class="line">        i = i - <span class="number">1</span></span><br><span class="line">    arrData[dest] = tmp</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">HalfInsertSort</span><span class="params">(arrData)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(arrData)):</span><br><span class="line">        HalfSort(arrData, i, <span class="number">0</span>, i - <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> arrData</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">0</span>]</span><br><span class="line">    print(HalfInsertSort(arr))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-5-希尔排序"><a href="#2-5-希尔排序" class="headerlink" title="2.5 希尔排序"></a>2.5 希尔排序</h4><p>原理说明：</p>
+<p>考虑到归并排序在数据原本就比较有序的情况下效率比较高，借用这种想法，每隔数个间隔进行一次比较，逐步缩短比较的间隔，直到排序完毕</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ShellSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    gap = int(n/<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">while</span> gap &gt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(gap,n):</span><br><span class="line">            temp = arr[i]</span><br><span class="line">            j = i</span><br><span class="line">            <span class="keyword">while</span>  j &gt;= gap <span class="keyword">and</span> arr[j-gap] &gt;temp:</span><br><span class="line">                arr[j] = arr[j-gap]</span><br><span class="line">                j -= gap</span><br><span class="line">            arr[j] = temp</span><br><span class="line">        gap = int(gap/<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">0</span>]</span><br><span class="line">    print(ShellSort(arr))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-6-链表排序"><a href="#2-6-链表排序" class="headerlink" title="2.6 链表排序"></a>2.6 链表排序</h4><p>原理说明：</p>
+<p>在直接插入的基础上，通过链表插入，只需要更换两个节点的指针，不需要进行数据移位。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节点定义</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data, child=None)</span>:</span></span><br><span class="line">        self.data = data</span><br><span class="line">        self.child = child</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成测试链表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GenerateTestData</span><span class="params">(arr, left, rights)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left == rights:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    HeadList = Node(arr[left], GenerateTestData(arr, left + <span class="number">1</span>, rights))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> HeadList</span><br><span class="line"></span><br><span class="line"><span class="comment"># 链表打印</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">DataTestPrint</span><span class="params">(headList)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> headList != <span class="keyword">None</span>:</span><br><span class="line">        print(headList.data, <span class="string">" "</span>, end=<span class="string">''</span>)</span><br><span class="line">        headList = headList.child</span><br><span class="line">    print(<span class="string">" "</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 链表排序</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ListSort</span><span class="params">(headList)</span>:</span></span><br><span class="line">    root = Node(<span class="keyword">None</span>, headList)   <span class="comment"># 生成一个空的头节点</span></span><br><span class="line">    sortList = root               <span class="comment"># 已经排好序的头结点</span></span><br><span class="line"></span><br><span class="line">    unSortList = root.child       <span class="comment"># 未排序的节点</span></span><br><span class="line">    sortList.child = <span class="keyword">None</span>         <span class="comment"># 排好序的链表和未排好序的链表断开</span></span><br><span class="line"></span><br><span class="line">    p = unSortList                <span class="comment"># 需要插入的链表</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> p != <span class="keyword">None</span>:</span><br><span class="line">        unSortList = unSortList.child  <span class="comment"># 与 p 的连接断开</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> sortList.child != <span class="keyword">None</span>:  <span class="comment"># 找到需要插入的位置</span></span><br><span class="line">            <span class="keyword">if</span> p.data &lt;= sortList.child.data:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            sortList = sortList.child</span><br><span class="line"></span><br><span class="line">        p.child = sortList.child       <span class="comment"># 插入</span></span><br><span class="line">        sortList.child = p</span><br><span class="line"></span><br><span class="line">        p = unSortList                 <span class="comment"># 下一个需要插入的位置</span></span><br><span class="line">        sortList = root                <span class="comment"># 将指针移动到排好序链表的头位置</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> root.child</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">0</span>]</span><br><span class="line">    headList = GenerateTestData(arr, <span class="number">0</span>, len(arr))</span><br><span class="line">    DataTestPrint(ListSort(headList))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>  <span class="number">2</span>  <span class="number">3</span>  <span class="number">3</span>  <span class="number">3</span>  <span class="number">4</span>  <span class="number">5</span>  <span class="number">6</span>  <span class="number">8</span>  <span class="number">9</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-7-快速排序"><a href="#2-7-快速排序" class="headerlink" title="2.7 快速排序"></a>2.7 快速排序</h4><p>原理如下图：</p>
+<p><img src="/84466ae2/GIF-1575640826325.gif" alt="GIF"></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getIndex</span><span class="params">(arr, left, right, tmp)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        arr[left] = tmp</span><br><span class="line">        <span class="keyword">return</span> left</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left  &lt; right) <span class="keyword">and</span> (arr[right] &gt;= tmp):</span><br><span class="line">        right = right - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    arr[left] = arr[right]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) <span class="keyword">and</span> (arr[left] &lt;= tmp):</span><br><span class="line">        left = left + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    arr[right] = arr[left]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> getIndex(arr, left, right,tmp)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SortByQuickly</span><span class="params">(arr, left, right)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line">    middle = getIndex(arr, left, right, arr[left])</span><br><span class="line"></span><br><span class="line">    SortByQuickly(arr, left, middle - <span class="number">1</span>)</span><br><span class="line">    SortByQuickly(arr, middle + <span class="number">1</span>, right)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> arr</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    print(SortByQuickly(arr,<span class="number">0</span>,len(arr)<span class="number">-1</span>))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-8-计数排序"><a href="#2-8-计数排序" class="headerlink" title="2.8 计数排序"></a>2.8 计数排序</h4><p>原理说明：</p>
+<p>统计每一个数大于其他数的次数，然后进行排序。优点：不需要进行交换和移位，在数据值范围较小的情况，性能比较优秀。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">CountSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    res = [<span class="keyword">None</span>] * n</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        p = <span class="number">0</span>; q = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">if</span> arr[i] &gt; arr[j]:</span><br><span class="line">                p += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> arr[i] == arr[j]:</span><br><span class="line">                q += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(p, p+q):</span><br><span class="line">            res[k] = arr[i]</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    print(CountSort(arr))</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-9-树选择排序"><a href="#2-9-树选择排序" class="headerlink" title="2.9 树选择排序"></a>2.9 树选择排序</h4><p>原理说明：</p>
+<p>通过类似于树的结果，通过两两比较，类似打擂台的形式，比较出最大值（下面程序中是最小），保存输出。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">TreeSelectMax</span><span class="params">(arr, left, right)</span>:</span> <span class="comment"># 返回最大值的index</span></span><br><span class="line">    <span class="keyword">if</span> left == right:</span><br><span class="line">        <span class="keyword">return</span> left</span><br><span class="line"></span><br><span class="line">    middle = int((left + right) / <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    A = TreeSelectMax(arr,left,middle)</span><br><span class="line">    B = TreeSelectMax(arr,middle+<span class="number">1</span>,right)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> arr[A] &lt; arr[B]:</span><br><span class="line">        <span class="keyword">return</span> A</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> B</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">TreeSelectSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    outArr = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        index = TreeSelectMax(arr,<span class="number">0</span>,n<span class="number">-1</span>)</span><br><span class="line">        outArr.append(arr[index])         <span class="comment"># 找到最小值，存入输出内存</span></span><br><span class="line">        arr[index] = np.inf               <span class="comment"># 赋值无穷大</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> outArr</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">6</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">0</span>]</span><br><span class="line">    print(TreeSelectSort(arr))</span><br></pre></td></tr></table></figure>
+<h4 id="2-10-二路归并排序"><a href="#2-10-二路归并排序" class="headerlink" title="2.10 二路归并排序"></a>2.10 二路归并排序</h4><p>原理如下图：</p>
+<p><img src="/84466ae2/GIF-1575641153974.gif" alt="GIF"></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(arr, left, middle, right, tmpArray)</span>:</span></span><br><span class="line">    left_i = left</span><br><span class="line">    right_k = right</span><br><span class="line">    temp = middle</span><br><span class="line">    middle = middle + <span class="number">1</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt;= temp) <span class="keyword">and</span> (middle &lt;= right):   <span class="comment"># 扫描两段，比较存入到tmpArray，直到其中一个扫描完毕</span></span><br><span class="line">        <span class="keyword">if</span> arr[left] &lt; arr[middle]:</span><br><span class="line">            tmpArray[i] = arr[left]</span><br><span class="line">            left = left + <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tmpArray[i] = arr[middle]</span><br><span class="line">            middle = middle + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> left &lt;= temp:     <span class="comment"># 把第一段未扫描的结束的直接添加到tmpArray后面</span></span><br><span class="line">        tmpArray[i] = arr[left]</span><br><span class="line">        left = left + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> middle &lt;= right:   <span class="comment"># 把第二段未扫描的结束的直接添加到tmpArray后面</span></span><br><span class="line">        tmpArray[i] = arr[middle]</span><br><span class="line">        middle = middle + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> left_i &lt;= right_k: <span class="comment"># 复制到原数组中arr</span></span><br><span class="line">        arr[left_i] = tmpArray[i]</span><br><span class="line">        left_i = left_i + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mergeSort</span><span class="params">(arr, left, right, tmpArray)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    middle = int((left + right) / <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    mergeSort(arr, left, middle, tmpArray)</span><br><span class="line">    mergeSort(arr, middle + <span class="number">1</span>, right, tmpArray)</span><br><span class="line"></span><br><span class="line">    merge(arr, left, middle, right, tmpArray)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MergeSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    tmpArray = arr[:]  <span class="comment"># 复制数组</span></span><br><span class="line">    mergeSort(arr, <span class="number">0</span>, len(arr) - <span class="number">1</span>, tmpArray)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    arr = [<span class="number">6</span>,<span class="number">3</span>,<span class="number">8</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">0</span>]</span><br><span class="line">    MergeSort(arr)</span><br><span class="line">    print(arr)</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="2-11-堆排序"><a href="#2-11-堆排序" class="headerlink" title="2.11 堆排序"></a>2.11 堆排序</h4><p>原理说明：</p>
+<p><img src="/84466ae2/heapSort.gif" alt="heapSort"></p>
+<p>程序如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">heapIfy</span><span class="params">(arr, start, end)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> start &gt; end:</span><br><span class="line">        <span class="keyword">return</span> - np.inf</span><br><span class="line"></span><br><span class="line">    A = heapIfy(arr, <span class="number">2</span> * start + <span class="number">1</span>, end)    <span class="comment"># 得到左节点数据</span></span><br><span class="line">    B = heapIfy(arr, <span class="number">2</span> * start + <span class="number">2</span>, end)    <span class="comment"># 得到右节点数据</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> arr[start] &lt; A:     <span class="comment"># 比左儿子小，交换</span></span><br><span class="line">        temp = arr[start]</span><br><span class="line">        arr[start] = arr[<span class="number">2</span> * start + <span class="number">1</span>]</span><br><span class="line">        arr[<span class="number">2</span> * start + <span class="number">1</span>] = temp</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> arr[start] &lt; B:     <span class="comment"># 比右儿子小，交换</span></span><br><span class="line">        temp = arr[start]</span><br><span class="line">        arr[start] = arr[<span class="number">2</span> * start + <span class="number">2</span>]</span><br><span class="line">        arr[<span class="number">2</span> * start + <span class="number">2</span>] = temp</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> arr[start]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">heapSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        heapIfy(arr, <span class="number">0</span>, n - i - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        temp = arr[<span class="number">0</span>]</span><br><span class="line">        arr[<span class="number">0</span>] = arr[n - i - <span class="number">1</span>]</span><br><span class="line">        arr[n - i - <span class="number">1</span>] = temp</span><br><span class="line"></span><br><span class="line">    print(arr)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    arr = [<span class="number">4</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">3</span>]</span><br><span class="line">    heapSort(arr)</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ec2e0da6/" rel="next" title="通用算法-平衡二叉树">
+                <i class="fa fa-chevron-left"></i> 通用算法-平衡二叉树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、环境"><span class="nav-text">一、环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、各种排序算法"><span class="nav-text">二、各种排序算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-冒泡排序"><span class="nav-text">2.1 冒泡排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-选择排序"><span class="nav-text">2.2 选择排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-直接插入排序"><span class="nav-text">2.3 直接插入排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-折半插入排序"><span class="nav-text">2.4 折半插入排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5-希尔排序"><span class="nav-text">2.5 希尔排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6-链表排序"><span class="nav-text">2.6 链表排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7-快速排序"><span class="nav-text">2.7 快速排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-8-计数排序"><span class="nav-text">2.8 计数排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-9-树选择排序"><span class="nav-text">2.9 树选择排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-10-二路归并排序"><span class="nav-text">2.10 二路归并排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-11-堆排序"><span class="nav-text">2.11 堆排序</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、作业题目在校园内采集两组图像，在图像上选取一稳定色彩区域，并采用不同的色彩空间进行颜色差异性评价 二、RGB空间2.1 空间显示首先对RGB图像空间进行分析，采取一张叶子图片进行分析，分别单个显示其红色通道、绿色通道以及蓝色通道，并绘制每一个通道的直方图。结果如下，执行代码见附录6.1。  图1 从上往下，从左往右分别是原图、红色通道、红色通道直方图、绿色通道、绿色通道直方图、蓝色通道、蓝色通">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="作业-计算机视觉1">
+<meta property="og:url" content="https://www.zwenc.cn/dd15fbc0/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、作业题目在校园内采集两组图像，在图像上选取一稳定色彩区域，并采用不同的色彩空间进行颜色差异性评价 二、RGB空间2.1 空间显示首先对RGB图像空间进行分析，采取一张叶子图片进行分析，分别单个显示其红色通道、绿色通道以及蓝色通道，并绘制每一个通道的直方图。结果如下，执行代码见附录6.1。  图1 从上往下，从左往右分别是原图、红色通道、红色通道直方图、绿色通道、绿色通道直方图、蓝色通道、蓝色通">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/dd15fbc0/1569136497379.png">
+<meta property="og:image" content="https://www.zwenc.cn/dd15fbc0/1569140174282.png">
+<meta property="og:image" content="https://www.zwenc.cn/dd15fbc0/1569142467300.png">
+<meta property="og:updated_time" content="2019-09-22T12:50:27.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="作业-计算机视觉1">
+<meta name="twitter:description" content="一、作业题目在校园内采集两组图像，在图像上选取一稳定色彩区域，并采用不同的色彩空间进行颜色差异性评价 二、RGB空间2.1 空间显示首先对RGB图像空间进行分析，采取一张叶子图片进行分析，分别单个显示其红色通道、绿色通道以及蓝色通道，并绘制每一个通道的直方图。结果如下，执行代码见附录6.1。  图1 从上往下，从左往右分别是原图、红色通道、红色通道直方图、绿色通道、绿色通道直方图、蓝色通道、蓝色通">
+<meta name="twitter:image" content="https://www.zwenc.cn/dd15fbc0/1569136497379.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/dd15fbc0/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>作业-计算机视觉1 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/dd15fbc0/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">作业-计算机视觉1
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 20:44:43 / 修改时间：20:50:27" itemprop="dateCreated datePublished" datetime="2019-09-22T20:44:43+08:00">2019-09-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/作业/" itemprop="url" rel="index"><span itemprop="name">作业</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、作业题目"><a href="#一、作业题目" class="headerlink" title="一、作业题目"></a>一、作业题目</h3><p>在校园内采集两组图像，在图像上选取一稳定色彩区域，并采用不同的色彩空间进行颜色差异性评价</p>
+<h3 id="二、RGB空间"><a href="#二、RGB空间" class="headerlink" title="二、RGB空间"></a>二、RGB空间</h3><h4 id="2-1-空间显示"><a href="#2-1-空间显示" class="headerlink" title="2.1 空间显示"></a>2.1 空间显示</h4><p>首先对RGB图像空间进行分析，采取一张叶子图片进行分析，分别单个显示其红色通道、绿色通道以及蓝色通道，并绘制每一个通道的直方图。结果如下，执行代码见附录6.1。</p>
+<p><img src="/dd15fbc0/1569136497379.png" alt="1569136497379"></p>
+<p></p><p align="center" style="font-size:13px"><strong>图1 从上往下，从左往右分别是原图、红色通道、红色通道直方图、绿色通道、绿色通道直方图、蓝色通道、蓝色通道直方图</strong></p><p></p>
+<h4 id="2-2-分析"><a href="#2-2-分析" class="headerlink" title="2.2 分析"></a>2.2 分析</h4><p>如图1所示，如果只看图片可以明显的感觉绿色分量的能量强度明显强于红色分量和蓝色分量，而红色分量强于蓝色分量，能量强度顺序为：绿色&gt;红色&gt;蓝色。但是查看直方图可以得出，绿色能量强度最高，蓝色次之，红色最弱，能量强度顺序为：绿色&gt;蓝色&gt;红色。查找资料分析如下：</p>
+<ul>
+<li>红色为暖色调，在差不多同等能量强度下，人眼容易觉得红色光更强</li>
+<li>对于树叶来说，绿色和蓝色为其主色调</li>
+</ul>
+<h3 id="三、HSI空间"><a href="#三、HSI空间" class="headerlink" title="三、HSI空间"></a>三、HSI空间</h3><h4 id="3-1-转换公式"><a href="#3-1-转换公式" class="headerlink" title="3.1 转换公式"></a>3.1 转换公式</h4><p>HIS彩色空间正是为了适应人眼对颜色的感知和描述发展的颜色模型。它是开发基于彩色描述的图像处理方法的理想工具，这个模型利用色调（H），饱和度（S），强度（I）来描述色彩。其中HSI彩色模型和RGB彩色模型转换公式如下所示：</p>
+<p>色调（H）</p>
+<script type="math/tex; mode=display">
+\begin{array}{}
+H &= \left\{ 
+\begin{array}{}
+\theta       &B \le G        \\
+360 - \theta &B > G
+\end{array}
+\right. \\
+\theta &=  arccos \left\{
+\begin{array}{}
+\frac{\frac{1}{2}[(R-G) + (R-B)]}{[(R-G)^2+(R-B)(G-B)]^{\frac{1}{2}}}
+\end{array}
+\right\}
+\end{array}</script><p>饱和度（S）</p>
+<script type="math/tex; mode=display">
+S = 1-\frac{3}{R+B+G}[min(R,G,B)]</script><p>强度（I）</p>
+<script type="math/tex; mode=display">
+I = \frac{1}{3}(R+B+G)</script><h4 id="3-2-空间转换"><a href="#3-2-空间转换" class="headerlink" title="3.2 空间转换"></a>3.2 空间转换</h4><p>依旧采取叶子作为分析目标，对HSI空间进行分析，为了方便显示，色调（H），饱和度（S），强度（I）都归一化到(0，255)之间，并对其做直方图分析。显示结果如下图2所示，代码见附录6.2。</p>
+<p><img src="/dd15fbc0/1569140174282.png" alt="1569140174282"></p>
+<p></p><p align="center" style="font-size:13px"><strong>图2 从上往下，从左往右分别是原图、色调(H)通道、色调(H)通道直方图、饱和度(S)通道、饱和度(S)通道直方图、强度(I)通道、强度(I)通道直方图</strong></p><p></p>
+<h4 id="3-3-分析"><a href="#3-3-分析" class="headerlink" title="3.3 分析"></a>3.3 分析</h4><p>对图2进行分析，结果如下：</p>
+<ul>
+<li>色调（H）比较集中，主要集中在绿色附近，符合叶子颜色</li>
+<li>饱和度（S）均值在0.5左右，图像呈现正太分布形状</li>
+<li>强度（I），能量主要集中在0~150，整体偏暗。</li>
+</ul>
+<h3 id="四、YUV空间"><a href="#四、YUV空间" class="headerlink" title="四、YUV空间"></a>四、YUV空间</h3><h4 id="4-1-转换公式"><a href="#4-1-转换公式" class="headerlink" title="4.1 转换公式"></a>4.1 转换公式</h4><p>YUV空间，其中“Y”表示明亮度，也就是灰阶值；而“U”和“V” 表示的则是色度，作用是描述影像色彩及饱和度，用于指定像素的颜色。。采用YUV色彩空间的重要性是它的亮度信号Y和色度信号U、V是分离的。如果只有Y信号分量而没有U、V信号分量，那么这样表示的图像就是黑白灰度图像，非常适合兼容黑白电视机和彩色电视机。从RGB空间转换到YUV空间公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{}
+Y &= 0.299 R + 0.587 G + 0.114 B \\
+U &= - 0.1687 R - 0.3313 G + 0.5 B + 128 \\ 
+V &= 0.5 R - 0.4187 G - 0.0813 B + 128
+\end{array}</script><h4 id="4-2-空间转换"><a href="#4-2-空间转换" class="headerlink" title="4.2 空间转换"></a>4.2 空间转换</h4><p>依旧采取叶子作为分析目标，使用opencv从RGB空间转换到YUV空间，并进行直方图显示。显示结果如下，代码见附录6.3。</p>
+<p><img src="/dd15fbc0/1569142467300.png" alt="1569142467300"></p>
+<p></p><p align="center" style="font-size:13px"><strong>图3 从上往下，从左往右分别是原图、Y通道、Y通道直方图、U通道、U通道直方图、V通道、V通道直方图</strong></p><p></p>
+<h4 id="4-3-分析"><a href="#4-3-分析" class="headerlink" title="4.3 分析"></a>4.3 分析</h4><p>如图3所示，Y通道的能量和带宽比U和V通道都高。根据YUV的用途——视频的传输显示，Y通道占用了大量的带宽用于黑白图像显示，如果要显示彩色图像，只需要增加带宽开销较小的U、V通道即可。这样就很好的解决了黑白电视机和彩色电视机协议是否兼容的问题。</p>
+<h3 id="五、总体分析"><a href="#五、总体分析" class="headerlink" title="五、总体分析"></a>五、总体分析</h3><ul>
+<li>RGB空间更加适合用于硬件显示。</li>
+<li>HSI空间更加适合人对图像的描述。因为我们无法直观的从RGB分量上面得知该图像的具体颜色。</li>
+<li>YUV空间适合用于图像的传输。</li>
+</ul>
+<h3 id="六、附录"><a href="#六、附录" class="headerlink" title="六、附录"></a>六、附录</h3><h4 id="6-1-RGB空间显示"><a href="#6-1-RGB空间显示" class="headerlink" title="6.1 RGB空间显示"></a>6.1 RGB空间显示</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">image = plt.imread(<span class="string">"image/image1.jpg"</span>)</span><br><span class="line">imageRGB = cv2.resize(image,(image.shape[<span class="number">1</span>],image.shape[<span class="number">0</span>]))</span><br><span class="line">imageRGB = np.uint8(imageRGB)</span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax1 = fig.add_subplot(<span class="number">221</span>)</span><br><span class="line">ax1_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax1_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">ax1_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax1_img)</span><br><span class="line">plt.sca(ax1)</span><br><span class="line"></span><br><span class="line">ax2 = fig.add_subplot(<span class="number">222</span>)</span><br><span class="line">ax2_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax2_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax2_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax2_img)</span><br><span class="line">plt.sca(ax2)</span><br><span class="line"></span><br><span class="line">ax3 = fig.add_subplot(<span class="number">223</span>)</span><br><span class="line">ax3_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax3_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax3_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax3_img)</span><br><span class="line">plt.sca(ax3)</span><br><span class="line"></span><br><span class="line">ax4 = fig.add_subplot(<span class="number">224</span>)</span><br><span class="line">plt.imshow(imageRGB)</span><br><span class="line">plt.sca(ax4)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h4 id="6-2-HSI转换并显示"><a href="#6-2-HSI转换并显示" class="headerlink" title="6.2 HSI转换并显示"></a>6.2 HSI转换并显示</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rgbtohsi</span><span class="params">(rgb_lwpImg)</span>:</span></span><br><span class="line">    rows = int(rgb_lwpImg.shape[<span class="number">0</span>])</span><br><span class="line">    cols = int(rgb_lwpImg.shape[<span class="number">1</span>])</span><br><span class="line">    b, g, r = cv2.split(rgb_lwpImg)</span><br><span class="line">    <span class="comment"># 归一化到[0,1]</span></span><br><span class="line">    b = b / <span class="number">255.0</span></span><br><span class="line">    g = g / <span class="number">255.0</span></span><br><span class="line">    r = r / <span class="number">255.0</span></span><br><span class="line">    hsi_lwpImg = rgb_lwpImg.copy()</span><br><span class="line">    H, S, I = cv2.split(hsi_lwpImg)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(rows):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">            num = <span class="number">0.5</span> * ((r[i, j]-g[i, j])+(r[i, j]-b[i, j]))</span><br><span class="line">            den = np.sqrt((r[i, j]-g[i, j])**<span class="number">2</span>+(r[i, j]-b[i, j])*(g[i, j]-b[i, j]))</span><br><span class="line">            theta = float(np.arccos(num/den))</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> den == <span class="number">0</span>:</span><br><span class="line">                    H = <span class="number">0</span></span><br><span class="line">            <span class="keyword">elif</span> b[i, j] &lt;= g[i, j]:</span><br><span class="line">                H = theta</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                H = <span class="number">2</span>*<span class="number">3.14169265</span> - theta</span><br><span class="line"></span><br><span class="line">            min_RGB = min(min(b[i, j], g[i, j]), r[i, j])</span><br><span class="line">            sum = b[i, j]+g[i, j]+r[i, j]</span><br><span class="line">            <span class="keyword">if</span> sum == <span class="number">0</span>:</span><br><span class="line">                S = <span class="number">0</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                S = <span class="number">1</span> - <span class="number">3</span>*min_RGB/sum</span><br><span class="line"></span><br><span class="line">            H = H/(<span class="number">2</span>*<span class="number">3.14159265</span>)</span><br><span class="line">            I = sum/<span class="number">3.0</span></span><br><span class="line">            <span class="comment"># 输出HSI图像，扩充到255以方便显示，一般H分量在[0,2pi]之间，S和I在[0,1]之间</span></span><br><span class="line">            hsi_lwpImg[i, j, <span class="number">0</span>] = H*<span class="number">255</span></span><br><span class="line">            hsi_lwpImg[i, j, <span class="number">1</span>] = S*<span class="number">255</span></span><br><span class="line">            hsi_lwpImg[i, j, <span class="number">2</span>] = I*<span class="number">255</span></span><br><span class="line">    <span class="keyword">return</span> hsi_lwpImg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">image = plt.imread(<span class="string">"image/image2.jpg"</span>)</span><br><span class="line">imageRGB = rgbtohsi(image[:,:,[<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>]])</span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">fig.add_subplot(<span class="number">421</span>)</span><br><span class="line">plt.imshow(image)</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">423</span>)</span><br><span class="line">ax1_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax1_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">ax1_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax1_img[:,:,<span class="number">0</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"1"</span>,ax1_img[:,:,<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">424</span>)</span><br><span class="line">plt.hist(ax1_img[:,:,<span class="number">0</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">425</span>)</span><br><span class="line">ax2_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax2_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax2_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax2_img[:,:,<span class="number">1</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"2"</span>,ax2_img[:,:,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">426</span>)</span><br><span class="line">plt.hist(ax2_img[:,:,<span class="number">1</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">427</span>)</span><br><span class="line">ax3_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax3_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax3_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax3_img[:,:,<span class="number">2</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"3"</span>,ax3_img[:,:,<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">428</span>)</span><br><span class="line">plt.hist(ax3_img[:,:,<span class="number">2</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">plt.pause(<span class="number">0.1</span>)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="6-3-YUV空间转换和显示"><a href="#6-3-YUV空间转换和显示" class="headerlink" title="6.3 YUV空间转换和显示"></a>6.3 YUV空间转换和显示</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">image = plt.imread(<span class="string">"image/image2.jpg"</span>)</span><br><span class="line"></span><br><span class="line">imageRGB = cv2.cvtColor(image[:,:,[<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>]],cv2.COLOR_BGR2YUV)</span><br><span class="line">fig = plt.figure()</span><br><span class="line">fig.add_subplot(<span class="number">421</span>)</span><br><span class="line">plt.imshow(image)</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">423</span>)</span><br><span class="line">ax1_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax1_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">ax1_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax1_img[:,:,<span class="number">0</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"1"</span>,ax1_img[:,:,<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">424</span>)</span><br><span class="line">plt.hist(ax1_img[:,:,<span class="number">0</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">425</span>)</span><br><span class="line">ax2_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax2_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax2_img[:,:,<span class="number">2</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax2_img[:,:,<span class="number">1</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"2"</span>,ax2_img[:,:,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">426</span>)</span><br><span class="line">plt.hist(ax2_img[:,:,<span class="number">1</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">427</span>)</span><br><span class="line">ax3_img = np.copy(imageRGB[:,:,:])</span><br><span class="line">ax3_img[:,:,<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">ax3_img[:,:,<span class="number">1</span>] = <span class="number">0</span></span><br><span class="line">plt.imshow(ax3_img[:,:,<span class="number">2</span>],cmap=<span class="string">"gray"</span>)</span><br><span class="line">cv2.imshow(<span class="string">"3"</span>,ax3_img[:,:,<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">fig.add_subplot(<span class="number">428</span>)</span><br><span class="line">plt.hist(ax3_img[:,:,<span class="number">2</span>].ravel(), <span class="number">256</span>, [<span class="number">0</span>, <span class="number">256</span>])</span><br><span class="line"></span><br><span class="line">plt.pause(<span class="number">0.1</span>)</span><br><span class="line">cv2.waitKey(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/4013bb9b/" rel="next" title="手写数字识别画板（qt）">
+                <i class="fa fa-chevron-left"></i> 手写数字识别画板（qt）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/441caa7a/" rel="prev" title="作业-计算机视觉2">
+                作业-计算机视觉2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、作业题目"><span class="nav-text">一、作业题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、RGB空间"><span class="nav-text">二、RGB空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-空间显示"><span class="nav-text">2.1 空间显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-分析"><span class="nav-text">2.2 分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、HSI空间"><span class="nav-text">三、HSI空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-转换公式"><span class="nav-text">3.1 转换公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-空间转换"><span class="nav-text">3.2 空间转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-分析"><span class="nav-text">3.3 分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、YUV空间"><span class="nav-text">四、YUV空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-转换公式"><span class="nav-text">4.1 转换公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-空间转换"><span class="nav-text">4.2 空间转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-分析"><span class="nav-text">4.3 分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、总体分析"><span class="nav-text">五、总体分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、附录"><span class="nav-text">六、附录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-RGB空间显示"><span class="nav-text">6.1 RGB空间显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-HSI转换并显示"><span class="nav-text">6.2 HSI转换并显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-YUV空间转换和显示"><span class="nav-text">6.3 YUV空间转换和显示</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

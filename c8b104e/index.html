@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言&amp;emsp;&amp;emsp;数字图像处理第七章的小波和多分辨率处理学不走了，把小波变换基础学习一下。如果有人不小心查看到这篇文章，建议跳过这里，直接阅读：  https://blog.csdn.net/hellozex/article/details/78330923https://blog.csdn.net/hellozex/article/details/78330923  二、基础概念2">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字图像处理入门（10）-小波变换">
+<meta property="og:url" content="https://www.zwenc.cn/c8b104e/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言&amp;emsp;&amp;emsp;数字图像处理第七章的小波和多分辨率处理学不走了，把小波变换基础学习一下。如果有人不小心查看到这篇文章，建议跳过这里，直接阅读：  https://blog.csdn.net/hellozex/article/details/78330923https://blog.csdn.net/hellozex/article/details/78330923  二、基础概念2">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/c8b104e/2.png">
+<meta property="og:image" content="https://www.zwenc.cn/c8b104e/3.png">
+<meta property="og:image" content="https://www.zwenc.cn/c8b104e/4.png">
+<meta property="og:image" content="https://www.zwenc.cn/c8b104e/5.png">
+<meta property="og:image" content="https://www.zwenc.cn/c8b104e/6.png">
+<meta property="og:updated_time" content="2019-04-15T15:32:15.030Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数字图像处理入门（10）-小波变换">
+<meta name="twitter:description" content="一、前言&amp;emsp;&amp;emsp;数字图像处理第七章的小波和多分辨率处理学不走了，把小波变换基础学习一下。如果有人不小心查看到这篇文章，建议跳过这里，直接阅读：  https://blog.csdn.net/hellozex/article/details/78330923https://blog.csdn.net/hellozex/article/details/78330923  二、基础概念2">
+<meta name="twitter:image" content="https://www.zwenc.cn/c8b104e/2.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/c8b104e/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>数字图像处理入门（10）-小波变换 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/c8b104e/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数字图像处理入门（10）-小波变换
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-11 16:15:05" itemprop="dateCreated datePublished" datetime="2019-04-11T16:15:05+08:00">2019-04-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-15 23:32:15" itemprop="dateModified" datetime="2019-04-15T23:32:15+08:00">2019-04-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/图像/" itemprop="url" rel="index"><span itemprop="name">图像</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>&emsp;&emsp;数字图像处理第七章的小波和多分辨率处理学不走了，把小波变换基础学习一下。如果有人不小心查看到这篇文章，建议跳过这里，直接阅读：</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/hellozex/article/details/78330923" target="_blank" rel="noopener">https://blog.csdn.net/hellozex/article/details/78330923</a><br><a href="https://blog.csdn.net/hellozex/article/details/78330923" target="_blank" rel="noopener">https://blog.csdn.net/hellozex/article/details/78330923</a></p>
+</blockquote>
+<h3 id="二、基础概念"><a href="#二、基础概念" class="headerlink" title="二、基础概念"></a>二、基础概念</h3><h4 id="2-1-傅里叶变换基本原理"><a href="#2-1-傅里叶变换基本原理" class="headerlink" title="2.1 傅里叶变换基本原理"></a>2.1 傅里叶变换基本原理</h4><blockquote>
+<p>参考知乎：<a href="https://www.zhihu.com/question/22864189/answer/40772083" target="_blank" rel="noopener">https://www.zhihu.com/question/22864189/answer/40772083</a></p>
+</blockquote>
+<ul>
+<li><p>傅里叶变换公式如下：</p>
+<script type="math/tex; mode=display">
+F(w) = \int_{- \infty}^{ \infty}f(t) e^{-jwt} dt</script></li>
+<li><p>原始信号如下：<br><img src="/c8b104e/2.png" alt=""></p>
+</li>
+<li><p>基函数如下：<br><img src="/c8b104e/3.png" alt=""></p>
+</li>
+<li><p>总结：说到底，这就是一个搞基的过程，通过对基的伸缩、平移。缩得窄，对应高频；伸得宽，对应低频。然后这个基函数不断和信号做相乘。某一个尺度（宽窄）下乘出来的结果，就可以理解成信号所包含的当前尺度对应频率成分有多少。于是，基函数会在某些尺度下，与信号相乘得到一个很大的值，因为此时二者有一种重合关系，那么我们就知道信号包含该频率的的成分有多少。</p>
+</li>
+<li><p>缺点：由于基函数的能量范围是整个空间，对于一些平稳的信号可以很好的处理，比如周期函数。但是现实中大多数信号都是非平稳信号，能量范围是整个空间的基函数，傅里叶之后的频域就只有频率幅值，这样就会丢失时域信息。这里可能会有几个问题：</p>
+<ul>
+<li><p>傅里叶的本质是作甚？<br>答：他想表达的是一种变化，低频表示变化慢的地方，高频表示变化快的地方。如果对方波进行高通滤波，出来的信号只剩下了方波信号翻转的地方，有点类似于周期冲击信号。</p>
+</li>
+<li><p>傅里叶怎么就会丢失时域信息。<br>答：这个问题我也没有想通，傅里叶并不会丢失时域信息，他有相位信息保留时域，但是他会非常不直观，无法直接从频域中看到。我们的终极目标是得到时域的哪些位置变化快慢以及这些位置的频域分量，而傅里叶无法准确直观的给出这个信息，所以才说他丢失了时域信息。</p>
+</li>
+<li><p>有什么方法<br>答：改变傅里叶的基，接下来的事情就是找一个好基，进行搞基。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-2-小波变换基本原理"><a href="#2-2-小波变换基本原理" class="headerlink" title="2.2 小波变换基本原理"></a>2.2 小波变换基本原理</h4><blockquote>
+<p>其实严格说来，傅里叶变换算小波变换的一种特殊情况</p>
+</blockquote>
+<h5 id="2-2-1-基础概念"><a href="#2-2-1-基础概念" class="headerlink" title="2.2.1 基础概念"></a>2.2.1 基础概念</h5><p>&emsp;&emsp;小波变换之于傅里叶变换的一大区别就是将傅里叶的正弦波（时域无穷）替换成了一种时域有限的波，具体波的形式可以自由设定。举例如下：<br><img src="/c8b104e/4.png" alt=""><br>&emsp;&emsp;这里我心里产生了一个问题：那出来的就不是真正的频谱了啊，还有意义吗？这里我想到一种可能，虽然小波变换后不是真正的频谱，但是他依旧可以表示信号变化的快慢，并且由于小波是一种带衰减的信号，变换过后可以保留时域信息。</p>
+<h5 id="2-2-2-公式定义"><a href="#2-2-2-公式定义" class="headerlink" title="2.2.2 公式定义"></a>2.2.2 公式定义</h5><ul>
+<li>公式：<script type="math/tex; mode=display">
+WT(a,\tau) = \frac{1}{\sqrt{a}} \int_{- \infty}^{ \infty}f(t) \psi (\frac{t-\tau}{a}) dt</script></li>
+<li>公式说明：相比于傅里叶变换自由一个变量$w$，这里拥有尺度a，和平移系数$\tau$。其中尺度a对应着小波函数的伸缩，平移系数$\tau​$对应于时间。</li>
+</ul>
+<h3 id="三、小波变换公式"><a href="#三、小波变换公式" class="headerlink" title="三、小波变换公式"></a>三、小波变换公式</h3><h4 id="3-1-公式推导"><a href="#3-1-公式推导" class="headerlink" title="3.1 公式推导"></a>3.1 公式推导</h4><blockquote>
+<p>参考文章：<br><a href="https://blog.csdn.net/zlcnup/article/details/50932563" target="_blank" rel="noopener">https://blog.csdn.net/zlcnup/article/details/50932563</a><br><a href="https://blog.csdn.net/u014485485/article/details/78672184" target="_blank" rel="noopener">https://blog.csdn.net/u014485485/article/details/78672184</a><br><a href="https://blog.csdn.net/shenziheng1/article/details/52989253" target="_blank" rel="noopener">https://blog.csdn.net/shenziheng1/article/details/52989253</a></p>
+</blockquote>
+<h5 id="3-1-1-小波变换理论"><a href="#3-1-1-小波变换理论" class="headerlink" title="3.1.1 小波变换理论"></a>3.1.1 小波变换理论</h5><p>&emsp;&emsp;如果$\psi(t)∈L^2 (R)$，称$ϕ(t)$为一个基本的小波和母小波，其中$L^2 (R)$指均方可积空间。小波一定满足：$\int_{- \infty}^{ \infty}\psi(t)dt = 0$，这也是称之为”小波“的意义。将母函数进行伸缩和平移后，可以得到小波序列：$\psi_{a,b}(t) = \frac{1}{\sqrt a}\psi(\frac{t-b}{a})~(a,b∈R,a≠0)$，其中a,b分别为伸缩因子和平移因子。</p>
+<h5 id="3-1-2-连续小波变换"><a href="#3-1-2-连续小波变换" class="headerlink" title="3.1.2 连续小波变换"></a>3.1.2 连续小波变换</h5><p>&emsp;&emsp;连续小波正变换变换的定义如下，这里面有两个变量a，b，它们分别控制小波的两个变换。</p>
+<script type="math/tex; mode=display">
+WT(a,\tau) = \frac{1}{\sqrt{a}} \int_{- \infty}^{ \infty}f(t) \psi (\frac{t-\tau}{a}) dt</script><ul>
+<li>其中应当满足：<br>从定义可以看出：小波变换和傅立叶变换一样，$WT(a,\tau)$也是一种变换，为小波变换系数，也可见其与傅立叶变换的区别。<script type="math/tex; mode=display">
+\psi(w) = \frac{1}{\sqrt a} \psi(\frac{t-\tau}{a})，b \in R，a \in R-\{0\}</script></li>
+<li>scaling（或者叫dilation，延展）：stretching and shrinking the signal in time，完全由$a​$控制，可以改变小波变换的中心频率（ center frequency）</li>
+</ul>
+<hr>
+<p>&emsp;&emsp;若小波满足容许条件，则连续小波变换存在着逆变换：</p>
+<ul>
+<li>先要条件：<script type="math/tex; mode=display">
+C_\psi = \int_R \frac{\left| \psi(w) \right|^2}{\left | w \right |}dw < \infty</script></li>
+<li>逆变换公式：<script type="math/tex; mode=display">
+f(t) = \frac{1}{C_\psi} \int_{0}^{+ \infty} WT_f(a,\tau)\frac{1}{\sqrt{a}}\psi(\frac{t - \tau}{a}) d \tau</script>这里需要做两条重要的说明：<br>（1）必须满足“先要条件”，反变换才存在。<br>（2）在实际应用中，对基本小波的要求往往不局限于满足容许条件，对$\psi(t)$还要施加所谓“正则性条件”，使在频域上表现出较好的局域性能。为了在频域上有较好的局域性，要求 $\psi(w)$随$a$的减小而迅速减小，所以这就要求$WT_f(a,\tau)$的前$n$阶原点距为0，且$n$值越高越好。</li>
+</ul>
+<hr>
+<ul>
+<li>小波变换的性质:<br>线性、时移共变性、时标定理、微分运算、能领守恒、冗余度</li>
+<li>连续小波变换的步骤<br>（1）选择小波函数及其尺度$a​$值。<br>（2）从信号的起始位置开始，将小波函数和信号进行比较，即计算小波系数。<br>（3）沿时间轴移动小波函数，即改变参数$b​$，在新的位置计算小波系数，直至信号的终点。<br>（4）改变尺度$a​$值，重复（2）、（3）步。</li>
+<li>设计原则：<br>$a$为尺度；$\Delta$为采样间隔；$F_c$为小波的中心频率；$F_a$为伪频率。<script type="math/tex; mode=display">
+F_a = \frac{\Delta * F_c}{a}</script></li>
+</ul>
+<h5 id="3-1-3-离散小波变换"><a href="#3-1-3-离散小波变换" class="headerlink" title="3.1.3 离散小波变换"></a>3.1.3 离散小波变换</h5><blockquote>
+<p>连续是采集不到的，计算机都是对离散数据进行处理</p>
+</blockquote>
+<p>&emsp;&emsp;为了减小小波变换系数的冗余度，我们将小波基函数的$a、\tau$限定在一些离散的点上取值。</p>
+<ul>
+<li><p>尺度的离散化。<br>目前通行的做法是对尺度进行幂数级离散化，即令$a$取：</p>
+<script type="math/tex; mode=display">
+a = a_0^j,a_0 > 0,j \in z</script><p>则，小波函数为：</p>
+<script type="math/tex; mode=display">
+\frac{1}{\sqrt{a_0^j}}\psi \left(\frac{t-\tau}{a ^ j}\right),j=0,1,2...</script></li>
+<li><p>位移离散化</p>
+<script type="math/tex; mode=display">
+\tau = ka_0^j \tau_0</script><p>&emsp;&emsp;通常对$\tau$进行均匀离散取值，以覆盖整个时间轴， $\tau$满足Nyquist采样定理。在$a=2^j$时，沿$\tau$轴的响应采样间隔是$2^jτ_0$，在$a_0=2$情况下，j增加1，则尺度$a$增加一倍，对应的频率减小一半。此时采样率可降低一半而不导致引起信息的丢失。</p>
+</li>
+<li><p>此时，离散小波定义为：</p>
+<script type="math/tex; mode=display">
+WT_f(a^j,k\tau_0)=\int f(t) \psi_{a^j,k\psi_0}(t)dt,j=0,1,2,3...</script><p>一般，取$a_0=2$，则$a=2^j，τ=2^jkτ_0$，则采样间隔为$τ=2^jτ_0$<br>当$a=2^j$时，$τ$的采样间隔是$2^jτ_0$，此时，$\psi_{a,t} (t)$变为：</p>
+<script type="math/tex; mode=display">
+\frac{1}{\sqrt{2^j}}\psi \left(\frac{t-2^jk\tau}{2 ^ j}\right),j=0,1,2...;k \in Z</script><p>一般将$\tau_0$归一化，即$\tau_0 = 1$，于是有：</p>
+<script type="math/tex; mode=display">
+\psi_{j,k} (t) = \frac{1}{2^j}\psi\left({\frac{t-2^jk}{2^j}}\right)</script><p>此时，对应的$WT_f$为：</p>
+<script type="math/tex; mode=display">
+WT_f(j,k) = \int_{-\infty}^{\infty} f(t) \psi_{j,k}(t)dt</script><h4 id="3-2-Matlab测试效果"><a href="#3-2-Matlab测试效果" class="headerlink" title="3.2 Matlab测试效果"></a>3.2 Matlab测试效果</h4></li>
+</ul>
+<blockquote>
+<p>搞不懂，必须实践一下，和上述公式推导无关，纯粹为了检验小波变换效果。matlab使用cwt做小波变换</p>
+</blockquote>
+<p>代码如下：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">t=<span class="number">0</span> : <span class="number">0.01</span> :<span class="number">12</span>;</span><br><span class="line">s = <span class="number">1</span>:<span class="number">0.3</span>:<span class="number">10</span>;</span><br><span class="line">f = square(<span class="number">2</span>*t,<span class="number">50</span>) + <span class="number">0.1</span>*<span class="built_in">randn</span>(<span class="number">1</span>,<span class="built_in">length</span>(t));</span><br><span class="line"></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">1</span>)</span><br><span class="line"><span class="built_in">plot</span>(t,f)</span><br><span class="line">axis([<span class="number">0</span>,<span class="number">12</span>,<span class="number">-2</span>,<span class="number">2</span>]);</span><br><span class="line">title(<span class="string">'原图'</span>);</span><br><span class="line">ylabel(<span class="string">'幅度'</span>);</span><br><span class="line">xlabel(<span class="string">'时间'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">figure</span>(<span class="number">2</span>)</span><br><span class="line">coef = cwt(f,s,<span class="string">'db3'</span>);</span><br><span class="line">surf(t,s,coef)</span><br><span class="line">title(<span class="string">'小波变换图'</span>);</span><br><span class="line">ylabel(<span class="string">'尺度'</span>);</span><br><span class="line">xlabel(<span class="string">'时间'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>运行效果：<br><img src="/c8b104e/5.png" alt=""><br><img src="/c8b104e/6.png" alt=""><br>从图片中可以清晰看出，在信号突变的位置，频率分量比较大。</p>
+<h3 id="四、小波变换在图像处理上面的应用"><a href="#四、小波变换在图像处理上面的应用" class="headerlink" title="四、小波变换在图像处理上面的应用"></a>四、小波变换在图像处理上面的应用</h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/d748b8c7/" rel="next" title="数字图像处理入门（9）-逆滤波和维纳滤波">
+                <i class="fa fa-chevron-left"></i> 数字图像处理入门（9）-逆滤波和维纳滤波
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/5d1da42/" rel="prev" title="matlab使用笔记">
+                matlab使用笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、基础概念"><span class="nav-text">二、基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-傅里叶变换基本原理"><span class="nav-text">2.1 傅里叶变换基本原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-小波变换基本原理"><span class="nav-text">2.2 小波变换基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-1-基础概念"><span class="nav-text">2.2.1 基础概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-2-公式定义"><span class="nav-text">2.2.2 公式定义</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、小波变换公式"><span class="nav-text">三、小波变换公式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-公式推导"><span class="nav-text">3.1 公式推导</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-1-小波变换理论"><span class="nav-text">3.1.1 小波变换理论</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-2-连续小波变换"><span class="nav-text">3.1.2 连续小波变换</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-3-离散小波变换"><span class="nav-text">3.1.3 离散小波变换</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Matlab测试效果"><span class="nav-text">3.2 Matlab测试效果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、小波变换在图像处理上面的应用"><span class="nav-text">四、小波变换在图像处理上面的应用</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

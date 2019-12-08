@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言 系统：win10 环境：python3.7 框架：pytorch1.1  完整代码会在最后给出 二、Darknet网络模版2.1 模板说明网络模板如下图所示，YoloV3只借鉴到了前面的卷积部分（有修改），后面的Avgpool、Connected、Softmax层去掉。注意事项  每一个Convolutional内都包含Con2d、Bn、LeakyRelu三个部分（这是固定搭配），为了方">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-YoloV3复现（网络搭建篇）">
+<meta property="og:url" content="https://www.zwenc.cn/dfa00507/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言 系统：win10 环境：python3.7 框架：pytorch1.1  完整代码会在最后给出 二、Darknet网络模版2.1 模板说明网络模板如下图所示，YoloV3只借鉴到了前面的卷积部分（有修改），后面的Avgpool、Connected、Softmax层去掉。注意事项  每一个Convolutional内都包含Con2d、Bn、LeakyRelu三个部分（这是固定搭配），为了方">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/dfa00507/85%7D1X[N0WR%607%607R1FLECTFM.png">
+<meta property="og:image" content="https://www.zwenc.cn/dfa00507/GT[VS3CKS0H8_0H80BP$K.png">
+<meta property="og:updated_time" content="2019-08-24T15:36:32.860Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-YoloV3复现（网络搭建篇）">
+<meta name="twitter:description" content="一、前言 系统：win10 环境：python3.7 框架：pytorch1.1  完整代码会在最后给出 二、Darknet网络模版2.1 模板说明网络模板如下图所示，YoloV3只借鉴到了前面的卷积部分（有修改），后面的Avgpool、Connected、Softmax层去掉。注意事项  每一个Convolutional内都包含Con2d、Bn、LeakyRelu三个部分（这是固定搭配），为了方">
+<meta name="twitter:image" content="https://www.zwenc.cn/dfa00507/85%7D1X[N0WR%607%607R1FLECTFM.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/dfa00507/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-YoloV3复现（网络搭建篇） | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/dfa00507/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-YoloV3复现（网络搭建篇）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-23 23:59:29" itemprop="dateCreated datePublished" datetime="2019-08-23T23:59:29+08:00">2019-08-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-08-24 23:36:32" itemprop="dateModified" datetime="2019-08-24T23:36:32+08:00">2019-08-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ul>
+<li>系统：win10</li>
+<li>环境：python3.7</li>
+<li>框架：pytorch1.1</li>
+</ul>
+<p>完整代码会在最后给出</p>
+<h3 id="二、Darknet网络模版"><a href="#二、Darknet网络模版" class="headerlink" title="二、Darknet网络模版"></a>二、Darknet网络模版</h3><h4 id="2-1-模板说明"><a href="#2-1-模板说明" class="headerlink" title="2.1 模板说明"></a>2.1 模板说明</h4><p>网络模板如下图所示，YoloV3只借鉴到了前面的卷积部分（有修改），后面的Avgpool、Connected、Softmax层去掉。注意事项</p>
+<ul>
+<li>每一个Convolutional内都包含Con2d、Bn、LeakyRelu三个部分（这是固定搭配），为了方便使用，建议单独实现</li>
+<li>每一个Residual都包含两个Convolutional</li>
+</ul>
+<p><img src="/dfa00507/85}1X[N0WR`7`7R1FLECTFM.png" alt="img"></p>
+<h4 id="2-2-部分代码实现"><a href="#2-2-部分代码实现" class="headerlink" title="2.2 部分代码实现"></a>2.2 部分代码实现</h4><ul>
+<li>Convolutional单独实现</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Conv2d</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channels, out_channels, kernel_size, stride, padding, bias)</span>:</span></span><br><span class="line">        super(Conv2d, self).__init__()</span><br><span class="line">        self.conv = nn.Sequential(</span><br><span class="line">                nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size,stride=stride,padding=padding,bias=bias),</span><br><span class="line">                nn.BatchNorm2d(out_channels),</span><br><span class="line">                nn.LeakyReLU(<span class="number">0.1</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.conv(x)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Residual单独实现</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, inplanes, planes)</span>:</span></span><br><span class="line">        super(BasicBlock, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.Conv1 = Conv2d(inplanes, planes[<span class="number">0</span>], kernel_size=<span class="number">1</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        self.Conv2 = Conv2d(planes[<span class="number">0</span>], planes[<span class="number">1</span>], kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        out = self.Conv1(x)</span><br><span class="line">        out = self.Conv2(out)</span><br><span class="line"></span><br><span class="line">        out += residual</span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<h3 id="三、YoloV3网络结构"><a href="#三、YoloV3网络结构" class="headerlink" title="三、YoloV3网络结构"></a>三、YoloV3网络结构</h3><p>（找了好久才找齐这两幅图片——darknet和YoloV3改进，单独看一个都不好看懂）</p>
+<h4 id="3-1-网络说明"><a href="#3-1-网络说明" class="headerlink" title="3.1 网络说明"></a>3.1 网络说明</h4><p>网络如下所示<sup><a href="#fn_1" id="reffn_1">1</a></sup>，前面的一部分借鉴了darknet53结构，后面从Convolutional Set开始由YoloV3作者自己改进，有三个输出，添加了上采样。具体原理可以参考论文或者其他优秀博客</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/leviopku/article/details/82660381" target="_blank" rel="noopener">yolo系列之yolo v3【深度解析】</a> 里面有张神图，转载需要版权，故需要点进去看</p>
+</blockquote>
+<p><img src="/dfa00507/GT[VS3CKS0H8_0H80BP$K.png" alt="img"></p>
+<h4 id="3-2-部分代码实现"><a href="#3-2-部分代码实现" class="headerlink" title="3.2 部分代码实现"></a>3.2 部分代码实现</h4><h5 id="3-2-1-Convolutional-Set"><a href="#3-2-1-Convolutional-Set" class="headerlink" title="3.2.1 Convolutional Set"></a>3.2.1 Convolutional Set</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConvSet</span><span class="params">(nn.Module)</span>:</span>  <span class="comment"># inplanes-&gt;inplanes</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, inplanes, outplanes)</span>:</span></span><br><span class="line">        super(ConvSet, self).__init__()</span><br><span class="line">        self.convset = nn.Sequential(</span><br><span class="line">                Conv2d(inplanes, outplanes, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes, outplanes, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes, outplanes * <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes * <span class="number">2</span>, outplanes * <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes * <span class="number">2</span>, outplanes, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.convset(x)</span><br></pre></td></tr></table></figure>
+<p>看到上述的代码实现，心中涌现几个问题：</p>
+<ul>
+<li>图中信息只给出了卷积核的大小，并不知道填充位（padding）</li>
+<li>图中也没有给出中间层输入通道和输出通道的数量，这些该怎么确定</li>
+</ul>
+<p>在没有完整的看完论文之前有以下猜测</p>
+<ul>
+<li>第一个卷积一般按照给定的输入输出（inplanes, outplanes），卷积核为1</li>
+<li>如果卷积为3，则输入和输出一样，填充（padding）此时为1。（这应该是检测功能实现部位）</li>
+<li>后面再遇到卷积核为1，则需要进行通道变换（放大，或者缩小）。（这应该是选择功能实现部位）</li>
+</ul>
+<p>看完论文后，我想打人！！！没有说网络是怎么建立的！</p>
+<h5 id="3-2-2-UpSampling"><a href="#3-2-2-UpSampling" class="headerlink" title="3.2.2 UpSampling"></a>3.2.2 UpSampling</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Upsampling</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Upsampling, self).__init__()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="comment"># interpolate 上采样专用函数，scale_factor放大倍数，mode插值模式</span></span><br><span class="line">        <span class="keyword">return</span> nn.functional.interpolate(x, scale_factor=<span class="number">2</span>, mode=<span class="string">'nearest'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>根据图片和论文其实无法得到每一个卷积层具体的参数，估计需要有一套自己对卷积网络的理解才能独自建立网络。对于复现来说，最难的不是网络搭建，而是loss损失函数设计和数据集设计，见后文。</p>
+<h3 id="五、完整代码"><a href="#五、完整代码" class="headerlink" title="五、完整代码"></a>五、完整代码</h3><ul>
+<li>代码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time    : 2019/8/23 18:07</span></span><br><span class="line"><span class="comment"># @Author  : zwenc</span></span><br><span class="line"><span class="comment"># @File    : net.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Conv2d</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, in_channels, out_channels, kernel_size, stride, padding, bias)</span>:</span></span><br><span class="line">        super(Conv2d, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.conv = nn.Sequential(</span><br><span class="line">                nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding,</span><br><span class="line">                          bias=bias),</span><br><span class="line">                nn.BatchNorm2d(out_channels),</span><br><span class="line">                nn.LeakyReLU(<span class="number">0.1</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.conv(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, inplanes, planes)</span>:</span></span><br><span class="line">        super(BasicBlock, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.Conv1 = Conv2d(inplanes, planes[<span class="number">0</span>], kernel_size=<span class="number">1</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        self.Conv2 = Conv2d(planes[<span class="number">0</span>], planes[<span class="number">1</span>], kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        residual = x</span><br><span class="line"></span><br><span class="line">        out = self.Conv1(x)</span><br><span class="line">        out = self.Conv2(out)</span><br><span class="line"></span><br><span class="line">        out += residual</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConvSet</span><span class="params">(nn.Module)</span>:</span>  <span class="comment"># inplanes-&gt;inplanes</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, inplanes, outplanes)</span>:</span></span><br><span class="line">        super(ConvSet, self).__init__()</span><br><span class="line">        self.convset = nn.Sequential(</span><br><span class="line">                Conv2d(inplanes, outplanes, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes, outplanes, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes, outplanes * <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes * <span class="number">2</span>, outplanes * <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                Conv2d(outplanes * <span class="number">2</span>, outplanes, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.convset(x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Upsampling</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Upsampling, self).__init__()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="comment"># interpolate 上采样专用函数，scale_factor放大倍数，mode插值模式</span></span><br><span class="line">        <span class="keyword">return</span> nn.functional.interpolate(x, scale_factor=<span class="number">2</span>, mode=<span class="string">'nearest'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Yolo3Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, class_nums ,layers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">4</span>])</span>:</span>  <span class="comment"># 默认使用darknet53</span></span><br><span class="line">        super(Yolo3Net, self).__init__()</span><br><span class="line">        self.class_nums = class_nums</span><br><span class="line">        self.inplanes = <span class="number">32</span></span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">3</span>, self.inplanes, kernel_size=<span class="number">3</span>, stride=<span class="number">1</span>, padding=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        self.bn1 = nn.BatchNorm2d(self.inplanes)</span><br><span class="line">        self.relu1 = nn.LeakyReLU(<span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">        self.layer1 = self._make_layer([<span class="number">32</span>, <span class="number">64</span>], layers[<span class="number">0</span>], <span class="number">0</span>)</span><br><span class="line">        self.layer2 = self._make_layer([<span class="number">64</span>, <span class="number">128</span>], layers[<span class="number">1</span>], <span class="number">1</span>)</span><br><span class="line">        self.layer3 = self._make_layer([<span class="number">128</span>, <span class="number">256</span>], layers[<span class="number">2</span>], <span class="number">2</span>)</span><br><span class="line">        self.layer4 = self._make_layer([<span class="number">256</span>, <span class="number">512</span>], layers[<span class="number">3</span>], <span class="number">3</span>)</span><br><span class="line">        self.layer5 = self._make_layer([<span class="number">512</span>, <span class="number">1024</span>], layers[<span class="number">4</span>], <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">        self.convset_13 = ConvSet(<span class="number">1024</span>, <span class="number">512</span>)</span><br><span class="line">        self.delection_13 = nn.Sequential(</span><br><span class="line">                Conv2d(<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                <span class="comment"># 3*(1+5) = 18 num_anchors = 3, num_classes = 1</span></span><br><span class="line">                nn.Conv2d(<span class="number">512</span>, <span class="number">3</span> * (self.class_nums + <span class="number">5</span>), kernel_size=<span class="number">1</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        )</span><br><span class="line">        self.up13_to_26 = nn.Sequential(</span><br><span class="line">                Conv2d(<span class="number">512</span>, <span class="number">256</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Upsampling()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.convset_26 = ConvSet(<span class="number">768</span>, <span class="number">512</span>)  <span class="comment"># 512 + 256 = 768</span></span><br><span class="line">        self.delection_26 = nn.Sequential(</span><br><span class="line">                Conv2d(<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                nn.Conv2d(<span class="number">512</span>, <span class="number">3</span> * (self.class_nums + <span class="number">5</span>), kernel_size=<span class="number">1</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        )</span><br><span class="line">        self.up26_to_52 = nn.Sequential(</span><br><span class="line">                Conv2d(<span class="number">512</span>, <span class="number">256</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="keyword">False</span>),</span><br><span class="line">                Upsampling()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.convset_52 = ConvSet(<span class="number">512</span>, <span class="number">512</span>)  <span class="comment"># 256 + 256 = 512</span></span><br><span class="line">        self.delection_52 = nn.Sequential(</span><br><span class="line">                Conv2d(<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="keyword">False</span>),</span><br><span class="line">                nn.Conv2d(<span class="number">512</span>, <span class="number">3</span> * (self.class_nums + <span class="number">5</span>), kernel_size=<span class="number">1</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.layers_out_filters = [<span class="number">64</span>, <span class="number">128</span>, <span class="number">256</span>, <span class="number">512</span>, <span class="number">1024</span>]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> self.modules():</span><br><span class="line">            <span class="keyword">if</span> isinstance(m, nn.Conv2d):</span><br><span class="line">                n = m.kernel_size[<span class="number">0</span>] * m.kernel_size[<span class="number">1</span>] * m.out_channels</span><br><span class="line">                m.weight.data.normal_(<span class="number">0</span>, math.sqrt(<span class="number">2.</span> / n))</span><br><span class="line">            <span class="keyword">elif</span> isinstance(m, nn.BatchNorm2d):</span><br><span class="line">                m.weight.data.fill_(<span class="number">1</span>)</span><br><span class="line">                m.bias.data.zero_()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_make_layer</span><span class="params">(self, planes, blocks, layer_num)</span>:</span></span><br><span class="line">        layers = []</span><br><span class="line"></span><br><span class="line">        <span class="comment"># downsample</span></span><br><span class="line">        layers.append((<span class="string">"ds_conv"</span>, nn.Conv2d(self.inplanes, planes[<span class="number">1</span>], kernel_size=<span class="number">3</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>, bias=<span class="keyword">False</span>)))</span><br><span class="line">        layers.append((<span class="string">"ds_bn"</span>, nn.BatchNorm2d(planes[<span class="number">1</span>])))</span><br><span class="line">        layers.append((<span class="string">"ds_relu"</span>, nn.LeakyReLU(<span class="number">0.1</span>)))</span><br><span class="line">        <span class="comment">#  blocks</span></span><br><span class="line">        self.inplanes = planes[<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, blocks):</span><br><span class="line">            layers.append((<span class="string">"residual_&#123;&#125;"</span>.format(i), BasicBlock(self.inplanes, planes)))</span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(OrderedDict(layers))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.conv1(x)</span><br><span class="line">        x = self.bn1(x)</span><br><span class="line">        x = self.relu1(x)</span><br><span class="line"></span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x_52 = self.layer3(x)  <span class="comment"># darknet 输出1</span></span><br><span class="line">        x_26 = self.layer4(x_52)  <span class="comment"># darknet 输出2</span></span><br><span class="line">        x_13 = self.layer5(x_26)  <span class="comment"># darknet 输出3</span></span><br><span class="line"></span><br><span class="line">        x_13 = self.convset_13(x_13)</span><br><span class="line">        out_13 = self.delection_13(x_13)  <span class="comment">#  网络输出1</span></span><br><span class="line"></span><br><span class="line">        x_13 = self.up13_to_26(x_13)</span><br><span class="line"></span><br><span class="line">        x_26 = torch.cat((x_13, x_26), dim=<span class="number">1</span>)  <span class="comment"># 26 和 26 拼接</span></span><br><span class="line">        x_26 = self.convset_26(x_26)</span><br><span class="line">        out_26 = self.delection_26(x_26)  <span class="comment">#  网络输出2</span></span><br><span class="line"></span><br><span class="line">        x_26 = self.up26_to_52(x_26)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># x_26.size() = torch.Size([?, 256, 52, 52])</span></span><br><span class="line">        <span class="comment"># x_52.size() = torch.Size([?, 256, 52, 52])</span></span><br><span class="line">        x_52 = torch.cat((x_26, x_52), dim=<span class="number">1</span>)  <span class="comment"># dim = 1, 表示在第二个位置进行合成</span></span><br><span class="line">        x_52 = self.convset_52(x_52)</span><br><span class="line">        out_52 = self.delection_52(x_52)  <span class="comment">#  网络输出3</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> out_52, out_26, out_13</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line"></span><br><span class="line">    model = Yolo3Net(class_nums=<span class="number">5</span>)</span><br><span class="line">    print(model)</span><br><span class="line">    model.eval()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>):</span><br><span class="line">        t1 = time.time()</span><br><span class="line">        x = torch.rand(<span class="number">1</span>, <span class="number">3</span>, <span class="number">416</span>, <span class="number">416</span>)</span><br><span class="line">        out3 = model(x)</span><br><span class="line">        <span class="keyword">for</span> out <span class="keyword">in</span> out3:</span><br><span class="line">            print(out.shape)</span><br><span class="line">        cnt = time.time() - t1</span><br><span class="line">        print(cnt)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>运行测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">torch.Size([1, 30, 52, 52])</span><br><span class="line">torch.Size([1, 30, 26, 26])</span><br><span class="line">torch.Size([1, 30, 13, 13])</span><br><span class="line">2.550520658493042</span><br><span class="line">torch.Size([1, 30, 52, 52])</span><br><span class="line">torch.Size([1, 30, 26, 26])</span><br><span class="line">torch.Size([1, 30, 13, 13])</span><br><span class="line">2.7060494422912598</span><br></pre></td></tr></table></figure>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://blog.csdn.net/qq_39938666/article/details/89390945" target="_blank" rel="noopener">yolov3 darknet53网络及mobilenet改进</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/ba3ece3e/" rel="next" title="神经网络-YOLOv3安装并训练自己数据">
+                <i class="fa fa-chevron-left"></i> 神经网络-YOLOv3安装并训练自己数据
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/cb3d7ec4/" rel="prev" title="神经网络-K-means算法">
+                神经网络-K-means算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Darknet网络模版"><span class="nav-text">二、Darknet网络模版</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-模板说明"><span class="nav-text">2.1 模板说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-部分代码实现"><span class="nav-text">2.2 部分代码实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、YoloV3网络结构"><span class="nav-text">三、YoloV3网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-网络说明"><span class="nav-text">3.1 网络说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-部分代码实现"><span class="nav-text">3.2 部分代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-1-Convolutional-Set"><span class="nav-text">3.2.1 Convolutional Set</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-2-UpSampling"><span class="nav-text">3.2.2 UpSampling</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-text">四、总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、完整代码"><span class="nav-text">五、完整代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

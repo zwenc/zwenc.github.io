@@ -1,0 +1,72 @@
+a{ margin: 0px; padding: 0px;  text-decoration:none;}
+a:hover{color: #3399CC;}
+
+.ct{
+	width: 980px;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	height: auto;
+	position: fixed;
+	margin: 20px auto;
+}
+
+.divhead {
+	width: 720px;
+	height: auto;
+	background: #ffffff;
+	margin: 20px auto;
+	box-shadow: 2px 4px 6px #000;
+	border: 1px solid #000;
+}
+
+.expericece {
+	font-weight: bold;
+	margin: 1px;
+}
+
+.container {
+	width: 700px;
+	height: auto;
+	background: #ffffff;
+	margin: 1px auto;
+}
+
+.MyItem {
+	width: 700px;
+	font-weight: bold;
+	color: darkturquoise;
+	background: #ffffff;
+}
+
+.subDiv{
+	width: 700px;
+	font-size: 13px;
+	background: #FFFFFF;
+	margin: 5px;
+}
+
+.myTd {
+	border-bottom: 1px solid;
+	width: 700px;
+	color: #0D95E8;
+}
+
+.header {
+	width: 700px;
+	height: 170px;
+	background: #FFFFFF;
+}
+
+
+.DownButtonNormal{//设计该类的所有格式
+    height: 18px;
+    line-height: 18px;
+    padding: 0 11px;
+    background: rgb(120, 127, 162);
+    border: 1px #E5E7EA solid;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 12px;
+    outline: none;
+ }

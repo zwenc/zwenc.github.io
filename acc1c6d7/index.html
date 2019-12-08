@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、神经网络第一课 神经网络分类 激励函数 过拟合 网络搭建 数据集搭建 开始训练 调整参数  注：没有我讲 是很难看懂滴 二、神经网络分类从代码的角度来讲，主要分为2类，线性网络和卷积网络。 2.1 线性网络线性网络大致如下图，对一维数据进行操作   神经元：激励函数，一般为relu、sigmod等，也可以没有 黑色的线：$y = wx + b$，在代码中b（bias）默认有，可以通过设置取消">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-教学（第一课）">
+<meta property="og:url" content="https://www.zwenc.cn/acc1c6d7/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、神经网络第一课 神经网络分类 激励函数 过拟合 网络搭建 数据集搭建 开始训练 调整参数  注：没有我讲 是很难看懂滴 二、神经网络分类从代码的角度来讲，主要分为2类，线性网络和卷积网络。 2.1 线性网络线性网络大致如下图，对一维数据进行操作   神经元：激励函数，一般为relu、sigmod等，也可以没有 黑色的线：$y = wx + b$，在代码中b（bias）默认有，可以通过设置取消">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/acc1c6d7/1567007772473.png">
+<meta property="og:image" content="https://www.zwenc.cn/acc1c6d7/1567008272958.png">
+<meta property="og:image" content="https://www.zwenc.cn/acc1c6d7/1567008954618.png">
+<meta property="og:image" content="https://www.zwenc.cn/acc1c6d7/1567009359267.png">
+<meta property="og:updated_time" content="2019-08-29T10:20:46.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-教学（第一课）">
+<meta name="twitter:description" content="一、神经网络第一课 神经网络分类 激励函数 过拟合 网络搭建 数据集搭建 开始训练 调整参数  注：没有我讲 是很难看懂滴 二、神经网络分类从代码的角度来讲，主要分为2类，线性网络和卷积网络。 2.1 线性网络线性网络大致如下图，对一维数据进行操作   神经元：激励函数，一般为relu、sigmod等，也可以没有 黑色的线：$y = wx + b$，在代码中b（bias）默认有，可以通过设置取消">
+<meta name="twitter:image" content="https://www.zwenc.cn/acc1c6d7/1567007772473.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/acc1c6d7/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-教学（第一课） | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/acc1c6d7/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-教学（第一课）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-29 18:15:26 / 修改时间：18:20:46" itemprop="dateCreated datePublished" datetime="2019-08-29T18:15:26+08:00">2019-08-29</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/作业/" itemprop="url" rel="index"><span itemprop="name">作业</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、神经网络第一课"><a href="#一、神经网络第一课" class="headerlink" title="一、神经网络第一课"></a>一、神经网络第一课</h3><ul>
+<li>神经网络分类</li>
+<li>激励函数</li>
+<li>过拟合</li>
+<li>网络搭建</li>
+<li>数据集搭建</li>
+<li>开始训练</li>
+<li>调整参数</li>
+</ul>
+<p>注：没有我讲 是很难看懂滴</p>
+<h3 id="二、神经网络分类"><a href="#二、神经网络分类" class="headerlink" title="二、神经网络分类"></a>二、神经网络分类</h3><p>从代码的角度来讲，主要分为2类，线性网络和卷积网络。</p>
+<h4 id="2-1-线性网络"><a href="#2-1-线性网络" class="headerlink" title="2.1 线性网络"></a>2.1 线性网络</h4><p>线性网络大致如下图，对一维数据进行操作</p>
+<p><img src="/acc1c6d7/1567007772473.png" alt="1567007772473"></p>
+<ul>
+<li>神经元：激励函数，一般为relu、sigmod等，也可以没有</li>
+<li>黑色的线：$y = wx + b$，在代码中b（bias）默认有，可以通过设置取消</li>
+</ul>
+<p>建立线性网络格式如下，这种建立只是为了把网络搭建起来，具体的激励还得另外写</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.Linear(inputChannel, outputChannel，bias = <span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-卷积网络"><a href="#2-2-卷积网络" class="headerlink" title="2.2 卷积网络"></a>2.2 卷积网络</h4><p>卷积网络大致如下，是对二维数据进行操作，如图片</p>
+<p><img src="/acc1c6d7/1567008272958.png" alt="1567008272958"></p>
+<ul>
+<li>神经元：激励函数</li>
+<li>黑色的线：如上线性网络一样</li>
+<li>建立卷积网络代码如下：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding,bias=bias)</span><br></pre></td></tr></table></figure>
+<h3 id="三、激励函数"><a href="#三、激励函数" class="headerlink" title="三、激励函数"></a>三、激励函数</h3><p>如果没有激励函数的话，那么层和层之间的传递关系式为：$y = wx + b$，可以看到这个为一次函数。一次函数的缺点很明显，值域无穷，反正在一些对值域有要求的情况下就会不好。所以后面提出了sigmod，tanh等激励函数。</p>
+<p>这些常用的激励函数见下链接：<a href="https://blog.csdn.net/adolph_yang/article/details/78956987" target="_blank" rel="noopener">点我</a></p>
+<h3 id="四、过拟合"><a href="#四、过拟合" class="headerlink" title="四、过拟合"></a>四、过拟合</h3><p>简而言之，学习能力太强，把数据全部记住了，以后除了训练数据能输出正确结果，其他的都不认。</p>
+<p>造成原因：数据集太少（主要原因），学习迭代次数过多。解决方法，使用dropout函数，在每次学习的时候使一些神经元的数据失效，一般放在最后一层网络层来用。</p>
+<p>略</p>
+<h3 id="五、网络搭建"><a href="#五、网络搭建" class="headerlink" title="五、网络搭建"></a>五、网络搭建</h3><p>网络搭建是整个神经网络代码中最简单的部分，下面用数据对一次函数拟合，先给出拟合完成的图片。如图所示，红色为拟合结果，蓝色为数据。</p>
+<p><img src="/acc1c6d7/1567008954618.png" alt="1567008954618"></p>
+<p>注：最下面那个（0,0,）点是绘图程序写的不严谨出现的，和网络输出无关</p>
+<p>设计思路非常简单，使用简单的一个神经元就好</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(net, self).__init__()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        out = self.fc1(x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<p>对这个网络建立的细节进行一些讲解和注意事项。此时只学习$w,b$</p>
+<h3 id="六、数据集搭建"><a href="#六、数据集搭建" class="headerlink" title="六、数据集搭建"></a>六、数据集搭建</h3><p>这是整个神经网络中最繁琐的地方，大部分时候需要自己搜集，如果是图片，动辄就是几万张。但是这里拟合的话，数据就可以模拟生成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generateData</span><span class="params">(k, b)</span>:</span></span><br><span class="line">    dataSet = torch.tensor(torch.zeros([<span class="number">200</span>,<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">40</span>):</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">            rand_x = torch.randn(<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">            rand_y = torch.randn(<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">            dataSet[i*<span class="number">5</span> + n,:] = torch.tensor([i + rand_x, rand_y*<span class="number">10</span>  + k * i + b])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print(dataSet)</span></span><br><span class="line">    <span class="comment"># plt.scatter(dataSet[:,0],dataSet[:,1])</span></span><br><span class="line">    <span class="comment"># plt.show()</span></span><br><span class="line">    <span class="keyword">return</span> dataSet</span><br></pre></td></tr></table></figure>
+<p>这里使用在确定的一次函数，通过正太分布的的随机值，参数随机坐标。结果如图所示：</p>
+<p><img src="/acc1c6d7/1567009359267.png" alt="1567009359267"></p>
+<p><strong>将生成的数据打印出来看</strong></p>
+<h3 id="七、开始训练"><a href="#七、开始训练" class="headerlink" title="七、开始训练"></a>七、开始训练</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">model = net()</span><br><span class="line"><span class="comment"># 在这里打印网络参数，通过随机数据测试网络是否可以用torch.randn([10,1])，介绍网络数据输入方式</span></span><br><span class="line"></span><br><span class="line">dataSet = generateData(<span class="number">5</span>,<span class="number">20</span>)</span><br><span class="line"><span class="comment"># 把数据格式打印出来</span></span><br><span class="line"><span class="comment"># print（dataSet）</span></span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), lr= lr) <span class="comment"># 采用梯度下降算法</span></span><br><span class="line">loss_func = nn.MSELoss()                                <span class="comment"># 损失函数，如何计算损失？</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> eoach <span class="keyword">in</span> range(<span class="number">1000</span>):  <span class="comment"># 循环迭代1000次，（当然用不了这么多次）</span></span><br><span class="line">    outlist = torch.tensor(torch.zeros([<span class="number">200</span>,<span class="number">2</span>]))  <span class="comment"># 用于结果绘图，可以不看</span></span><br><span class="line">    loss_avg = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> index, (odata, olabel) <span class="keyword">in</span> enumerate(dataSet):</span><br><span class="line">    	<span class="comment"># 这里要对网络上一些使用Var** 作为设计梯度的错误说明</span></span><br><span class="line">    	x = torch.tensor([odata], requires_grad=<span class="keyword">True</span>).float() </span><br><span class="line">        label = torch.tensor([olabel]).float()</span><br><span class="line"></span><br><span class="line">        out  = model(x)</span><br><span class="line">        </span><br><span class="line">        loss = loss_func(out, label)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        loss_avg = loss_avg + loss.data.numpy()  <span class="comment"># 记录损失</span></span><br><span class="line">        outlist[odata.data.numpy()] = torch.tensor([odata.data, out.data]) </span><br><span class="line">  </span><br><span class="line">  	print(loss_avg / <span class="number">1000</span>) <span class="comment"># 打印损失</span></span><br><span class="line"></span><br><span class="line">	<span class="comment"># 绘制图像</span></span><br><span class="line">    plt.clf()</span><br><span class="line">    plt.axis([<span class="number">-1</span>,<span class="number">50</span>,<span class="number">-10</span>,<span class="number">250</span>])</span><br><span class="line">    plt.scatter(dataSet[:,<span class="number">0</span>],dataSet[:,<span class="number">1</span>])</span><br><span class="line">    plt.scatter(outlist[:,<span class="number">0</span>],outlist[:,<span class="number">1</span>],c=<span class="string">"r"</span>)</span><br><span class="line">    plt.pause(<span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="八、调试"><a href="#八、调试" class="headerlink" title="八、调试"></a>八、调试</h3><p>如果参数不对或者不合适的话，就会出现nan、或者拟合的一次函数的偏置b貌似为0，此时需要进行调试，查看那里出现了问题，打印网络节点参数（一个网络可以这么调试，几万个我就不知道了）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, param <span class="keyword">in</span> model.named_parameters():</span><br><span class="line">	print(name,param)</span><br></pre></td></tr></table></figure>
+<p>通过参数可以看到，偏置b在变动，只不过变动的非常缓慢，没有w变动的快，此时可以通过调整b的学习速率</p>
+<h3 id="九、调整学习速率"><a href="#九、调整学习速率" class="headerlink" title="九、调整学习速率"></a>九、调整学习速率</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">optimizer = torch.optim.SGD([</span><br><span class="line"><span class="comment"># encoder-weights</span></span><br><span class="line">&#123;<span class="string">'params'</span>: model.fc1.weight, <span class="string">'lr'</span>: lr&#125;,</span><br><span class="line"><span class="comment"># encoder-bias</span></span><br><span class="line">&#123;<span class="string">'params'</span>: model.fc1.bias, <span class="string">'lr'</span>: lr * <span class="number">100</span>&#125;,</span><br><span class="line"></span><br><span class="line">], lr=lr)</span><br></pre></td></tr></table></figure>
+<p>这样就可以了，但是这样如果面对很多层网络，手写肯定不是办法，下面采用一个函数来解决</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setparamsLr</span><span class="params">(model,lr)</span>:</span></span><br><span class="line">    params = []</span><br><span class="line">    params_dict = dict(model.named_parameters())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> key,value <span class="keyword">in</span> params_dict.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"weight"</span> <span class="keyword">in</span> key:</span><br><span class="line">            params.append(&#123;<span class="string">'params'</span>: value, <span class="string">'lr'</span>: lr&#125;)</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">"bias"</span> <span class="keyword">in</span> key:</span><br><span class="line">            params.append(&#123;<span class="string">'params'</span>: value,<span class="string">'lr'</span>: lr*<span class="number">100</span>&#125;)</span><br><span class="line">    <span class="keyword">return</span> params</span><br></pre></td></tr></table></figure>
+<h3 id="十、数据集操作（补充，不重要）"><a href="#十、数据集操作（补充，不重要）" class="headerlink" title="十、数据集操作（补充，不重要）"></a>十、数据集操作（补充，不重要）</h3><p>如果想要对数据集进行一些特殊的操作，比如一次取出多组数据，打乱数据集呢。这里就需要使用数据集对应的库。先给个可以单独运行的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> TensorDataset</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>] <span class="comment"># Data</span></span><br><span class="line">b = [<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>] <span class="comment"># Lable</span></span><br><span class="line"></span><br><span class="line">c = TensorDataset(torch.tensor(a),torch.tensor(b))</span><br><span class="line"></span><br><span class="line">d = data.DataLoader(dataset=c,batch_size=<span class="number">2</span>,shuffle=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index,(D,L) <span class="keyword">in</span> enumerate(d):</span><br><span class="line">    print(<span class="string">"index:%d"</span>%index)</span><br><span class="line">    print(D)</span><br><span class="line">    print(L)</span><br></pre></td></tr></table></figure>
+<p>细致修改有些复杂，后面再说</p>
+<h3 id="十一、loss函数自定义"><a href="#十一、loss函数自定义" class="headerlink" title="十一、loss函数自定义"></a>十一、loss函数自定义</h3><p>如果我不是输出预测值，而是要求w,b的具体值，改怎么做。</p>
+<p>此时就是多项式拟合，拟合系数，可以参考百度教程，此时就需要自定义loss，因为网络输出的结果经过一定计算才可以得到具体损失。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cb3d7ec4/" rel="next" title="神经网络-K-means算法">
+                <i class="fa fa-chevron-left"></i> 神经网络-K-means算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/3a23387e/" rel="prev" title="通用算法-递归入门到放弃">
+                通用算法-递归入门到放弃 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、神经网络第一课"><span class="nav-text">一、神经网络第一课</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、神经网络分类"><span class="nav-text">二、神经网络分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-线性网络"><span class="nav-text">2.1 线性网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-卷积网络"><span class="nav-text">2.2 卷积网络</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、激励函数"><span class="nav-text">三、激励函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、过拟合"><span class="nav-text">四、过拟合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、网络搭建"><span class="nav-text">五、网络搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、数据集搭建"><span class="nav-text">六、数据集搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、开始训练"><span class="nav-text">七、开始训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、调试"><span class="nav-text">八、调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、调整学习速率"><span class="nav-text">九、调整学习速率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十、数据集操作（补充，不重要）"><span class="nav-text">十、数据集操作（补充，不重要）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十一、loss函数自定义"><span class="nav-text">十一、loss函数自定义</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

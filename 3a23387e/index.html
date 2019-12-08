@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、前言递归是编程基础、基础、基础 环境配置如下：  系统：win10 语言：python3.7  二、递归大致分类 分治算法 减而治之（求阶层）：每次将复杂度减一 分而治之（二分查找）：每次将复杂度减半   回溯算法（全排列问题）：如果碰到不符合目标结果的就直接返回 动态规划（与分治算法类似，找最优解）  三、递归思想（三分实用，七分装逼，总之别人看不懂就完了） 现在就开始讲三分实用 注：如非得">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用算法-递归入门到放弃">
+<meta property="og:url" content="https://www.zwenc.cn/3a23387e/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、前言递归是编程基础、基础、基础 环境配置如下：  系统：win10 语言：python3.7  二、递归大致分类 分治算法 减而治之（求阶层）：每次将复杂度减一 分而治之（二分查找）：每次将复杂度减半   回溯算法（全排列问题）：如果碰到不符合目标结果的就直接返回 动态规划（与分治算法类似，找最优解）  三、递归思想（三分实用，七分装逼，总之别人看不懂就完了） 现在就开始讲三分实用 注：如非得">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-07T13:17:20.441Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通用算法-递归入门到放弃">
+<meta name="twitter:description" content="一、前言递归是编程基础、基础、基础 环境配置如下：  系统：win10 语言：python3.7  二、递归大致分类 分治算法 减而治之（求阶层）：每次将复杂度减一 分而治之（二分查找）：每次将复杂度减半   回溯算法（全排列问题）：如果碰到不符合目标结果的就直接返回 动态规划（与分治算法类似，找最优解）  三、递归思想（三分实用，七分装逼，总之别人看不懂就完了） 现在就开始讲三分实用 注：如非得">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/3a23387e/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>通用算法-递归入门到放弃 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/3a23387e/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">通用算法-递归入门到放弃
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-06 11:16:19" itemprop="dateCreated datePublished" datetime="2019-09-06T11:16:19+08:00">2019-09-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-07 21:17:20" itemprop="dateModified" datetime="2019-09-07T21:17:20+08:00">2019-09-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/通用算法/" itemprop="url" rel="index"><span itemprop="name">通用算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>递归是编程基础、基础、基础</p>
+<p>环境配置如下：</p>
+<ul>
+<li>系统：win10</li>
+<li>语言：python3.7</li>
+</ul>
+<h3 id="二、递归大致分类"><a href="#二、递归大致分类" class="headerlink" title="二、递归大致分类"></a>二、递归大致分类</h3><ul>
+<li>分治算法<ul>
+<li>减而治之（求阶层）：每次将复杂度减一</li>
+<li>分而治之（二分查找）：每次将复杂度减半</li>
+</ul>
+</li>
+<li>回溯算法（全排列问题）：如果碰到不符合目标结果的就直接返回</li>
+<li>动态规划（与分治算法类似，找最优解）</li>
+</ul>
+<h3 id="三、递归思想"><a href="#三、递归思想" class="headerlink" title="三、递归思想"></a>三、递归思想</h3><p>（三分实用，七分<del>装逼</del>，总之别人看不懂就完了）</p>
+<p>现在就开始讲三分实用</p>
+<p>注：如非得已，请勿使用递归，虽然很帅，很漂亮。（如非得已，我的智商也不允许我这么做）</p>
+<h4 id="3-1-一个栗子"><a href="#3-1-一个栗子" class="headerlink" title="3.1 一个栗子"></a>3.1 一个栗子</h4><p>求n的阶乘，并返回结果。（减而治止）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> n *func(n<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(func(<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-递归的目的"><a href="#3-2-递归的目的" class="headerlink" title="3.2 递归的目的"></a>3.2 递归的目的</h4><p>目的总结下来就是：大事化小，小事化了</p>
+<h4 id="3-3-什么时候可以用递归？"><a href="#3-3-什么时候可以用递归？" class="headerlink" title="3.3 什么时候可以用递归？"></a>3.3 什么时候可以用递归？</h4><p>一般来说，有循环的地方就可以用递归，但是递归更加适用于有时候我们并不知道循环多少次，多少层循环，比如二叉树遍历问题（很多问题都可以建模成二叉树问题）。</p>
+<h4 id="3-4-递归的主要结构"><a href="#3-4-递归的主要结构" class="headerlink" title="3.4 递归的主要结构"></a>3.4 递归的主要结构</h4><ul>
+<li>结束语句：如果没有结束语句，那么递归程序将会一直递归下去。</li>
+<li>功能代码：具体要做的事情</li>
+<li>返回语句：（也可以没有）</li>
+</ul>
+<h4 id="3-5-简单例子"><a href="#3-5-简单例子" class="headerlink" title="3.5 简单例子"></a>3.5 简单例子</h4><ul>
+<li>可以看做是一层循环</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">JustLikeFor</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> :</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    </span><br><span class="line">    print(n)</span><br><span class="line"></span><br><span class="line">    JustLikeFor(n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="四、简单实践一"><a href="#四、简单实践一" class="headerlink" title="四、简单实践一"></a>四、简单实践一</h3><p>（这些网络上都有很多例子）</p>
+<h4 id="4-1-求阶层"><a href="#4-1-求阶层" class="headerlink" title="4.1 求阶层"></a>4.1 求阶层</h4><p>问题：求n的阶乘</p>
+<p>思路：当求n的阶乘的时候，如果可以每次得到f（n-1）的阶乘就方便了。</p>
+<p>设计：当n==0的时候，返回1。（当不知道返回值的时候，就想象最简的时候应该返回什么）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> n * func(n<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    print(func(<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+<p>如果使用循环，答案如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func2</span><span class="params">(n)</span>:</span></span><br><span class="line">    out = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,n+<span class="number">1</span>):</span><br><span class="line">        out = out * i</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-求斐波拉契数列"><a href="#4-2-求斐波拉契数列" class="headerlink" title="4.2 求斐波拉契数列"></a>4.2 求斐波拉契数列</h4><p>问题：已知$a_0 = 1, a_1=1, a_n = a_{n-1} + a_{n-2}$，求当n=k时，$a_n$为多少？</p>
+<p>思路：如上面求阶层一样，如果每次可以得到$a_{n-1} + a_{n-2}$，就方便了。（减而治之）</p>
+<p>设计：当$n=0,1$时，返回为1</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun3</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">or</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> fun3(n<span class="number">-1</span>) + fun3(n<span class="number">-2</span>)</span><br></pre></td></tr></table></figure>
+<p>注：可以优化，里面会有重复计算的值，可以用一个数组保存起来，碰到计算过的值便不会再计算。（牺牲空间以节省时间）</p>
+<p>使用循环来写，可以看出不帅，不简洁，不易读（对懂递归的人来说）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun4</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">or</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    a0 = <span class="number">1</span></span><br><span class="line">    a1 = <span class="number">1</span></span><br><span class="line">    out = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n):</span><br><span class="line">        out = a0 + a1</span><br><span class="line">        a0 = a1</span><br><span class="line">        a1 = out</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-求冒泡排序"><a href="#4-3-求冒泡排序" class="headerlink" title="4.3 求冒泡排序"></a>4.3 求冒泡排序</h4><ul>
+<li>传统方法：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maopao</span><span class="params">(arr)</span>:</span></span><br><span class="line">    n = len(arr)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(n - i - <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> arr[k] &gt; arr[k + <span class="number">1</span>]:</span><br><span class="line">                temp = arr[k]</span><br><span class="line">                arr[k] = arr[k + <span class="number">1</span>]</span><br><span class="line">                arr[k + <span class="number">1</span>] = temp</span><br><span class="line">    <span class="keyword">return</span> arr</span><br></pre></td></tr></table></figure>
+<ul>
+<li>递归实现方法一：把递归单纯当做是一层循环来用。此时的结束条件是<code>n == 0</code>，这里使用的是减而治之的思想</li>
+</ul>
+<p>(目前没有想到有返回值的方法，除非是使用Class）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maopao2</span><span class="params">(arr, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(n - <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> arr[k] &gt; arr[k + <span class="number">1</span>]:</span><br><span class="line">            temp = arr[k]</span><br><span class="line">            arr[k] = arr[k + <span class="number">1</span>]</span><br><span class="line">            arr[k + <span class="number">1</span>] = temp</span><br><span class="line"></span><br><span class="line">    maopao2(arr, n - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>递归实现方法二：想个办法再把里面的循环也去了。这里使用的也是减而治之的思想</li>
+</ul>
+<p>思路：现在最外层n次循环已经实现了，现在去掉里面的<code>for</code>，换成<code>if</code>判断<code>left</code>和<code>right</code>的大小，使得<code>k</code>每次重新置零<sup><a href="#fn_1" id="reffn_1">1</a></sup>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">maopao3</span><span class="params">(arr, left, right)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> right &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> arr[left] &gt; arr[left + <span class="number">1</span>]:</span><br><span class="line">        temp = arr[left]</span><br><span class="line">        arr[left] = arr[left + <span class="number">1</span>]</span><br><span class="line">        arr[left + <span class="number">1</span>] = temp</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> left &gt;= (right - <span class="number">2</span>):</span><br><span class="line">        maopao3(arr, <span class="number">0</span>, right - <span class="number">1</span>)           <span class="comment"># 控制第一重循环</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        maopao3(arr, left + <span class="number">1</span>, right)        <span class="comment"># 控制第二重循环</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-4-求二分查找"><a href="#4-4-求二分查找" class="headerlink" title="4.4 求二分查找"></a>4.4 求二分查找</h4><p>问题：使用二分法遍历数组进行查找，假设数列为由小到大排序。</p>
+<p>思路：每次将问题简化一半（分而治之）</p>
+<p>设计：当范围不能再划分时，返回，返回值为一个<code>index</code>，认为目标数据就在这个范围之中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">erFen</span><span class="params">(arr, left, right, goal)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt; right:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    middle = int((left + right) / <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> arr[middle] &lt; goal:</span><br><span class="line">        <span class="keyword">return</span> erFen(arr, middle + <span class="number">1</span>, right, goal)  <span class="comment"># middle 已经判断过，所以加1</span></span><br><span class="line">    <span class="keyword">elif</span> arr[middle] &gt; goal:</span><br><span class="line">        <span class="keyword">return</span> erFen(arr, left, middle - <span class="number">1</span>, goal)   <span class="comment"># 理由同上</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> middle                               <span class="comment"># 找到了便返回</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-5-求快速排序"><a href="#4-5-求快速排序" class="headerlink" title="4.5 求快速排序"></a>4.5 求快速排序</h4><p>问题：使用快速排序<sup><a href="#fn_2" id="reffn_2">2</a></sup>，对乱序数组进行从小到大排序。</p>
+<p>思路：每次将问题简化一半（分而治之），对两边单独进行排序，一直递归下去</p>
+<p>设计：当范围不能再划分时，返回</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getIndex</span><span class="params">(arr, left, right, tmp)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        arr[left] = tmp</span><br><span class="line">        <span class="keyword">return</span> left</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left  &lt; right) <span class="keyword">and</span> (arr[right] &gt;= tmp):</span><br><span class="line">        right = right - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    arr[left] = arr[right]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) <span class="keyword">and</span> (arr[left] &lt;= tmp):</span><br><span class="line">        left = left + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    arr[right] = arr[left]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> getIndex(arr, left, right,tmp)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SortByQuickly</span><span class="params">(arr, left, right)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    middle = getIndex(arr, left, right, arr[left])</span><br><span class="line"></span><br><span class="line">    SortByQuickly(arr, left, middle - <span class="number">1</span>)</span><br><span class="line">    SortByQuickly(arr, middle + <span class="number">1</span>, right)</span><br></pre></td></tr></table></figure>
+<p>注：其实<code>getIndex</code>可以使用一个<code>while</code>循环实现，但是为了**，使用递归。</p>
+<h4 id="4-6-求归并排序"><a href="#4-6-求归并排序" class="headerlink" title="4.6 求归并排序"></a>4.6 求归并排序</h4><p>问题：使用归并排序<sup><a href="#fn_3" id="reffn_3">3</a></sup>，对乱序数组排序。</p>
+<p>思路：使用递归将数组不断对半划分，直到不可划分为止，后再进行归并。（出栈后进行数据处理，递归只做数据划分。）</p>
+<p>设计：当不可划分的时候，则停止递归。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(arr, left, middle, right, tmpArray)</span>:</span></span><br><span class="line">    left_i = left</span><br><span class="line">    right_k = right</span><br><span class="line">    temp = middle</span><br><span class="line">    middle = middle + <span class="number">1</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt;= temp) <span class="keyword">and</span> (middle &lt;= right):   <span class="comment"># 扫描两段，比较存入到tmpArray，直到其中一个扫描完毕</span></span><br><span class="line">        <span class="keyword">if</span> arr[left] &lt; arr[middle]:</span><br><span class="line">            tmpArray[i] = arr[left]</span><br><span class="line">            left = left + <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tmpArray[i] = arr[middle]</span><br><span class="line">            middle = middle + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> left &lt;= temp:     <span class="comment"># 把第一段未扫描的结束的直接添加到tmpArray后面</span></span><br><span class="line">        tmpArray[i] = arr[left]</span><br><span class="line">        left = left + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> middle &lt;= right:   <span class="comment"># 把第二段未扫描的结束的直接添加到tmpArray后面</span></span><br><span class="line">        tmpArray[i] = arr[middle]</span><br><span class="line">        middle = middle + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> left_i &lt;= right_k: <span class="comment"># 复制到原数组中arr</span></span><br><span class="line">        arr[left_i] = tmpArray[i]</span><br><span class="line">        left_i = left_i + <span class="number">1</span></span><br><span class="line">        i = i + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mergeSort</span><span class="params">(arr, left, right, tmpArray)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> left &gt;= right:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    middle = int((left + right) / <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    mergeSort(arr, left, middle, tmpArray)</span><br><span class="line">    mergeSort(arr, middle + <span class="number">1</span>, right, tmpArray)</span><br><span class="line"></span><br><span class="line">    merge(arr, left, middle, right, tmpArray)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MergeSort</span><span class="params">(arr)</span>:</span></span><br><span class="line">    tmpArray = arr[:]  <span class="comment"># 复制数组</span></span><br><span class="line">    mergeSort(arr, <span class="number">0</span>, len(arr) - <span class="number">1</span>, tmpArray)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    arr = [<span class="number">2</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">12</span>, <span class="number">10</span>, <span class="number">4</span>, <span class="number">2</span>]</span><br><span class="line">    MergeSort(arr)</span><br><span class="line">    print(arr)</span><br></pre></td></tr></table></figure>
+<h3 id="五、简单实践二（二叉树）"><a href="#五、简单实践二（二叉树）" class="headerlink" title="五、简单实践二（二叉树）"></a>五、简单实践二（二叉树）</h3><p>（这里主要讲递归，所以二叉树只是辅助，默认原理都懂）</p>
+<h4 id="5-1-基本概念"><a href="#5-1-基本概念" class="headerlink" title="5.1 基本概念"></a>5.1 基本概念</h4><ul>
+<li>二叉树的储存方式<sup><a href="#fn_5" id="reffn_5">5</a></sup><ul>
+<li>数组方式</li>
+<li>链表方式（本文主要使用）</li>
+</ul>
+</li>
+<li>二叉树的遍历方式<sup><a href="#fn_4" id="reffn_4">4</a></sup><ul>
+<li>前序遍历</li>
+<li>中序遍历</li>
+<li>后序遍历</li>
+<li>层序遍历</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-2-生成测试数据"><a href="#5-2-生成测试数据" class="headerlink" title="5.2 生成测试数据"></a>5.2 生成测试数据</h4><p>这里主要是对二叉树进行操作，很多现实问题都可以转换为二叉树遍历问题来进行求解。先生成一个二叉树：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data, L_Child=None, R_Child=None)</span>:</span></span><br><span class="line">        self.data = data</span><br><span class="line">        self.L_Child = L_Child</span><br><span class="line">        self.R_Child = R_Child</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setChild</span><span class="params">(self, L_Child=None, R_Child=None)</span>:</span></span><br><span class="line">        self.L_Child = L_Child</span><br><span class="line">        self.R_Child = R_Child</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generateRandNode</span><span class="params">(arr)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(arr) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    middle = int(len(arr) / <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Node(arr[<span class="number">0</span>], generateRandNode(arr[<span class="number">1</span>:middle + <span class="number">1</span>]), generateRandNode(arr[middle + <span class="number">1</span>:]))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    arr = [<span class="number">2</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">4</span>]</span><br><span class="line">    test = generateRandNode(arr)</span><br></pre></td></tr></table></figure>
+<p>在调试模式下可以查看变量，经过验证，<code>len(arr) = 0</code>和<code>len(arr) = n</code>都可以实现分配node</p>
+<h4 id="5-1-前序遍历"><a href="#5-1-前序遍历" class="headerlink" title="5.1 前序遍历"></a>5.1 前序遍历</h4><p>解释：先遍历左节点，后遍历右节点，在入栈之前操作</p>
+<ul>
+<li>方法一</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FrontTraversing</span><span class="params">(node)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> (node == <span class="keyword">None</span>):</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    print(node.data)</span><br><span class="line"></span><br><span class="line">    FrontTraversing(node.L_Child)</span><br><span class="line">    FrontTraversing(node.R_Child)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>方法二</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">FrontTraversing</span><span class="params">(node)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> (node == <span class="keyword">None</span>):</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> [node.data] + FrontTraversing(node.L_Child)+ FrontTraversing(node.R_Child)</span><br></pre></td></tr></table></figure>
+<h4 id="5-2-中序遍历"><a href="#5-2-中序遍历" class="headerlink" title="5.2 中序遍历"></a>5.2 中序遍历</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">MiddleTraversing</span><span class="params">(node)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> (node == <span class="keyword">None</span>):</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span>  FrontTraversing(node.L_Child) + [node.data] + FrontTraversing(node.R_Child)</span><br></pre></td></tr></table></figure>
+<h4 id="5-3-后序遍历"><a href="#5-3-后序遍历" class="headerlink" title="5.3 后序遍历"></a>5.3 后序遍历</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def PostorderTraversal(node):</span><br><span class="line">    if (node == None):</span><br><span class="line">        return []</span><br><span class="line"></span><br><span class="line">    return FrontTraversing(node.L_Child) + FrontTraversing(node.R_Child) + [node.data]</span><br></pre></td></tr></table></figure>
+<h4 id="5-4-层序遍历"><a href="#5-4-层序遍历" class="headerlink" title="5.4 层序遍历"></a>5.4 层序遍历</h4><p>首推使用队列进行进行遍历<sup><a href="#fn_6" id="reffn_6">6</a></sup>，但是这里是递归教学篇，递归也可以实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">levelOrder</span><span class="params">(node, level, sol)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> node == <span class="keyword">None</span>:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(sol) == level - <span class="number">1</span>:</span><br><span class="line">        sol.append([])</span><br><span class="line"></span><br><span class="line">    sol[level - <span class="number">1</span>].append(node.data)</span><br><span class="line"></span><br><span class="line">    levelOrder(node.L_Child, level + <span class="number">1</span>, sol)</span><br><span class="line">    levelOrder(node.R_Child, level + <span class="number">1</span>, sol)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">LevelTraversal</span><span class="params">(node)</span>:</span></span><br><span class="line">    sol = []</span><br><span class="line">    levelOrder(node,<span class="number">1</span>,sol)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sol</span><br></pre></td></tr></table></figure>
+<p>这里其实使用的是前序遍历类型的方法，但是呢，通过一个参数来确定层数，虽然不是一次把该层遍历完，但是可以把数据储存到对应的层中。</p>
+<h3 id="六、题目"><a href="#六、题目" class="headerlink" title="六、题目"></a>六、题目</h3><ul>
+<li>迷宫最优路径问题</li>
+<li>上台阶问题</li>
+<li>计算器实现问题</li>
+<li>找最优解问题</li>
+</ul>
+<p>百度上面都有答案的</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://www.cnblogs.com/jing-an-feng-shao/p/9078826.html" target="_blank" rel="noopener">排序算法杂谈（二） —— 冒泡排序的递归实现</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="https://www.runoob.com/w3cnote/quick-sort.html" target="_blank" rel="noopener">快速排序</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. <a href="https://cuijiahua.com/blog/2018/01/algorithm_7.html" target="_blank" rel="noopener">排序（7）：归并排序</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_4">
+<sup>4</sup>. <a href="https://www.cnblogs.com/fly-me/p/wei-ti-jiaoer-cha-shu-de-si-zhong-bian-li-fang-fa.html" target="_blank" rel="noopener">二叉树的四种遍历方法笔记</a><a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_5">
+<sup>5</sup>. <a href="https://blog.csdn.net/qq_38323666/article/details/82415366" target="_blank" rel="noopener">二叉树存储方式-二叉链表</a><a href="#reffn_5" title="Jump back to footnote [5] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_6">
+<sup>6</sup>. <a href="https://www.jianshu.com/p/12107999b9c3" target="_blank" rel="noopener">数据结构第12讲 二叉树的层次遍历</a><a href="#reffn_6" title="Jump back to footnote [6] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/acc1c6d7/" rel="next" title="神经网络-教学（第一课）">
+                <i class="fa fa-chevron-left"></i> 神经网络-教学（第一课）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/4013bb9b/" rel="prev" title="手写数字识别画板（qt）">
+                手写数字识别画板（qt） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、递归大致分类"><span class="nav-text">二、递归大致分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、递归思想"><span class="nav-text">三、递归思想</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-一个栗子"><span class="nav-text">3.1 一个栗子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-递归的目的"><span class="nav-text">3.2 递归的目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-什么时候可以用递归？"><span class="nav-text">3.3 什么时候可以用递归？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-递归的主要结构"><span class="nav-text">3.4 递归的主要结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-简单例子"><span class="nav-text">3.5 简单例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、简单实践一"><span class="nav-text">四、简单实践一</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-求阶层"><span class="nav-text">4.1 求阶层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-求斐波拉契数列"><span class="nav-text">4.2 求斐波拉契数列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-求冒泡排序"><span class="nav-text">4.3 求冒泡排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-求二分查找"><span class="nav-text">4.4 求二分查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-求快速排序"><span class="nav-text">4.5 求快速排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-求归并排序"><span class="nav-text">4.6 求归并排序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、简单实践二（二叉树）"><span class="nav-text">五、简单实践二（二叉树）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-基本概念"><span class="nav-text">5.1 基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-生成测试数据"><span class="nav-text">5.2 生成测试数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-前序遍历"><span class="nav-text">5.1 前序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-中序遍历"><span class="nav-text">5.2 中序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-后序遍历"><span class="nav-text">5.3 后序遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-层序遍历"><span class="nav-text">5.4 层序遍历</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、题目"><span class="nav-text">六、题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
