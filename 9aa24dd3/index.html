@@ -104,25 +104,27 @@
 
 
 
-  <meta name="description" content="一、前言 源图片：24位RGB图 JPEG  二、采样 颜色空间转换根据以下公式从RGB颜色空间转换到YUV颜色空间。 \begin{align} R &amp;= Y+1.402(C_r-128) \\\\ G &amp;= Y-0.34414(C_b-128)-0.71414(C_r-128) \\\\ B &amp;= Y+1.772(C_b-128) \\\\ \end{align}其中Y表示亮度信息，$C_b$">
+  <meta name="description" content="一、环境 系统：win10 语言：python 3.7  二、原理说明在图论中，对于连通图，生成一颗最小生成树，使得其所有点连通，并且权重最小，使用Prim算法，原理如下图所示：  描述：先随机设定一个起点，按照距离最近的原则将周围的点依次访问，并且加入到一块，访问的时候需要记录该节点的父节点。 原理相对简单，代码设计思路为：  假设选取了0点作为起始点，先对0可以连接的点的距离进行访问，inf表">
 <meta name="keywords" content="程序猿">
 <meta property="og:type" content="article">
-<meta property="og:title" content="数字图像处理入门（1）-采样和量化">
-<meta property="og:url" content="https://www.zwenc.cn/684f8c85/index.html">
+<meta property="og:title" content="通用算法-最小生成树（Prim）">
+<meta property="og:url" content="https://www.zwenc.cn/9aa24dd3/index.html">
 <meta property="og:site_name" content="zwen">
-<meta property="og:description" content="一、前言 源图片：24位RGB图 JPEG  二、采样 颜色空间转换根据以下公式从RGB颜色空间转换到YUV颜色空间。 \begin{align} R &amp;= Y+1.402(C_r-128) \\\\ G &amp;= Y-0.34414(C_b-128)-0.71414(C_r-128) \\\\ B &amp;= Y+1.772(C_b-128) \\\\ \end{align}其中Y表示亮度信息，$C_b$">
+<meta property="og:description" content="一、环境 系统：win10 语言：python 3.7  二、原理说明在图论中，对于连通图，生成一颗最小生成树，使得其所有点连通，并且权重最小，使用Prim算法，原理如下图所示：  描述：先随机设定一个起点，按照距离最近的原则将周围的点依次访问，并且加入到一块，访问的时候需要记录该节点的父节点。 原理相对简单，代码设计思路为：  假设选取了0点作为起始点，先对0可以连接的点的距离进行访问，inf表">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-20T06:53:13.667Z">
+<meta property="og:image" content="https://www.zwenc.cn/9aa24dd3/GIF.gif">
+<meta property="og:updated_time" content="2019-12-09T15:02:43.306Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="数字图像处理入门（1）-采样和量化">
-<meta name="twitter:description" content="一、前言 源图片：24位RGB图 JPEG  二、采样 颜色空间转换根据以下公式从RGB颜色空间转换到YUV颜色空间。 \begin{align} R &amp;= Y+1.402(C_r-128) \\\\ G &amp;= Y-0.34414(C_b-128)-0.71414(C_r-128) \\\\ B &amp;= Y+1.772(C_b-128) \\\\ \end{align}其中Y表示亮度信息，$C_b$">
+<meta name="twitter:title" content="通用算法-最小生成树（Prim）">
+<meta name="twitter:description" content="一、环境 系统：win10 语言：python 3.7  二、原理说明在图论中，对于连通图，生成一颗最小生成树，使得其所有点连通，并且权重最小，使用Prim算法，原理如下图所示：  描述：先随机设定一个起点，按照距离最近的原则将周围的点依次访问，并且加入到一块，访问的时候需要记录该节点的父节点。 原理相对简单，代码设计思路为：  假设选取了0点作为起始点，先对0可以连接的点的距离进行访问，inf表">
+<meta name="twitter:image" content="https://www.zwenc.cn/9aa24dd3/GIF.gif">
 
 
 
 
 
 
-  <link rel="canonical" href="https://www.zwenc.cn/684f8c85/">
+  <link rel="canonical" href="https://www.zwenc.cn/9aa24dd3/">
 
 
 
@@ -132,7 +134,7 @@
   };
 </script>
 
-  <title>数字图像处理入门（1）-采样和量化 | zwen</title>
+  <title>通用算法-最小生成树（Prim） | zwen</title>
   
 
 
@@ -370,7 +372,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/684f8c85/">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/9aa24dd3/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zwen">
@@ -387,7 +389,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">数字图像处理入门（1）-采样和量化
+          <h1 class="post-title" itemprop="name headline">通用算法-最小生成树（Prim）
 
               
             
@@ -413,24 +415,12 @@
                 
               
 
-              <time title="创建时间：2019-03-16 13:26:31" itemprop="dateCreated datePublished" datetime="2019-03-16T13:26:31+08:00">2019-03-16</time>
+              <time title="创建时间：2019-12-09 21:36:37 / 修改时间：23:02:43" itemprop="dateCreated datePublished" datetime="2019-12-09T21:36:37+08:00">2019-12-09</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-03-20 14:53:13" itemprop="dateModified" datetime="2019-03-20T14:53:13+08:00">2019-03-20</time>
               
             
           </span>
@@ -454,7 +444,7 @@
                   ，
                 
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/图像/" itemprop="url" rel="index"><span itemprop="name">图像</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/通用算法/" itemprop="url" rel="index"><span itemprop="name">通用算法</span></a></span>
 
                 
                 
@@ -495,49 +485,48 @@
       
 
       
-        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ul>
-<li>源图片：24位RGB图</li>
-<li>JPEG</li>
+        <h3 id="一、环境"><a href="#一、环境" class="headerlink" title="一、环境"></a>一、环境</h3><ul>
+<li>系统：win10</li>
+<li>语言：python 3.7</li>
 </ul>
-<h3 id="二、采样"><a href="#二、采样" class="headerlink" title="二、采样"></a>二、采样</h3><ul>
-<li>颜色空间转换<br>根据以下公式从RGB颜色空间转换到YUV颜色空间。<script type="math/tex; mode=display">
-\begin{align}
-R &= Y+1.402(C_r-128) \\\\
-G &= Y-0.34414(C_b-128)-0.71414(C_r-128) \\\\
-B &= Y+1.772(C_b-128) \\\\
-\end{align}</script>其中Y表示亮度信息，$C_b$表示饱和度信息，$C_r$表示的色度信息。看公式就好，只是一种色彩定义标准，和RGB功能类似，但是由于人眼对亮度信息更加敏感，对色彩变化却不怎么敏感，于是YUV（$Y,C_b,C_r$）用作图片处理更加直观。</li>
-<li>采样原理<br>对源图片的像素信息进行采用，比如直接提取24位RGB也是可以的。但是研究发现，人眼对亮度变换的敏感度要比对色彩变换的敏感度高出很多，因此，我们可以认为Y分量要比Cb,Cr分量重要的多。在BMP图片中，RGB三个分量各采用一个字节进行采样，也就是我们常听到的RGB888的模式；而JPEG图片中，通常采用两种采样方式：YUV411和YUV422，它们所代表的意义是Y,Cb,Cr三个分量的数据取样比例一般是4：1：1或者4：2：2。</li>
-<li>无损采样<br>原来图片是什么样子的，采集后就是什么样子的，只是简单进行了颜色空间的变化。</li>
-<li>有损采样<ol>
-<li>将4个像素压缩成为一个像素，也会损失数据，图片的分辨率变小</li>
-<li>有损换来的好处是图片储存空间变小</li>
-</ol>
-</li>
-<li>采样的特点<br>采样是为了方便后续的数据处理压缩，对于场景缓慢变化的图片如纯白，纯黑，采用粗采样可以节省储存空间。</li>
+<h3 id="二、原理说明"><a href="#二、原理说明" class="headerlink" title="二、原理说明"></a>二、原理说明</h3><p>在图论中，对于连通图，生成一颗最小生成树，使得其所有点连通，并且权重最小，使用Prim算法，原理如下图所示：</p>
+<p><img src="/9aa24dd3/GIF.gif" alt="GIF"></p>
+<p>描述：先随机设定一个起点，按照距离最近的原则将周围的点依次访问，并且加入到一块，访问的时候需要记录该节点的父节点。</p>
+<p>原理相对简单，代码设计思路为：</p>
+<ul>
+<li>假设选取了0点作为起始点，先对0可以连接的点的距离进行访问，inf表示连接不上（距离无穷大）</li>
 </ul>
-<h3 id="三、量化"><a href="#三、量化" class="headerlink" title="三、量化"></a>三、量化</h3><ul>
-<li>量化的概念<br>量化是一个中性词，与图像处理本身没有什么关系。用公式来表示的话，他的意义如下<script type="math/tex; mode=display">
-量化后的值=(输入的值)/(量化系数)</script>比如量化系数为2，输出的值表示为输出值的多少倍，那么问题来了，有什么用？<ol>
-<li>有什么用<br>量化后的数据，一般用来取整数，可以缩小数据储存空间，比如0~256的色彩空间，变成了0~128的色彩空间。但这不是最厉害的。</li>
-<li>最厉害的<br>如果对每一个不同的数据的量化系数不同，可以达到对数据的间接处理，具体接着看下文</li>
-</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>,<span class="number">8</span>,<span class="number">12</span>,inf,inf,inf,inf,inf,inf]</span><br><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>] <span class="comment"># 标记每个节点的父节点是谁</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>比较除0之外的其他数字（0可以理解为已经被访问过），选择最小值（这里是1号节点），然后将这个位置标记为0。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">12</span>,inf,inf,inf,inf,inf,inf]</span><br><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>] <span class="comment"># 标记每个节点的父节点是谁</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>将上一步选中的点（1号节点），计算与剩下点之间的距离，如果比上一步中得到的数字小，则保存进去，数组更新为：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">12</span>,<span class="number">9</span>,inf,inf,inf,inf,inf]</span><br><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>] <span class="comment"># 标记每个节点的父节点是谁</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>比较除0之外的其他数字，选择最小值（这里是4号节点）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">12</span>,<span class="number">9</span>,inf,inf,inf,inf,inf]</span><br><span class="line">[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>] <span class="comment"># 标记每个节点的父节点是谁</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>同理，计算4号节点与剩下点之间的距离，如果比上一步中得到的数字小，则保存进去。如此循环往复。</li>
+</ul>
+<h3 id="三、代码实现"><a href="#三、代码实现" class="headerlink" title="三、代码实现"></a>三、代码实现</h3><p>参考别人用C实现的思路<sup><a href="#fn_2" id="reffn_2">2</a></sup>，这里使用python代码对其进行复现：</p>
+<ul>
+<li><p>根据上述图，设计图的邻阶矩阵<sup><a href="#fn_ 1" id="reffn_ 1"> 1</a></sup></p>
 </li>
-<li>在图像处理中的作用<br>在JPEG中，量化是对DCT变化出来的频率分量进行量化（从小到大排序好），由于人眼对高频分量不敏感，可以将高频分量的量化系数设置的很大，这样高频分量取整之后就全部变成了0，于是剩下的都是有用数据。</li>
-<li>参数说明<ol>
-<li>细量化：量化系数设置的小（&gt;=1）</li>
-<li>粗量化：量化系数设置的大</li>
-</ol>
+<li><p>创建两个长度为n的数组，一个记录距离，一个记录父子关系。其中n为图的节点个数</p>
 </li>
 </ul>
-<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><ul>
-<li>对于图像来说，如果图片储存大小要求一致<ol>
-<li>对于变化缓慢的图片，比如蓝天白云，采用粗采样，细量化。</li>
-<li>对于细节较多的图片，比如人物照片，采用细采用，粗量化。</li>
-<li>以上两点都是简单处理，专业人士表示有更好的。</li>
-</ol>
-</li>
-<li>问题提出<br>对于图像处理来说，量化后的高频分量虽然为0，但是依旧存在，没有起到压缩效果，其作用是：<br>答：采用，量化只是压缩的前置步骤，类似于预处理。</li>
-</ul>
+<p>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GenerateGrap</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    纯手工构建邻阶矩阵，其中np.inf表示无穷大</span></span><br><span class="line"><span class="string">    :return:  邻阶矩阵</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    grap = []</span><br><span class="line"></span><br><span class="line">    grap.append([<span class="number">0</span>,         <span class="number">0.1</span>,     <span class="number">12</span>, np.inf, np.inf, np.inf, np.inf, np.inf, np.inf])</span><br><span class="line">    grap.append([<span class="number">0.1</span>,         <span class="number">0</span>,     <span class="number">13</span>,     <span class="number">25</span>,      <span class="number">9</span>, np.inf, np.inf, np.inf, np.inf])</span><br><span class="line">    grap.append([<span class="number">12</span>,         <span class="number">13</span>,      <span class="number">0</span>,     <span class="number">14</span>, np.inf, np.inf,     <span class="number">21</span>, np.inf, np.inf])</span><br><span class="line">    grap.append([np.inf,     <span class="number">25</span>,     <span class="number">14</span>,      <span class="number">0</span>,     <span class="number">20</span>,    <span class="number">0.1</span>,     <span class="number">12</span>,     <span class="number">12</span>,     <span class="number">16</span>])</span><br><span class="line">    grap.append([np.inf,      <span class="number">9</span>, np.inf,     <span class="number">20</span>,      <span class="number">0</span>,     <span class="number">19</span>, np.inf, np.inf, np.inf])</span><br><span class="line">    grap.append([np.inf, np.inf, np.inf,    <span class="number">0.1</span>,     <span class="number">19</span>,      <span class="number">0</span>, np.inf,     <span class="number">11</span>, np.inf])</span><br><span class="line">    grap.append([np.inf, np.inf,     <span class="number">21</span>,     <span class="number">12</span>, np.inf, np.inf,      <span class="number">0</span>, np.inf,     <span class="number">11</span>])</span><br><span class="line">    grap.append([np.inf, np.inf, np.inf,     <span class="number">12</span>, np.inf,     <span class="number">11</span>, np.inf,      <span class="number">0</span>,      <span class="number">9</span>])</span><br><span class="line">    grap.append([np.inf, np.inf, np.inf,     <span class="number">16</span>, np.inf, np.inf,     <span class="number">11</span>,      <span class="number">9</span>,      <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.array(grap)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getMinIndex</span><span class="params">(arr)</span>:</span></span><br><span class="line">    temp = np.copy(arr)</span><br><span class="line">    temp[temp[:] == <span class="number">-1</span>] = np.inf</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> np.argmin(temp)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Prim</span><span class="params">(grap)</span>:</span></span><br><span class="line">    col,row = grap.shape</span><br><span class="line"></span><br><span class="line">    lowCost = np.zeros(col)</span><br><span class="line">    parentTable = np.zeros(col)</span><br><span class="line"></span><br><span class="line">    grap[grap[:] == <span class="number">0</span>] = np.inf</span><br><span class="line"></span><br><span class="line">    start = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(col):</span><br><span class="line">        lowCost[i] = grap[start][i]</span><br><span class="line">    lowCost[start] = <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,col):</span><br><span class="line">        k = getMinIndex(lowCost)   <span class="comment"># 返回最小值下标</span></span><br><span class="line">        start = k</span><br><span class="line">        lowCost[start] = <span class="number">-1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,col):</span><br><span class="line">            <span class="keyword">if</span> grap[start][j] &lt; lowCost[j] <span class="keyword">and</span> lowCost[j] != <span class="number">-1</span>:</span><br><span class="line">                lowCost[j] = grap[start][j]</span><br><span class="line">                parentTable[j] = start</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parentTable</span><br><span class="line"></span><br><span class="line">grap = GenerateGrap()</span><br><span class="line">print(Prim(grap))</span><br></pre></td></tr></table></figure>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_ 1">
+<sup> 1</sup>. <a href="https://www.jianshu.com/p/fd2d8b9bb8c4" target="_blank" rel="noopener">邻接矩阵 - 无向图</a><a href="#reffn_ 1" title="Jump back to footnote [ 1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="https://www.cnblogs.com/zhchoutai/p/8687614.html" target="_blank" rel="noopener">最小生成树-Prim算法和Kruskal算法</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
 
       
     </div>
@@ -603,8 +592,8 @@ B &= Y+1.772(C_b-128) \\\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/11d377cb/" rel="next" title="自定义计算器">
-                <i class="fa fa-chevron-left"></i> 自定义计算器
+              <a href="/faa99d34/" rel="next" title="通用算法-最优二叉树">
+                <i class="fa fa-chevron-left"></i> 通用算法-最优二叉树
               </a>
             
           </div>
@@ -612,10 +601,6 @@ B &= Y+1.772(C_b-128) \\\\
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/3e761277/" rel="prev" title="数字图像图例入门（2）-JPEG解析">
-                数字图像图例入门（2）-JPEG解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -804,7 +789,7 @@ B &= Y+1.772(C_b-128) \\\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、采样"><span class="nav-text">二、采样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、量化"><span class="nav-text">三、量化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-text">四、总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、环境"><span class="nav-text">一、环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、原理说明"><span class="nav-text">二、原理说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、代码实现"><span class="nav-text">三、代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
