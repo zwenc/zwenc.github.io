@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、环境介绍1.1 安装Ubuntu版本号是18.04，下载链接。安装过程：略 18.04的自带gcc版本可以用，不用重新安装 1.2 安装显卡驱动选择阿里源之后，选择430显卡驱动，390太老了不建议使用（显卡10以上的电脑会报错），在安装显卡驱动之前需要在bios中把Security boot关掉。具体步骤：略。 检测命令 1nvidia-smi  1.3 安装cuda和cudnn这两个是做神">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里天池大赛-玻璃瓶瑕疵检测">
+<meta property="og:url" content="https://www.zwenc.cn/d8fb5a40/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="一、环境介绍1.1 安装Ubuntu版本号是18.04，下载链接。安装过程：略 18.04的自带gcc版本可以用，不用重新安装 1.2 安装显卡驱动选择阿里源之后，选择430显卡驱动，390太老了不建议使用（显卡10以上的电脑会报错），在安装显卡驱动之前需要在bios中把Security boot关掉。具体步骤：略。 检测命令 1nvidia-smi  1.3 安装cuda和cudnn这两个是做神">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1579797641093.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1579504960291.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1579797005296.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1579797446694.png">
+<meta property="og:updated_time" content="2020-01-23T16:53:23.250Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="阿里天池大赛-玻璃瓶瑕疵检测">
+<meta name="twitter:description" content="一、环境介绍1.1 安装Ubuntu版本号是18.04，下载链接。安装过程：略 18.04的自带gcc版本可以用，不用重新安装 1.2 安装显卡驱动选择阿里源之后，选择430显卡驱动，390太老了不建议使用（显卡10以上的电脑会报错），在安装显卡驱动之前需要在bios中把Security boot关掉。具体步骤：略。 检测命令 1nvidia-smi  1.3 安装cuda和cudnn这两个是做神">
+<meta name="twitter:image" content="https://www.zwenc.cn/d8fb5a40/1579797641093.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/d8fb5a40/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>阿里天池大赛-玻璃瓶瑕疵检测 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/d8fb5a40/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">阿里天池大赛-玻璃瓶瑕疵检测
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-01-20 15:13:26" itemprop="dateCreated datePublished" datetime="2020-01-20T15:13:26+08:00">2020-01-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-01-24 00:53:23" itemprop="dateModified" datetime="2020-01-24T00:53:23+08:00">2020-01-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/作品/" itemprop="url" rel="index"><span itemprop="name">作品</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、环境介绍"><a href="#一、环境介绍" class="headerlink" title="一、环境介绍"></a>一、环境介绍</h3><h4 id="1-1-安装Ubuntu"><a href="#1-1-安装Ubuntu" class="headerlink" title="1.1 安装Ubuntu"></a>1.1 安装Ubuntu</h4><p>版本号是18.04，<a href="https://ubuntu.com/download/desktop" target="_blank" rel="noopener">下载链接</a>。安装过程：略</p>
+<p>18.04的自带gcc版本可以用，不用重新安装</p>
+<h4 id="1-2-安装显卡驱动"><a href="#1-2-安装显卡驱动" class="headerlink" title="1.2 安装显卡驱动"></a>1.2 安装显卡驱动</h4><p>选择阿里源之后，选择430显卡驱动，390太老了不建议使用（显卡10以上的电脑会报错），在安装显卡驱动之前需要在bios中把Security boot关掉。具体步骤：略。</p>
+<p>检测命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p><img src="/d8fb5a40/1579797641093.png" alt="1579797641093"></p>
+<h4 id="1-3-安装cuda和cudnn"><a href="#1-3-安装cuda和cudnn" class="headerlink" title="1.3 安装cuda和cudnn"></a>1.3 安装cuda和cudnn</h4><p>这两个是做神经网络必备的库，具体功能不清楚，在大部分教程会默认所有人拥有此库，一般没有介绍，故而报错。下载地址：</p>
+<p><a href="https://developer.nvidia.com/cuda-10.1-download-archive-base" target="_blank" rel="noopener">CUDA Toolkit 10.1</a>(安装的时候，会出现一个界面，因为已经安装过显卡驱动，这里取消显卡驱动安装)</p>
+<p><a href="https://developer.nvidia.com/rdp/cudnn-download" target="_blank" rel="noopener">cudnn</a>(如果进不去，说明需要注册账号，并且需要答题才能下载，选择对应版本安装就好，安装方法：双击)</p>
+<p>cudatoolkit 10.1的下载选项设置。</p>
+<p><img src="/d8fb5a40/1579504960291.png" alt="1579504960291"></p>
+<p>下载完成后，直接用上图最下面的命令安装，记得取消第一个显卡驱动的安装，不然会报错。</p>
+<h4 id="1-4-mmdetection安装"><a href="#1-4-mmdetection安装" class="headerlink" title="1.4 mmdetection安装"></a>1.4 mmdetection安装</h4><h5 id="1-4-1-安装pytorch"><a href="#1-4-1-安装pytorch" class="headerlink" title="1.4.1 安装pytorch"></a>1.4.1 安装pytorch</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch=1.1.0 torchvision=0.3.0 cudatoolkit=10.0</span><br></pre></td></tr></table></figure>
+<h5 id="1-4-2-安装cython"><a href="#1-4-2-安装cython" class="headerlink" title="1.4.2 安装cython"></a>1.4.2 安装cython</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install cython</span><br></pre></td></tr></table></figure>
+<h5 id="1-4-3-clone-mmdetection-库"><a href="#1-4-3-clone-mmdetection-库" class="headerlink" title="1.4.3 clone mmdetection 库"></a>1.4.3 clone mmdetection 库</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/open-mmlab/mmdetection.git</span><br></pre></td></tr></table></figure>
+<h5 id="1-4-4-安装必要库"><a href="#1-4-4-安装必要库" class="headerlink" title="1.4.4 安装必要库"></a>1.4.4 安装必要库</h5><p>进入库的根目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip --no-cache-dir install -i https://mirrors.aliyun.com/pypi/simple -r requirements.txt</span><br></pre></td></tr></table></figure>
+<p>等待安装完成</p>
+<p>-i：表示使用外部安装源，这里使用阿里云镜像，安装速度贼溜</p>
+<h5 id="1-4-5-安装编译"><a href="#1-4-5-安装编译" class="headerlink" title="1.4.5 安装编译"></a>1.4.5 安装编译</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install</span><br><span class="line">python setup.py develop</span><br></pre></td></tr></table></figure>
+<h5 id="1-4-6-测试"><a href="#1-4-6-测试" class="headerlink" title="1.4.6 测试"></a>1.4.6 测试</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#如果安装成功，则该文件可以运行成功。</span></span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> mmdet.apis <span class="keyword">import</span> init_detector</span><br><span class="line"><span class="keyword">from</span> mmdet.apis <span class="keyword">import</span> inference_detector</span><br><span class="line"><span class="keyword">from</span> mmdet.apis <span class="keyword">import</span> show_result</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 模型配置文件</span></span><br><span class="line">config_file = <span class="string">'./configs/cascade_rcnn_r50_fpn_1x.py'</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 预训练模型文件</span></span><br><span class="line">checkpoint_file = <span class="string">'../../checkpoints/cascade_rcnn_r50_fpn_20e_20181123-db483a09.pth'</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过模型配置文件与预训练文件构建模型</span></span><br><span class="line">model = init_detector(config_file, checkpoint_file, device=<span class="string">'cuda:0'</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 测试单张图片并进行展示</span></span><br><span class="line">img = <span class="string">'demo.jpg'</span></span><br><span class="line">result = inference_detector(model, img)</span><br><span class="line">show_result(img, result, model.CLASSES)</span><br></pre></td></tr></table></figure>
+<p>需要用到的权重文件下载：</p>
+<blockquote>
+<p>链接：<a href="https://pan.baidu.com/s/1blfAtzi5TfLQ8gecYMD6PA" target="_blank" rel="noopener">https://pan.baidu.com/s/1blfAtzi5TfLQ8gecYMD6PA</a>  提取码：2dzb</p>
+</blockquote>
+<p>这里需要自己设置一下权重文件的地址，和测试图片在mmdetection的demo文件夹下。测试结果如下图：</p>
+<h3 id="二、权重文件裁减"><a href="#二、权重文件裁减" class="headerlink" title="二、权重文件裁减"></a>二、权重文件裁减</h3><p>在第一节中下载的权重文件是对应coco数据集的，总共81个分类。这次比赛只需要11个分类，所以需要对权重文件进行裁减，裁减代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># gen coco pretrained weight</span></span><br><span class="line">    <span class="keyword">import</span> torch</span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">    num_classes = <span class="number">11</span>  <span class="comment"># 重点在这里，11个类别</span></span><br><span class="line">    model_coco = torch.load(<span class="string">"./cascade_rcnn_r50_fpn_1x_20190501-3b6211ab.pth"</span>)  <span class="comment"># weight</span></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.0.fc_cls.weight"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.0.fc_cls.weight"</span>][:num_classes, :]</span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.1.fc_cls.weight"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.1.fc_cls.weight"</span>][:num_classes, :]</span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.2.fc_cls.weight"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.2.fc_cls.weight"</span>][:num_classes, :]</span><br><span class="line"></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.0.fc_cls.bias"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.0.fc_cls.bias"</span>][:num_classes]</span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.1.fc_cls.bias"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.1.fc_cls.bias"</span>][:num_classes]</span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.2.fc_cls.bias"</span>] = \</span><br><span class="line">        model_coco[<span class="string">"state_dict"</span>][<span class="string">"bbox_head.2.fc_cls.bias"</span>][:num_classes]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print(model_coco["state_dict"]["rpn_head.rpn_cls.weight"].size())</span></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.weight"</span>] = torch.tensor(</span><br><span class="line">        np.concatenate(</span><br><span class="line">            (model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.weight"</span>],</span><br><span class="line">             model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.weight"</span>][:<span class="number">2</span>, :, :, :]), axis=<span class="number">0</span></span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.weight"</span>] = torch.tensor(</span><br><span class="line">        np.concatenate(</span><br><span class="line">            (model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.weight"</span>],</span><br><span class="line">             model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.weight"</span>][:<span class="number">8</span>, :, :, :]), axis=<span class="number">0</span></span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.bias"</span>] = torch.tensor(</span><br><span class="line">        np.concatenate(</span><br><span class="line">            (model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.bias"</span>],</span><br><span class="line">             model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_cls.bias"</span>][:<span class="number">2</span>]), axis=<span class="number">0</span></span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.bias"</span>] = torch.tensor(</span><br><span class="line">        np.concatenate(</span><br><span class="line">            (model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.bias"</span>],</span><br><span class="line">             model_coco[<span class="string">"state_dict"</span>][<span class="string">"rpn_head.rpn_reg.bias"</span>][:<span class="number">8</span>]), axis=<span class="number">0</span></span><br><span class="line">        )</span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># save new model</span></span><br><span class="line">    torch.save(model_coco, <span class="string">"weight_%d.pth"</span> % num_classes)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>需要自己设置的参数：</p>
+<ul>
+<li>原权重文件地址</li>
+<li>生成权重文件地址</li>
+</ul>
+<h3 id="三、数据集"><a href="#三、数据集" class="headerlink" title="三、数据集"></a>三、数据集</h3><p><a href="http://tianchi-competition.oss-cn-hangzhou.aliyuncs.com/231763/round1/chongqing1_round1_train1_20191223.zip" target="_blank" rel="noopener">训练集</a>  ，<a href="http://tianchi-competition.oss-cn-hangzhou.aliyuncs.com/231763/round1/chongqing1_round1_testA_20191223.zip" target="_blank" rel="noopener">测试集</a></p>
+<p>知识普及tips</p>
+<blockquote>
+<p>数据集分为训练集、验证集、测试集。</p>
+<p>训练集：用来训练神经网络的数据集，没什么说的。</p>
+<p>验证集：在训练的过程中，每执行一次epoch，都用验证集验证一次网络训练的怎么样，验证集一般比较小。</p>
+<p>测试集：用来做最后的输出，得分是根据测试集的结果来的，提交的是测试集输出的结果。测试集没有对应的json文件。</p>
+</blockquote>
+<h4 id="3-1-清晰数据集"><a href="#3-1-清晰数据集" class="headerlink" title="3.1 清晰数据集"></a>3.1 清晰数据集</h4><p>官方给的数据集里面有很多只有背景的数据集，这里在训练的过程中不需要这种数据，使用代码对其清洗。我这里直接使用已经清洗好的json文件。注：只需要改变json文件，不需要动真实图片。</p>
+<p><a href="annotationsw.json">清洗好的json文件，点击下载</a></p>
+<h4 id="3-2-分割数据集"><a href="#3-2-分割数据集" class="headerlink" title="3.2 分割数据集"></a>3.2 分割数据集</h4><p>由于自由训练集没有验证集，将验证集分一部分出来给验证集，分割代码如下：</p>
+<p><a href="spitData.py">分割代码-点击下载</a></p>
+<h3 id="四、mmdetection配置介绍"><a href="#四、mmdetection配置介绍" class="headerlink" title="四、mmdetection配置介绍"></a>四、mmdetection配置介绍</h3><p>各种目标检测的配置网络都在mmdetection目标下的configs下面，只要把配置文件写好，框架会根据配置文件自动生成网络，自动训练，实际过程中只需要管配置文件就好，本小节的代码需要细看。</p>
+<p>首先选用<code>cascade_rcnn_r50_fpn_1x.py</code>作为初始配置文件，查看各种资料后<sup><a href="#fn_1" id="reffn_1">1</a></sup>，对该文件进行修改如下。</p>
+<p><a href="cascade_rcnn_r50_fpn_1x.py">点击查看修改文件</a></p>
+<p>该文件的各种参数意义，查看：</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/hajlyx/article/details/85991400" target="_blank" rel="noopener"><strong>mmdetection的configs中的各项参数具体解释</strong></a></p>
+</blockquote>
+<p>如果没有配置好，我的文件可以直接复制使用，经过测试，就是最后的得分不高，绝对能跑。</p>
+<p>其他没有细写，查看配置就好，有问题找我（<del>前提是找到的啊</del>）</p>
+<h3 id="五、训练"><a href="#五、训练" class="headerlink" title="五、训练"></a>五、训练</h3><p>在根目录下，运行命令行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python tools/train.py configs/cascade_rcnn_r50_fpn_1x.py --gpus 1</span><br></pre></td></tr></table></figure>
+<p>就可以训练了。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python tools/train.py configs/cascade_rcnn_r50_fpn_1x.py --gpus 1 --validate</span><br></pre></td></tr></table></figure></p>
+<p>—validate表示在训练时进行评估，只有在分布式训练时能够进行评估（至少两张显卡，<del>所以要买自己服务器的时候懂了吧，双显卡主板+2070s+1060 6G，香，推荐配合1070ti 32G  *2条</del>）</p>
+<p>训练结束后，没有双卡，如何进行测试：</p>
+<p>输出图片：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python tools/test.py configs/cascade_rcnn_r50_fpn_1x.py  work_dirs/cascade_rcnn_r50_fpn_1x/epoch_10.pth --show</span><br></pre></td></tr></table></figure></p>
+<p><img src="/d8fb5a40/1579797005296.png" alt="1579797005296"></p>
+<p>输出精度测试，还不知道怎么弄！！</p>
+<h3 id="六、提交"><a href="#六、提交" class="headerlink" title="六、提交"></a>六、提交</h3><p>提交需要用他给的代码，导入训练好的参数，和测试集的位置，生成提交文件代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf/8</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> mmdet.apis <span class="keyword">import</span> inference_detector, init_detector</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEncoder</span><span class="params">(json.JSONEncoder)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">default</span><span class="params">(self, obj)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> isinstance(obj, np.integer):</span><br><span class="line">            <span class="keyword">return</span> int(obj)</span><br><span class="line">        <span class="keyword">elif</span> isinstance(obj, np.floating):</span><br><span class="line">            <span class="keyword">return</span> float(obj)</span><br><span class="line">        <span class="keyword">elif</span> isinstance(obj, np.ndarray):</span><br><span class="line">            <span class="keyword">return</span> obj.tolist()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> super(MyEncoder, self).default(obj)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># generate result</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">result_from_dir</span><span class="params">()</span>:</span></span><br><span class="line">    model = init_detector(config2make_json, model2make_json, device=<span class="string">'cuda:0'</span>)</span><br><span class="line">    pics = os.listdir(pic_path)</span><br><span class="line">    meta = &#123;&#125;</span><br><span class="line">    images = []</span><br><span class="line">    annotations = []</span><br><span class="line">    num = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> im <span class="keyword">in</span> tqdm(pics):</span><br><span class="line">        num += <span class="number">1</span></span><br><span class="line">        img = os.path.join(pic_path, im)</span><br><span class="line">        result_ = inference_detector(model, img)</span><br><span class="line">        images_anno = &#123;&#125;</span><br><span class="line">        images_anno[<span class="string">'file_name'</span>] = im</span><br><span class="line">        images_anno[<span class="string">'id'</span>] = num</span><br><span class="line">        images.append(images_anno)</span><br><span class="line">        <span class="keyword">for</span> i, boxes <span class="keyword">in</span> enumerate(result_, <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> len(boxes):</span><br><span class="line">                defect_label = i</span><br><span class="line">                <span class="keyword">for</span> box <span class="keyword">in</span> boxes:</span><br><span class="line">                    anno = &#123;&#125;</span><br><span class="line">                    anno[<span class="string">'image_id'</span>] = num</span><br><span class="line">                    anno[<span class="string">'category_id'</span>] = defect_label</span><br><span class="line">                    anno[<span class="string">'bbox'</span>] = [round(float(i), <span class="number">2</span>) <span class="keyword">for</span> i <span class="keyword">in</span> box[<span class="number">0</span>:<span class="number">4</span>]]</span><br><span class="line">                    anno[<span class="string">'bbox'</span>][<span class="number">2</span>] = anno[<span class="string">'bbox'</span>][<span class="number">2</span>] - anno[<span class="string">'bbox'</span>][<span class="number">0</span>]</span><br><span class="line">                    anno[<span class="string">'bbox'</span>][<span class="number">3</span>] = anno[<span class="string">'bbox'</span>][<span class="number">3</span>] - anno[<span class="string">'bbox'</span>][<span class="number">1</span>]</span><br><span class="line">                    anno[<span class="string">'score'</span>] = float(box[<span class="number">4</span>])</span><br><span class="line">                    annotations.append(anno)</span><br><span class="line">    meta[<span class="string">'images'</span>] = images</span><br><span class="line">    meta[<span class="string">'annotations'</span>] = annotations</span><br><span class="line">    <span class="keyword">with</span> open(json_out_path, <span class="string">'w'</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        json.dump(meta, fp, cls=MyEncoder, indent=<span class="number">4</span>, separators=(<span class="string">','</span>, <span class="string">': '</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">"Generate result"</span>)</span><br><span class="line">    parser.add_argument(<span class="string">"-m"</span>, <span class="string">"--model"</span>, help=<span class="string">"Model path"</span>, type=str, )</span><br><span class="line">    parser.add_argument(<span class="string">"-c"</span>, <span class="string">"--config"</span>, help=<span class="string">"Config path"</span>, type=str, )</span><br><span class="line">    parser.add_argument(<span class="string">"-im"</span>, <span class="string">"--im_dir"</span>, help=<span class="string">"Image path"</span>, type=str, )</span><br><span class="line">    parser.add_argument(<span class="string">'-o'</span>, <span class="string">"--out"</span>, help=<span class="string">"Save path"</span>, type=str, )</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line">    model2make_json = args.model</span><br><span class="line">    config2make_json = args.config</span><br><span class="line">    json_out_path = args.out</span><br><span class="line">    pic_path = args.im_dir</span><br><span class="line">    result_from_dir()</span><br></pre></td></tr></table></figure>
+<p>使用例子，在我的工程目录中，输入以下指令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python generateResult.py -m  work_dirs/cascade_rcnn_r50_fpn_1x/epoch_1.pth -c  configs/cascade_rcnn_r50_fpn_1x.py -im  /home/w/Desktop/TC/data/test/images/ -o wen1_reslut.json</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-m：权重地址</li>
+<li>-C：配置文件地址</li>
+<li>-im：测试图片地址</li>
+<li>-o：输出文件地址（一定要是json文件）</li>
+<li>wen1_reslut.json是<strong>最后要提交</strong>的文件。 </li>
+</ul>
+<h3 id="七、训练配置"><a href="#七、训练配置" class="headerlink" title="七、训练配置"></a>七、训练配置</h3><p>（非必要部分）</p>
+<p>为了训练中可以看到哪个训练输出的信息，哪个是验证输出的信息。分别在</p>
+<p>/home/w/miniconda3/envs/TC/lib/python3.7/site-packages/mmcv/runner/runner.py</p>
+<p>文件的train和val中添加打印信息：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">self.logger.info(<span class="string">"train process"</span>)</span><br><span class="line"></span><br><span class="line">self.logger.info(<span class="string">"val process"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/d8fb5a40/1579797446694.png" alt="1579797446694"></p>
+<p><del>不明觉厉</del></p>
+<h3 id="八、训练日志"><a href="#八、训练日志" class="headerlink" title="八、训练日志"></a>八、训练日志</h3><p>暂时还没有成功提交过</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://blog.csdn.net/weicao1990/article/details/103324218/" target="_blank" rel="noopener">mmdetection使用tensorboard可视化训练集与验证集指标参数</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/9aa24dd3/" rel="next" title="通用算法-最小生成树（Prim）">
+                <i class="fa fa-chevron-left"></i> 通用算法-最小生成树（Prim）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/0/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、环境介绍"><span class="nav-text">一、环境介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-安装Ubuntu"><span class="nav-text">1.1 安装Ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-安装显卡驱动"><span class="nav-text">1.2 安装显卡驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-安装cuda和cudnn"><span class="nav-text">1.3 安装cuda和cudnn</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-mmdetection安装"><span class="nav-text">1.4 mmdetection安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-1-安装pytorch"><span class="nav-text">1.4.1 安装pytorch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-2-安装cython"><span class="nav-text">1.4.2 安装cython</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-3-clone-mmdetection-库"><span class="nav-text">1.4.3 clone mmdetection 库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-4-安装必要库"><span class="nav-text">1.4.4 安装必要库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-5-安装编译"><span class="nav-text">1.4.5 安装编译</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-6-测试"><span class="nav-text">1.4.6 测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、权重文件裁减"><span class="nav-text">二、权重文件裁减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、数据集"><span class="nav-text">三、数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-清晰数据集"><span class="nav-text">3.1 清晰数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-分割数据集"><span class="nav-text">3.2 分割数据集</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、mmdetection配置介绍"><span class="nav-text">四、mmdetection配置介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、训练"><span class="nav-text">五、训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、提交"><span class="nav-text">六、提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、训练配置"><span class="nav-text">七、训练配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、训练日志"><span class="nav-text">八、训练日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body>
+</html>
