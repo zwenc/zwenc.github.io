@@ -118,8 +118,11 @@
 <meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580218488837.png">
 <meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580218151182.png">
 <meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580218298198.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580222413804.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580222422043.png">
+<meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1580222540466.png">
 <meta property="og:image" content="https://www.zwenc.cn/d8fb5a40/1579797446694.png">
-<meta property="og:updated_time" content="2020-01-28T14:08:48.990Z">
+<meta property="og:updated_time" content="2020-01-28T14:44:00.357Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阿里天池大赛-玻璃瓶瑕疵检测">
 <meta name="twitter:description" content="一、环境介绍1.1 安装Ubuntu版本号是18.04，下载链接。安装过程：略 18.04的自带gcc版本可以用，不用重新安装 1.2 安装显卡驱动选择阿里源之后，选择430显卡驱动，390太老了不建议使用（显卡10以上的电脑会报错），在安装显卡驱动之前需要在bios中把Security boot关掉。具体步骤：略。 检测命令 1nvidia-smi  1.3 安装cuda和cudnn这两个是做神">
@@ -438,7 +441,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-01-28 22:08:48" itemprop="dateModified" datetime="2020-01-28T22:08:48+08:00">2020-01-28</time>
+                <time title="修改时间：2020-01-28 22:44:00" itemprop="dateModified" datetime="2020-01-28T22:44:00+08:00">2020-01-28</time>
               
             
           </span>
@@ -577,6 +580,20 @@
 <p>经过debug跟踪调试，程序在读取annotation.json文件的时候，对每个id进行从映射，重映射的规则是按照annotation.json文件里面的categories的循序来的，如下两图所示。每个人可能不一样，需要进行调试确认重映射是否正确。</p>
 <p><img src="/d8fb5a40/1580218151182.png" alt="1580218151182"></p>
 <p><img src="/d8fb5a40/1580218298198.png" alt="1580218298198"></p>
+<h4 id="6-3-如何找到这个映射位置"><a href="#6-3-如何找到这个映射位置" class="headerlink" title="6.3 如何找到这个映射位置"></a>6.3 如何找到这个映射位置</h4><p>Emmmm，不太好些，就乱写吧。</p>
+<ul>
+<li>首先确认入口函数：tools/train。</li>
+<li>设置好参数，怎么设置啊？？看下面两图，这里的函数和命令行中输入的参数一致，注意地址要正确（不正确会直接报错，你肯定会发现的）</li>
+</ul>
+<p><img src="/d8fb5a40/1580222413804.png" alt="1580222413804"></p>
+<p><img src="/d8fb5a40/1580222422043.png" alt="1580222422043"></p>
+<ul>
+<li>然后在datasets/coco.py文件的对应位置打上断点。</li>
+<li>开始调试</li>
+</ul>
+<p><img src="/d8fb5a40/1580222540466.png" alt="1580222540466"></p>
+<p>此时就可以一步一步跟踪查看每个变量。</p>
+<p><del>胡说八道结束，我也不知道我说了啥</del></p>
 <h3 id="七、训练配置"><a href="#七、训练配置" class="headerlink" title="七、训练配置"></a>七、训练配置</h3><p>（非必要部分）</p>
 <p>为了训练中可以看到哪个训练输出的信息，哪个是验证输出的信息。分别在</p>
 <p>/home/w/miniconda3/envs/TC/lib/python3.7/site-packages/mmcv/runner/runner.py</p>
@@ -854,7 +871,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、环境介绍"><span class="nav-text">一、环境介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-安装Ubuntu"><span class="nav-text">1.1 安装Ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-安装显卡驱动"><span class="nav-text">1.2 安装显卡驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-安装cuda和cudnn"><span class="nav-text">1.3 安装cuda和cudnn</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-mmdetection安装"><span class="nav-text">1.4 mmdetection安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-1-安装pytorch"><span class="nav-text">1.4.1 安装pytorch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-2-安装cython"><span class="nav-text">1.4.2 安装cython</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-3-clone-mmdetection-库"><span class="nav-text">1.4.3 clone mmdetection 库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-4-安装必要库"><span class="nav-text">1.4.4 安装必要库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-5-安装编译"><span class="nav-text">1.4.5 安装编译</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-6-测试"><span class="nav-text">1.4.6 测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、权重文件裁减"><span class="nav-text">二、权重文件裁减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、数据集"><span class="nav-text">三、数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-清晰数据集"><span class="nav-text">3.1 清晰数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-分割数据集"><span class="nav-text">3.2 分割数据集</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、mmdetection配置介绍（重点）"><span class="nav-text">四、mmdetection配置介绍（重点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、训练"><span class="nav-text">五、训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、提交"><span class="nav-text">六、提交</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-我的配置"><span class="nav-text">6.1 我的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-注意事项"><span class="nav-text">6.2 注意事项</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、训练配置"><span class="nav-text">七、训练配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、训练日志"><span class="nav-text">八、训练日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、环境介绍"><span class="nav-text">一、环境介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-安装Ubuntu"><span class="nav-text">1.1 安装Ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-安装显卡驱动"><span class="nav-text">1.2 安装显卡驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-安装cuda和cudnn"><span class="nav-text">1.3 安装cuda和cudnn</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-mmdetection安装"><span class="nav-text">1.4 mmdetection安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-1-安装pytorch"><span class="nav-text">1.4.1 安装pytorch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-2-安装cython"><span class="nav-text">1.4.2 安装cython</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-3-clone-mmdetection-库"><span class="nav-text">1.4.3 clone mmdetection 库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-4-安装必要库"><span class="nav-text">1.4.4 安装必要库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-5-安装编译"><span class="nav-text">1.4.5 安装编译</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-4-6-测试"><span class="nav-text">1.4.6 测试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、权重文件裁减"><span class="nav-text">二、权重文件裁减</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、数据集"><span class="nav-text">三、数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-清晰数据集"><span class="nav-text">3.1 清晰数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-分割数据集"><span class="nav-text">3.2 分割数据集</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、mmdetection配置介绍（重点）"><span class="nav-text">四、mmdetection配置介绍（重点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、训练"><span class="nav-text">五、训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、提交"><span class="nav-text">六、提交</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-我的配置"><span class="nav-text">6.1 我的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-注意事项"><span class="nav-text">6.2 注意事项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-如何找到这个映射位置"><span class="nav-text">6.3 如何找到这个映射位置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、训练配置"><span class="nav-text">七、训练配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、训练日志"><span class="nav-text">八、训练日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
@@ -1199,19 +1216,7 @@
         }, 300);
       }).append(e);
     })
-  </script>
-
-
-  
-  
-
-  
-  
-
-  
-
-
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1228,5 +1233,17 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body>
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
