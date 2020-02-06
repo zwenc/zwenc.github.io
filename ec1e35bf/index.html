@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="【摘 要】 本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fp">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神经网络-MaskRCNN阅读笔记">
+<meta property="og:url" content="https://www.zwenc.cn/ec1e35bf/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="【摘 要】 本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fp">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/ec1e35bf/clip_image002.png">
+<meta property="og:image" content="https://www.zwenc.cn/ec1e35bf/clip_image010.jpg">
+<meta property="og:updated_time" content="2020-02-06T15:32:23.321Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神经网络-MaskRCNN阅读笔记">
+<meta name="twitter:description" content="【摘 要】 本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fp">
+<meta name="twitter:image" content="https://www.zwenc.cn/ec1e35bf/clip_image002.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/ec1e35bf/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>神经网络-MaskRCNN阅读笔记 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/ec1e35bf/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神经网络-MaskRCNN阅读笔记
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-06 23:11:39 / 修改时间：23:32:23" itemprop="dateCreated datePublished" datetime="2020-02-06T23:11:39+08:00">2020-02-06</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/算法/机器学习/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>【<strong>摘</strong> <strong>要</strong>】 本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fps。除此之外，Mask R-CNN也可以用来处理其他任务，比如估计人体姿态。在本文的最后，将会给出这次实验的结果。</p>
+<h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><p>随着卷积神经网络在计算机视觉领域的应用，计算机视觉领域在目标检测和语义分割上在短时间内取得了重大的突破。很大程度上，这些突破是建立在已有的研究基础上，例如分别用于目标检测和语义分割的Fast R-CNN<sup><a href="#fn_1" id="reffn_1">1</a></sup>/Faster R-CNN<sup><a href="#fn_2" id="reffn_2">2</a></sup>和FCN<sup><a href="#fn_3" id="reffn_3">3</a></sup>框架。这些方法不仅拥有直观，灵活和健壮等优良特性，而且拥有快速训练和运行的能力。在本文中，将会介绍一个与上述类似的框架，用来对图像进行实例分割。  </p>
+<p>实例分割在计算机视觉领域非常具有挑战性，因为不仅需要正确的检测图像的所有对象，同时还需要对每一个对象实例实现精确的分割。它结合了机器视觉中目标检测和语义分割两种重要元素，其中目标检测是对单个对象进行分类，并使用边界框对每个对象进行定位；语义分割是对图像中的每个像素进行分类。在Mask R-CNN<sup><a href="#fn_4" id="reffn_4">4</a></sup>之前，为了将目标检测和语义分割结合起来，可能需要一个特别复杂的框架，但是在本文中通过实验表明，本文介绍的框架拥有非常简单、灵活的结构，以及高效的性能，并且该框架在当时超过了世界最高级的实例分割算法。</p>
+<p>​          <img src="/ec1e35bf/clip_image002.png" alt="img">  </p>
+<p align="center"><strong> 图1-1 Mask R-CNN网络结构 </strong></p>
+该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别，该分支与现有的分类分支和边界框回归分支并行，如图1-1所示。这条新分支是将一个小型的FCN[^3]网络框架应用到每一个ROI[^2]（Regions Of Interest）中，对每一个像素进行分类。由于Faster R-CNN[2]的结构体系本身非常灵活，所以Mask R-CNN在训练和运行上同样方便。
+
+从结构上分析，Mask R-CNN是Faster R-CNN的拓展网络，所以构造出正确的掩模分支是本文的核心内容。Faster R-CNN没有对像素进行分类的能力，因为Faster R-CNN借鉴了SPP-NET[^5]的思想，使用ROI Pool[^1]层处理从RPN[^2]网络中输出的ROI，将不同尺寸的ROI映射到7*7区域，使得每一个ROI映射到全连接层的长度一致。虽然ROI Pool层解决了全连接层需要固定尺度的问题，但是ROI Pool算法固有的特点使得生成的特征图无法与原图相对应。根据这个缺点，本文提出ROI Align[^4]网络层，通过插值的方法将RPN输出的ROI转化固定大小特征图，这样就可以通过算法将网络输出与原图相对应。
+
+性能上，在单张Tesla M40 GPU硬件平台上，使用COCO数据集训练2天，便可以实现在测试集上精确的对目标进行实例分割，处理速度为0.2秒一帧。
+
+综上，Mask R-CNN贡献了ROI Align网络结构使得网络输出层可以和原图一一对应，并且将目标分割和语义分割完美的结合在一起，实现了神经网络的端到端设计，为未来的科研人员提供了新的问题解决思路。
+
+### 二、相关工作
+
+#### 2.1 传统目标检测算法
+
+目标检测任务可以分解成两个问题：图像识别、目标定位。对于图像识别任务，识别出目标图像中的对象。在单个图像识别任务中，只能识别出图像中的单个物体。面对这样的任务，设计出如下图2-1中的网络，便可以对目标进行识别。从类别上分析，图像识别问题也可以看成是分类问题。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image002-1581002210845.png)
+
+<p align="center"><strong>图2-1 传统目标分类网络框图</strong></p>
+在目标定位任务中，输入一张图片，输出是目标在图片中的位置。传统算法中将定位问题看成是回归问题，将网络输出的坐标与真实坐标计算损失，进行回归运算，设计出的网络结构如下图2-2
+
+
+
+
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image002-1581002239887.png)
+
+<p align="center"><strong>图2-2 传统目标检测网络框图</strong></p>
+在实际神经网络训练中，回归问题比较难收敛。为了解决这个问题，在特征图中选取一定数量的窗口，让不同窗口与真实的坐标计算分数，选择分数最大的一个窗口作为网络输出。这种方法在最后虽然无法收敛到真实坐标的位置，但是在窗口选取足够多的情况下，能够最大化的接近真实值，Yolo V3[^6]真是借鉴了anchor这种思想使得其目标检测性能进一步提高。
+
+然而在图片中目标比较多的情况，为了识别和定位每一个目标的位置，需要枚举出非常多的窗口，这种方式带来的运算量是巨大的，在R-CNN出现后便被淘汰，但是这种将回归问题改成分类问题的思想让后来的科研人员在目标检测上的研究上倍受启发。
+
+#### 2.2 R-CNN
+
+对图像中不同对象进行目标检测，传统目标检测算法需要枚举出的大量窗口，这给计算机处理带来了巨大的计算量。为了解决这个问题，通过Selective Search和Edge Boxes方法预先找出目标可能出现的位置，即候选区域（Region Proposal）。该方法利用图像中的纹理、边缘、颜色等信息可以保证在选取较少窗口的情况下保证较高的召回率。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image004.jpg)
+
+<p align="center"><strong>图2-3 R-CNN网络框架</strong></p>
+通过提取候选区以避免暴力枚举所有的框，大大降低了计算量，接下来需要对候选框进行识别检测。2014年，RBG（Ross B. Girshick）使用Region Proposal和CNN代替传统目标检测使用的滑动窗口结合手工设计特征，设计了R-CNN框架如图2-3，使得目标检测取得巨大突破，并开启了基于深度学习目标检测的热潮。
+
+R-CNN框架的流程如下：
+
+1、 输入测试图像。
+
+2、 利用选择性搜索算法Selective Search，在图像中提取可能包含物体的候选框。
+
+3、 将候选框缩放到统一大小，输入到CNN网络中。
+
+4、 将CNN输出的特征图，输入到SVM分类器中进行分类。
+
+#### 2.3 Fast R-CNN
+
+通过对R-CNN进行分析可以知道，即使使用了Selective Search等预处理步骤来提取潜在的框作为输入，但是R-CNN仍会有严重的速度瓶颈，原因也很明显，就是计算机对所有预处理区域进行特征提取时会有重复计算，Fast R-CNN正是为了解决这个问题诞生的。
+
+考虑到对预处理预期进行特征提取会有重复计算，所以Fast R-CNN在R-CNN基础上，先对整张图片提取特征，然后根据从SPP-NET得到的灵感，提出ROI pooling layer网络层将不同大小的特征区域缩放到统一大小。通过这种方法，不仅降低了大量的重复计算，同时也避免R-CNN对预处理区域缩放带来的图像的失真，网络框架如下2-4所示。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image006.jpg)
+
+<p align="center"><strong>图2-4 Fast R-CNN网络框图</strong></p>
+![img](神经网络-MaskRCNN阅读笔记/clip_image008.png)
+
+<p align="center"><strong>图2-5 Fast R-CNN网络结构</strong></p>
+
+<p>除此之外，作者还巧妙的把bbox回归放到神经网络内部用以代替R-CNN中的SVM分类器，到这步距离网络的端到端设计已经非常接近了，网络结构如图2-5所示。</p>
+<p>Fast R-CNN框架的流程如下：</p>
+<p>1、 输入测试图像。</p>
+<p>2、 利用选择性搜索算法Selective Search，在图像中提取可能包含物体的候选框。</p>
+<p>3、 将整幅图片输入到CNN网络中。</p>
+<p>4、 使用2步骤中提取的候选框，从CNN输出的特征图中提取候选特征区域，输入到ROI pooling layer缩放到统一大小。</p>
+<p>5、 通过全连接层进行目标分类和目标定位。</p>
+<h4 id="2-4-Faster-R-CNN"><a href="#2-4-Faster-R-CNN" class="headerlink" title="2.4 Faster R-CNN"></a>2.4 Faster R-CNN</h4><p>在Fast R-CNN中，通过选择性搜索算法Selective Search找出所有的候选框非常耗时，这使得Fast R-CNN算法在性能上存在了瓶颈。为了解决这个问题，RGBD在Fast R-CNN中引入Region Proposal Network(RPN)替代Selective Search，同时引入anchor box应对目标形状的变化问题，新网络命名为Faster R-CNN，网络结构如下图2-6所示。RPN放在之后一个卷积层后面，在经过训练后可以根据特征图直接输出候选区域，将得到的区域进行分类和定位，实现了网络的端到端设计。</p>
+<p><img src="/ec1e35bf/clip_image010.jpg" alt="img"></p>
+<p align="center"><strong>图2-6 Faster R-CNN 网络框图</strong></p>
+Faster R-CNN框架的流程如下：
+
+1、 将整幅图片输入到CNN网络中。
+
+2、 通过RPN网络获取候选框。
+
+3、 对候选框进行分类和定位。
+
+### 三、Mask R-CNN
+
+#### 3.1 设计思路
+
+Mask R-CNN通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别，该分支与现有的分类分支和边界框回归分支并行，如图1-1所示。这条新分支是将一个小型的FCN网络框架应用到每一个ROI（Regions Of Interest）中，对每一个像素进行分类。
+
+从结构上分析，Mask R-CNN是Faster R-CNN的拓展网络，所以构造出正确的掩模分支是本文的核心内容。Faster R-CNN没有对像素进行分类的能力，因为Faster R-CNN借鉴了SPP-NET的思想，使用ROI Pool处理从RPN网络中出来的ROI，将不同尺寸的ROI映射到7*7区域，使得每一个ROI映射到全连接层的长度一致。虽然ROI Pool层解决了全连接层需要固定尺度的问题，但是ROI Pool算法固有的特点使得生成的特征图无法与原图相对应。根据这个缺点，本文提出ROI Align网络层，通过插值的方法将RPN输出的ROI转化固定大小特征图，这样就可以通过算法将网络输出与原图相对应。
+
+综上，在Faster R-CNN的基础上，Mask R-CNN增加了一条掩模分支，以及将ROI Pool层修改为ROI Align层，网络总体结构如下3-1所示。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image012.png)
+
+<p align="center"><strong>图3-1 Mask R-CNN网络框架</strong></p>
+#### 3.2 ROI Align设计
+
+在前文中，说明了Faster R-CNN中的RoI Pool层会导致输出和输入像素无法相对应的问题，于是本文提出新的RoI Align算法以实现本文目标，在本小节中将会对RoI Pool层和RoI Align进行详细的描述。
+
+RoI Pool是Faster R-CNN框架中用来解决RoI尺度不一致导致的特征区域失真问题的关键网络层。RoI Pool的原理是将不同尺度的RoI划分成为7x7的区域，在每个区域中找到出最大值，最终输出7x7的特征图。这种粗糙的池化算法，对于目标分类和目标定位而言影响并不大，但是对于语义分割，却会导致输出特征图与原特征图无法相互对应，而发得到正确的分割结果。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image014.png)
+
+<p align="center"><strong>图3-2 RoI Align算法原理</strong></p>
+本文介绍的RoI Align算法，在RoI Pool的基础上，在它划分的每个区域中，使用双线性插值算法计算四个点，再对这四个点进行最大值池化，如图3-2所示，RoI Align算法的步骤如下：
+
+1、  遍历每一个候选区域，保持浮点数边界不做量化。
+
+2、  将候选区域分割成7x7个单元，每个单元的边界也不做量化。
+
+3、  在每个单元中计算固定四个坐标位置，用双线性内插的方法计算出这四个位置的值，然后进行最大池化操作。
+
+#### 3.3 掩模分支设计
+
+掩模是对输入对象的空间布局进行编码，掩模与分类和定位不同是其不需要通过全连接层输出一个向量，而是可以通过卷积提供的像素到像素的对应自然解决。
+
+在Mask R-CNN中的RoI Align之后的掩模分支中有一个"head"部分，如图3-1所示，其主要作用是将RoI Align的输出维度扩大，这样在预测掩模时会更加精确。在掩模分支的训练环节，作者没有采用FCN式的SoftMaxLoss，反而是输出了K个Mask预测图，并采用平均二元交叉熵损失训练，当然在训练掩模分支的时候，输出的K个特征图中，也只是对应真实类别的那一个特征图对掩模损失有贡献。
+
+#### 3.4 损失函数设计
+
+对于每一个预选ROI，作者设计了三个损失函数如下：
+$$
+L = L_{cls} + L_{box}+L_{mask}
+$$
+其中$L$是总损失、$L_{cls}$是类别损失、$L_{box}$是定位损失、$L_{mask}$是掩模损失。
+
+掩模分支对每一个ROI都有$Km^2$维度的输出，其中$m$表示$m *m$分辨率的特征图，$K$表示对于特征图的一个像素都有$K$个类别，$L_{mask}$作为作为特征图的掩模损失。
+
+### 四、结论
+
+至此，本文已经完成Mask R-CNN的原理和发展过程的介绍。Mask R-CNN的性能非常优秀，在单张Tesla M40 GPU硬件平台上，使用COCO数据集训练2天，便可以实现在测试集上精确的对目标进行实例分割，处理速度为0.2秒一帧。
+
+最后复现Mask R-CNN，以及附上实验结果，图4-1、4-2所示。
+
+![img](神经网络-MaskRCNN阅读笔记/clip_image036.jpg)
+
+<p align="center"><strong>图4-1</strong></p>
+![img](神经网络-MaskRCNN阅读笔记/clip_image038.jpg)
+
+<p align="center"><strong>图4-2</strong></p>
+
+<blockquote id="fn_1">
+<sup>1</sup>. Girshick, Ross. “Fast R-CNN.” Computer Science (2015).<a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. Ren, Shaoqing et al. “Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks.” IEEE Transactions on Pattern Analysis &amp; Machine Intelligence 39.6(2015):1137-1149.<a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. Long, Jonathan , E. Shelhamer , and T. Darrell . “Fully Convolutional Networks for Semantic Segmentation.” IEEE Transactions on Pattern Analysis &amp; Machine Intelligence 39.4(2014):640-651.<a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_4">
+<sup>4</sup>. He, Kaiming , et al. “Mask R-CNN.” 2017 IEEE International Conference on Computer Vision (ICCV) IEEE, 2017.<a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_5">
+<sup>5</sup>. Purkait, Pulak, Zhao, Cheng, and Zach, Christopher. “SPP-Net: Deep Absolute Pose Regression with Synthetic Views.”.<a href="#reffn_5" title="Jump back to footnote [5] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_6">
+<sup>6</sup>. Redmon, Joseph, and Farhadi, Ali. “YOLOv3: An Incremental Improvement.”.<a href="#reffn_6" title="Jump back to footnote [6] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2908452e/" rel="next" title="数字图像处理-初探图像编解码">
+                <i class="fa fa-chevron-left"></i> 数字图像处理-初探图像编解码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">67</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、介绍"><span class="nav-text">一、介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-Faster-R-CNN"><span class="nav-text">2.4 Faster R-CNN</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body>
+</html>
