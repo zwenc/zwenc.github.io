@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://www.zwenc.cn/ec1e35bf/clip_image014.png">
 <meta property="og:image" content="https://www.zwenc.cn/ec1e35bf/clip_image036.jpg">
 <meta property="og:image" content="https://www.zwenc.cn/ec1e35bf/clip_image038.jpg">
-<meta property="og:updated_time" content="2020-02-13T09:08:43.544Z">
+<meta property="og:updated_time" content="2020-02-13T09:51:09.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络-MaskRCNN阅读笔记">
 <meta name="twitter:description" content="【摘 要】本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fps">
@@ -442,7 +442,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-02-13 17:08:43" itemprop="dateModified" datetime="2020-02-13T17:08:43+08:00">2020-02-13</time>
+                <time title="修改时间：2020-02-13 17:51:09" itemprop="dateModified" datetime="2020-02-13T17:51:09+08:00">2020-02-13</time>
               
             
           </span>
@@ -507,23 +507,36 @@
       
 
       
-        <p></p><p><font face="楷体" size="3"><strong>【摘 要】</strong>本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fps。除此之外，Mask R-CNN也可以用来处理其他任务，比如估计人体姿态。在本文的最后，将会给出这次实验的结果。</font></p><p></p>
+        <p><font face="楷体" size="3"><strong>【摘 要】</strong>本文介绍的是一种基于卷积神经网络的目标实例分割方法。该方法具有简单、灵活、通用等特点，并且能够有效的检测图像中的目标，同时为每个分割对象生成高质量的分割掩码。该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别。因为仅仅在Faster R-CNN的基础上增加少量开销，使得Mask R-CNN不仅训练简单，而且运行速度可以达到5 fps。除此之外，Mask R-CNN也可以用来处理其他任务，比如估计人体姿态。在本文的最后，将会给出这次实验的结果。</font></p>
+
 <h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><p>随着卷积神经网络在计算机视觉领域的应用，计算机视觉领域在目标检测和语义分割上在短时间内取得了重大的突破。很大程度上，这些突破是建立在已有的研究基础上，例如分别用于目标检测和语义分割的Fast R-CNN<sup><a href="#fn_1" id="reffn_1">1</a></sup>/Faster R-CNN<sup><a href="#fn_2" id="reffn_2">2</a></sup>和FCN<sup><a href="#fn_3" id="reffn_3">3</a></sup>框架。这些方法不仅拥有直观，灵活和健壮等优良特性，而且拥有快速训练和运行的能力。在本文中，将会介绍一个与上述类似的框架，用来对图像进行实例分割。</p>
 <p>实例分割在计算机视觉领域非常具有挑战性，因为不仅需要正确的检测图像的所有对象，同时还需要对每一个对象实例实现精确的分割。它结合了机器视觉中目标检测和语义分割两种重要元素，其中目标检测是对单个对象进行分类，并使用边界框对每个对象进行定位；语义分割是对图像中的每个像素进行分类。在Mask R-CNN<sup><a href="#fn_4" id="reffn_4">4</a></sup>之前，为了将目标检测和语义分割结合起来，可能需要一个特别复杂的框架，但是在本文中通过实验表明，本文介绍的框架拥有非常简单、灵活的结构，以及高效的性能，并且该框架在当时超过了世界最高级的实例分割算法。</p>
-<p><img src="/ec1e35bf/clip_image002.png" alt="img"> </p>
-<p></p><p align="center"><strong> 图1-1 Mask R-CNN网络结构 </strong></p><br>该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别，该分支与现有的分类分支和边界框回归分支并行，如图1-1所示。这条新分支是将一个小型的FCN<sup><a href="#fn_3" id="reffn_3">3</a></sup>网络框架应用到每一个ROI<sup><a href="#fn_2" id="reffn_2">2</a></sup>（Regions Of Interest）中，对每一个像素进行分类。由于Faster R-CNN[2]的结构体系本身非常灵活，所以Mask R-CNN在训练和运行上同样方便。<p></p>
+<p><img src="/ec1e35bf/clip_image002.png" alt="img"></p>
+<p align="center"><strong> 图1-1 Mask R-CNN网络结构 </strong></p>
+
+
+<p>该方法称为Mask R-CNN，通过在Faster R-CNN的基础上添加一条新的分支以用于对目标边界识别，该分支与现有的分类分支和边界框回归分支并行，如图1-1所示。这条新分支是将一个小型的FCN<sup><a href="#fn_3" id="reffn_3">3</a></sup>网络框架应用到每一个ROI<sup><a href="#fn_2" id="reffn_2">2</a></sup>（Regions Of Interest）中，对每一个像素进行分类。由于Faster R-CNN[2]的结构体系本身非常灵活，所以Mask R-CNN在训练和运行上同样方便。</p>
 <p>从结构上分析，Mask R-CNN是Faster R-CNN的拓展网络，所以构造出正确的掩模分支是本文的核心内容。Faster R-CNN没有对像素进行分类的能力，因为Faster R-CNN借鉴了SPP-NET<sup><a href="#fn_5" id="reffn_5">5</a></sup>的思想，使用ROI Pool<sup><a href="#fn_1" id="reffn_1">1</a></sup>层处理从RPN<sup><a href="#fn_2" id="reffn_2">2</a></sup>网络中输出的ROI，将不同尺寸的ROI映射到7*7区域，使得每一个ROI映射到全连接层的长度一致。虽然ROI Pool层解决了全连接层需要固定尺度的问题，但是ROI Pool算法固有的特点使得生成的特征图无法与原图相对应。根据这个缺点，本文提出ROI Align<sup><a href="#fn_4" id="reffn_4">4</a></sup>网络层，通过插值的方法将RPN输出的ROI转化固定大小特征图，这样就可以通过算法将网络输出与原图相对应。</p>
 <p>性能上，在单张Tesla M40 GPU硬件平台上，使用COCO数据集训练2天，便可以实现在测试集上精确的对目标进行实例分割，处理速度为0.2秒一帧。</p>
 <p>综上，Mask R-CNN贡献了ROI Align网络结构使得网络输出层可以和原图一一对应，并且将目标分割和语义分割完美的结合在一起，实现了神经网络的端到端设计，为未来的科研人员提供了新的问题解决思路。</p>
 <h3 id="二、相关工作"><a href="#二、相关工作" class="headerlink" title="二、相关工作"></a>二、相关工作</h3><h4 id="2-1-传统目标检测算法"><a href="#2-1-传统目标检测算法" class="headerlink" title="2.1 传统目标检测算法"></a>2.1 传统目标检测算法</h4><p>目标检测任务可以分解成两个问题：图像识别、目标定位。对于图像识别任务，识别出目标图像中的对象。在单个图像识别任务中，只能识别出图像中的单个物体。面对这样的任务，设计出如下图2-1中的网络，便可以对目标进行识别。从类别上分析，图像识别问题也可以看成是分类问题。</p>
 <p><img src="/ec1e35bf/clip_image002-1581002210845.png" alt="img"></p>
-<p></p><p align="center"><strong>图2-1 传统目标分类网络框图</strong></p><br>在目标定位任务中，输入一张图片，输出是目标在图片中的位置。传统算法中将定位问题看成是回归问题，将网络输出的坐标与真实坐标计算损失，进行回归运算，设计出的网络结构如下图2-2<p></p>
+<p align="center"><strong>图2-1 传统目标分类网络框图</strong></p>
+
+
+<p>在目标定位任务中，输入一张图片，输出是目标在图片中的位置。传统算法中将定位问题看成是回归问题，将网络输出的坐标与真实坐标计算损失，进行回归运算，设计出的网络结构如下图2-2</p>
 <p><img src="/ec1e35bf/clip_image002-1581002239887.png" alt="img"></p>
-<p></p><p align="center"><strong>图2-2 传统目标检测网络框图</strong></p><br>在实际神经网络训练中，回归问题比较难收敛。为了解决这个问题，在特征图中选取一定数量的窗口，让不同窗口与真实的坐标计算分数，选择分数最大的一个窗口作为网络输出。这种方法在最后虽然无法收敛到真实坐标的位置，但是在窗口选取足够多的情况下，能够最大化的接近真实值，Yolo V3<sup><a href="#fn_6" id="reffn_6">6</a></sup>真是借鉴了anchor这种思想使得其目标检测性能进一步提高。<p></p>
+<p align="center"><strong>图2-2 传统目标检测网络框图</strong></p>
+
+
+<p>在实际神经网络训练中，回归问题比较难收敛。为了解决这个问题，在特征图中选取一定数量的窗口，让不同窗口与真实的坐标计算分数，选择分数最大的一个窗口作为网络输出。这种方法在最后虽然无法收敛到真实坐标的位置，但是在窗口选取足够多的情况下，能够最大化的接近真实值，Yolo V3<sup><a href="#fn_6" id="reffn_6">6</a></sup>真是借鉴了anchor这种思想使得其目标检测性能进一步提高。</p>
 <p>然而在图片中目标比较多的情况，为了识别和定位每一个目标的位置，需要枚举出非常多的窗口，这种方式带来的运算量是巨大的，在R-CNN出现后便被淘汰，但是这种将回归问题改成分类问题的思想让后来的科研人员在目标检测上的研究上倍受启发。</p>
 <h4 id="2-2-R-CNN"><a href="#2-2-R-CNN" class="headerlink" title="2.2 R-CNN"></a>2.2 R-CNN</h4><p>对图像中不同对象进行目标检测，传统目标检测算法需要枚举出的大量窗口，这给计算机处理带来了巨大的计算量。为了解决这个问题，通过Selective Search和Edge Boxes方法预先找出目标可能出现的位置，即候选区域（Region Proposal）。该方法利用图像中的纹理、边缘、颜色等信息可以保证在选取较少窗口的情况下保证较高的召回率。</p>
 <p><img src="/ec1e35bf/clip_image004.jpg" alt="img"></p>
-<p></p><p align="center"><strong>图2-3 R-CNN网络框架</strong></p><br>通过提取候选区以避免暴力枚举所有的框，大大降低了计算量，接下来需要对候选框进行识别检测。2014年，RBG（Ross B. Girshick）使用Region Proposal和CNN代替传统目标检测使用的滑动窗口结合手工设计特征，设计了R-CNN框架如图2-3，使得目标检测取得巨大突破，并开启了基于深度学习目标检测的热潮。<p></p>
+<p align="center"><strong>图2-3 R-CNN网络框架</strong></p>
+
+
+<p>通过提取候选区以避免暴力枚举所有的框，大大降低了计算量，接下来需要对候选框进行识别检测。2014年，RBG（Ross B. Girshick）使用Region Proposal和CNN代替传统目标检测使用的滑动窗口结合手工设计特征，设计了R-CNN框架如图2-3，使得目标检测取得巨大突破，并开启了基于深度学习目标检测的热潮。</p>
 <p>R-CNN框架的流程如下：</p>
 <p>1、 输入测试图像。</p>
 <p>2、 利用选择性搜索算法Selective Search，在图像中提取可能包含物体的候选框。</p>
@@ -532,8 +545,14 @@
 <h4 id="2-3-Fast-R-CNN"><a href="#2-3-Fast-R-CNN" class="headerlink" title="2.3 Fast R-CNN"></a>2.3 Fast R-CNN</h4><p>通过对R-CNN进行分析可以知道，即使使用了Selective Search等预处理步骤来提取潜在的框作为输入，但是R-CNN仍会有严重的速度瓶颈，原因也很明显，就是计算机对所有预处理区域进行特征提取时会有重复计算，Fast R-CNN正是为了解决这个问题诞生的。</p>
 <p>考虑到对预处理预期进行特征提取会有重复计算，所以Fast R-CNN在R-CNN基础上，先对整张图片提取特征，然后根据从SPP-NET得到的灵感，提出ROI pooling layer网络层将不同大小的特征区域缩放到统一大小。通过这种方法，不仅降低了大量的重复计算，同时也避免R-CNN对预处理区域缩放带来的图像的失真，网络框架如下2-4所示。</p>
 <p><img src="/ec1e35bf/clip_image006.jpg" alt="img"></p>
-<p></p><p align="center"><strong>图2-4 Fast R-CNN网络框图</strong></p><br><img src="/ec1e35bf/clip_image008.png" alt="img"><p></p>
-<p></p><p align="center"><strong>图2-5 Fast R-CNN网络结构</strong></p><br>除此之外，作者还巧妙的把bbox回归放到神经网络内部用以代替R-CNN中的SVM分类器，到这步距离网络的端到端设计已经非常接近了，网络结构如图2-5所示。<p></p>
+<p align="center"><strong>图2-4 Fast R-CNN网络框图</strong></p>
+
+
+<p><img src="/ec1e35bf/clip_image008.png" alt="img"></p>
+<p align="center"><strong>图2-5 Fast R-CNN网络结构</strong></p>
+
+
+<p>除此之外，作者还巧妙的把bbox回归放到神经网络内部用以代替R-CNN中的SVM分类器，到这步距离网络的端到端设计已经非常接近了，网络结构如图2-5所示。</p>
 <p>Fast R-CNN框架的流程如下：</p>
 <p>1、 输入测试图像。</p>
 <p>2、 利用选择性搜索算法Selective Search，在图像中提取可能包含物体的候选框。</p>
@@ -542,7 +561,10 @@
 <p>5、 通过全连接层进行目标分类和目标定位。</p>
 <h4 id="2-4-Faster-R-CNN"><a href="#2-4-Faster-R-CNN" class="headerlink" title="2.4 Faster R-CNN"></a>2.4 Faster R-CNN</h4><p>在Fast R-CNN中，通过选择性搜索算法Selective Search找出所有的候选框非常耗时，这使得Fast R-CNN算法在性能上存在了瓶颈。为了解决这个问题，RGBD在Fast R-CNN中引入Region Proposal Network(RPN)替代Selective Search，同时引入anchor box应对目标形状的变化问题，新网络命名为Faster R-CNN，网络结构如下图2-6所示。RPN放在之后一个卷积层后面，在经过训练后可以根据特征图直接输出候选区域，将得到的区域进行分类和定位，实现了网络的端到端设计。</p>
 <p><img src="/ec1e35bf/clip_image010.jpg" alt="img"></p>
-<p></p><p align="center"><strong>图2-6 Faster R-CNN 网络框图</strong></p><br>Faster R-CNN框架的流程如下：<p></p>
+<p align="center"><strong>图2-6 Faster R-CNN 网络框图</strong></p>
+
+
+<p>Faster R-CNN框架的流程如下：</p>
 <p>1、 将整幅图片输入到CNN网络中。</p>
 <p>2、 通过RPN网络获取候选框。</p>
 <p>3、 对候选框进行分类和定位。</p>
@@ -550,11 +572,15 @@
 <p>从结构上分析，Mask R-CNN是Faster R-CNN的拓展网络，所以构造出正确的掩模分支是本文的核心内容。Faster R-CNN没有对像素进行分类的能力，因为Faster R-CNN借鉴了SPP-NET的思想，使用ROI Pool处理从RPN网络中出来的ROI，将不同尺寸的ROI映射到7*7区域，使得每一个ROI映射到全连接层的长度一致。虽然ROI Pool层解决了全连接层需要固定尺度的问题，但是ROI Pool算法固有的特点使得生成的特征图无法与原图相对应。根据这个缺点，本文提出ROI Align网络层，通过插值的方法将RPN输出的ROI转化固定大小特征图，这样就可以通过算法将网络输出与原图相对应。</p>
 <p>综上，在Faster R-CNN的基础上，Mask R-CNN增加了一条掩模分支，以及将ROI Pool层修改为ROI Align层，网络总体结构如下3-1所示。</p>
 <p><img src="/ec1e35bf/clip_image012.png" alt="img"></p>
-<p></p><p align="center"><strong>图3-1 Mask R-CNN网络框架</strong></p><p></p>
+<p align="center"><strong>图3-1 Mask R-CNN网络框架</strong></p>
+
+
 <h4 id="3-2-ROI-Align设计"><a href="#3-2-ROI-Align设计" class="headerlink" title="3.2 ROI Align设计"></a>3.2 ROI Align设计</h4><p>在前文中，说明了Faster R-CNN中的RoI Pool层会导致输出和输入像素无法相对应的问题，于是本文提出新的RoI Align算法以实现本文目标，在本小节中将会对RoI Pool层和RoI Align进行详细的描述。</p>
 <p>RoI Pool是Faster R-CNN框架中用来解决RoI尺度不一致导致的特征区域失真问题的关键网络层。RoI Pool的原理是将不同尺度的RoI划分成为7x7的区域，在每个区域中找到出最大值，最终输出7x7的特征图。这种粗糙的池化算法，对于目标分类和目标定位而言影响并不大，但是对于语义分割，却会导致输出特征图与原特征图无法相互对应，而发得到正确的分割结果。</p>
 <p><img src="/ec1e35bf/clip_image014.png" alt="img"></p>
-<p></p><p align="center"><strong>图3-2 RoI Align算法原理</strong></p><br>本文介绍的RoI Align算法，在RoI Pool的基础上，在它划分的每个区域中，使用双线性插值算法计算四个点，再对这四个点进行最大值池化，如图3-2所示，RoI Align算法的步骤如下：<p></p>
+<p align="center"><strong>图3-2 RoI Align算法原理</strong></p>
+
+<p>本文介绍的RoI Align算法，在RoI Pool的基础上，在它划分的每个区域中，使用双线性插值算法计算四个点，再对这四个点进行最大值池化，如图3-2所示，RoI Align算法的步骤如下：</p>
 <p>1、  遍历每一个候选区域，保持浮点数边界不做量化。</p>
 <p>2、  将候选区域分割成7x7个单元，每个单元的边界也不做量化。</p>
 <p>3、  在每个单元中计算固定四个坐标位置，用双线性内插的方法计算出这四个位置的值，然后进行最大池化操作。</p>
@@ -567,7 +593,10 @@ L = L_{cls} + L_{box}+L_{mask}</script><p>其中$L$是总损失、$L_{cls}$是�
 <h3 id="四、结论"><a href="#四、结论" class="headerlink" title="四、结论"></a>四、结论</h3><p>至此，本文已经完成Mask R-CNN的原理和发展过程的介绍。Mask R-CNN的性能非常优秀，在单张Tesla M40 GPU硬件平台上，使用COCO数据集训练2天，便可以实现在测试集上精确的对目标进行实例分割，处理速度为0.2秒一帧。</p>
 <p>最后复现Mask R-CNN，以及附上实验结果，图4-1、4-2所示。</p>
 <p><img src="/ec1e35bf/clip_image036.jpg" alt="img"></p>
-<p></p><p align="center"><strong>图4-1</strong></p><br><img src="/ec1e35bf/clip_image038.jpg" alt="img"><p></p>
+<p align="center"><strong>图4-1</strong></p>
+
+
+<p><img src="/ec1e35bf/clip_image038.jpg" alt="img"></p>
 <p></p><p align="center"><strong>图4-2</strong></p><p></p>
 <h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
 <sup>1</sup>. Girshick, Ross. “Fast R-CNN.” Computer Science (2015).<a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
