@@ -118,7 +118,7 @@
 <meta property="og:image" content="https://www.zwenc.cn/65b37db3/1581953445272.png">
 <meta property="og:image" content="https://www.zwenc.cn/65b37db3/1582032142234.png">
 <meta property="og:image" content="https://www.zwenc.cn/65b37db3/1582032171545.png">
-<meta property="og:updated_time" content="2020-02-18T13:33:37.099Z">
+<meta property="og:updated_time" content="2020-02-26T08:05:43.846Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="神经网络-夜景图像增强论文阅读">
 <meta name="twitter:description" content="【摘 要】 这篇论文提出了一个新得图像增强神经网络，该网络学习的并不是图像到图像的映射，而是图像到增强图像中间的转换过程，学习的是仿射变换，再通过仿射变换生成增强图像，利用了自然光照具有明显先验的特点，颇具创新性。除此之外，还提供了一个新的数据集，该数据集拍摄了多种情况夜景共3000张，另外叫P图大师为每一张图片p正常光照的对应版本，壕无人性。     论文链接：Underexposed Phot">
@@ -437,7 +437,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-02-18 21:33:37" itemprop="dateModified" datetime="2020-02-18T21:33:37+08:00">2020-02-18</time>
+                <time title="修改时间：2020-02-26 16:05:43" itemprop="dateModified" datetime="2020-02-26T16:05:43+08:00">2020-02-26</time>
               
             
           </span>
@@ -546,9 +546,13 @@ L_c^i = \sum_P\angle(F(I_i)_p,(\bar I_i)_p)</script><p>平滑损失：</p>
 <script type="math/tex; mode=display">
 L_s^i = \sum_p \sum_c w_{x,c}^p(\partial_x S_p)_c^2 + w_{y,c}^p(\partial_y S_p)_c^2</script><p>内容损失表示输出图像和原图像的差距，色彩损失保证RGB的矢量方向一致，平滑损失根据光照先验，认为局部光照是平滑的。</p>
 <h3 id="六、代码调试日志"><a href="#六、代码调试日志" class="headerlink" title="六、代码调试日志"></a>六、代码调试日志</h3><p>代码官方已经开源：<a href="https://github.com/wangruixing/DeepUPE" target="_blank" rel="noopener">点击跳转</a></p>
+<ul>
+<li>环境：ubuntu</li>
+<li>语言：python3.6（官方使用2.7版本，但我这里经过简单修改也能运行）</li>
+</ul>
 <h4 id="6-1-安装cuda和cudnn"><a href="#6-1-安装cuda和cudnn" class="headerlink" title="6.1 安装cuda和cudnn"></a>6.1 安装cuda和cudnn</h4><p>这两个必须安装，否则会出现各种.so文件找不到，10版本以上应该都没有问题</p>
 <h4 id="6-2-安装运行环境"><a href="#6-2-安装运行环境" class="headerlink" title="6.2 安装运行环境"></a>6.2 安装运行环境</h4><p>按照git中教程按照环境</p>
-<h4 id="6-3-问题1"><a href="#6-3-问题1" class="headerlink" title="6.3 问题1"></a>6.3 问题1</h4><p>TensorFlow安装目录不对，使用conda按照，但是没有安装在envs目录中，导致的问题是，import TensorFlow失败，解决方法，重新安装。</p>
+<h4 id="6-3-问题1"><a href="#6-3-问题1" class="headerlink" title="6.3 问题1"></a>6.3 问题1</h4><p>TensorFlow安装目录不对，使用conda安装，但是没有安装在envs目录中，导致的问题是，import TensorFlow失败，解决方法，重新安装。</p>
 <h4 id="6-4-问题2"><a href="#6-4-问题2" class="headerlink" title="6.4 问题2"></a>6.4 问题2</h4><p>make 成功，但是运行程序，提示缺少符号，如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">undefined symbol: _ZTIN10tensorflow8OpKernelE.</span><br></pre></td></tr></table></figure>
 <p>这种情况都是有都动态链接库没有找到对应的源文件造成的，说明在编译的时候少了文件，经过检查缺少：<code>tensorflow_framework.so</code>文件，在makefile文件的 <code>CFLAGS</code> 变量后面加上<code>-ltensorflow_framework</code>。</p>

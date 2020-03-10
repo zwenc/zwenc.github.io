@@ -104,13 +104,13 @@
 
 
 
-  <meta name="description" content="一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature transform)是一种计算机视觉的算法。它用来侦测与描述影像中的局部性特征，它在空间尺度中寻找极值点，并提取出其位置、尺度、旋转不变量，此算法由 David Lowe在1999年所发表，2004年完善总结。 其应用范围包含物体辨识、机器人地图感知与导航、影像缝合、3D模型建立、手势辨识、影像">
+  <meta name="description" content="【摘 要】 本文主要介绍SITI算法原理，以及MATLAB算法实现。SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的特征。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等。       一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature tra">
 <meta name="keywords" content="程序猿">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器视觉-SIFT特征点提取">
 <meta property="og:url" content="https://www.zwenc.cn/bc292498/index.html">
 <meta property="og:site_name" content="zwen">
-<meta property="og:description" content="一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature transform)是一种计算机视觉的算法。它用来侦测与描述影像中的局部性特征，它在空间尺度中寻找极值点，并提取出其位置、尺度、旋转不变量，此算法由 David Lowe在1999年所发表，2004年完善总结。 其应用范围包含物体辨识、机器人地图感知与导航、影像缝合、3D模型建立、手势辨识、影像">
+<meta property="og:description" content="【摘 要】 本文主要介绍SITI算法原理，以及MATLAB算法实现。SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的特征。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等。       一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature tra">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.zwenc.cn/bc292498/1572335245843.png">
 <meta property="og:image" content="https://www.zwenc.cn/bc292498/gs.gif">
@@ -138,10 +138,10 @@
 <meta property="og:image" content="https://www.zwenc.cn/bc292498/1572510972313.png">
 <meta property="og:image" content="https://www.zwenc.cn/bc292498/1572509276800.png">
 <meta property="og:image" content="https://www.zwenc.cn/bc292498/1572511280992.png">
-<meta property="og:updated_time" content="2019-10-31T09:18:03.959Z">
+<meta property="og:updated_time" content="2020-03-10T14:45:04.163Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器视觉-SIFT特征点提取">
-<meta name="twitter:description" content="一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature transform)是一种计算机视觉的算法。它用来侦测与描述影像中的局部性特征，它在空间尺度中寻找极值点，并提取出其位置、尺度、旋转不变量，此算法由 David Lowe在1999年所发表，2004年完善总结。 其应用范围包含物体辨识、机器人地图感知与导航、影像缝合、3D模型建立、手势辨识、影像">
+<meta name="twitter:description" content="【摘 要】 本文主要介绍SITI算法原理，以及MATLAB算法实现。SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的特征。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等。       一、前言SIFI简单介绍 尺度不变特征转换即SIFT (Scale-invariant feature tra">
 <meta name="twitter:image" content="https://www.zwenc.cn/bc292498/1572335245843.png">
 
 
@@ -457,7 +457,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-10-31 17:18:03" itemprop="dateModified" datetime="2019-10-31T17:18:03+08:00">2019-10-31</time>
+                <time title="修改时间：2020-03-10 22:45:04" itemprop="dateModified" datetime="2020-03-10T22:45:04+08:00">2020-03-10</time>
               
             
           </span>
@@ -522,11 +522,14 @@
       
 
       
-        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p><strong>SIFI简单介绍</strong></p>
+        <p><font face="楷体" size="3"><strong>【摘 要】 </strong>本文主要介绍SITI算法原理，以及MATLAB算法实现。SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的特征。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等。
+    </font></p>
+
+<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p><strong>SIFI简单介绍</strong></p>
 <p>尺度不变特征转换即SIFT (Scale-invariant feature transform)是一种计算机视觉的算法。它用来侦测与描述影像中的局部性特征，它在空间尺度中寻找极值点，并提取出其位置、尺度、旋转不变量，此算法由 David Lowe在1999年所发表，2004年完善总结。</p>
 <p>其应用范围包含物体辨识、机器人地图感知与导航、影像缝合、3D模型建立、手势辨识、影像追踪和动作比对。</p>
 <p>局部影像特征的描述与侦测可以帮助辨识物体，SIFT特征是基于物体上的一些局部外观的兴趣点而与影像的大小和旋转无关。对于光线、噪声、些微视角改变的容忍度也相当高。基于这些特性，它们是高度显著而且相对容易撷取，在母数庞大的特征数据库中，很容易辨识物体而且鲜有误认。使用 SIFT特征描述对于部分物体遮蔽的侦测率也相当高，甚至只需要3个以上的SIFT物体特征就足以计算出位置与方位。在现今的电脑硬件速度下和小型的特征数据库条件下，辨识速度可接近即时运算。SIFT特征的信息量大，适合在海量数据库中快速准确匹配。</p>
-<p>SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的方向。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等<sup><a href="#fn_1" id="reffn_1">1</a></sup>。</p>
+<p>SIFT算法的实质是在不同的尺度空间上查找关键点(特征点)，并计算出关键点的特征。SIFT所查找到的关键点是一些十分突出，不会因光照，仿射变换和噪音等因素而变化的点，如角点、边缘点、暗区的亮点及亮区的暗点等<sup><a href="#fn_1" id="reffn_1">1</a></sup>。</p>
 <p>（SIFT太南了）</p>
 <h3 id="二、实现流程"><a href="#二、实现流程" class="headerlink" title="二、实现流程"></a>二、实现流程</h3><h4 id="2-1-SIFT算法流程图"><a href="#2-1-SIFT算法流程图" class="headerlink" title="2.1 SIFT算法流程图"></a>2.1 SIFT算法流程图</h4><p>（流程介绍很重要）</p>
 <p>SIFT算法流程如下图所示，先生成图像金字塔，做差分计算（DoG）后得到极值点，再对极值点使用泰勒展开得到精确的极值点，再结合对应<strong>尺度空间</strong>的图像计算出特征点的主方向。然后每个点根据得到的主方向，对该点周围区域生成一个特征描述算子，归一化后得到最终的所有特征点描述向量。</p>
