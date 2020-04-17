@@ -112,7 +112,7 @@
 <meta property="og:site_name" content="zwen">
 <meta property="og:description" content="【摘 要】 本文讲述的是Ubuntu18.04上面升级glibc到2.29版本的辛酸而又励志故事。在查遍了百度，google，必应等，只有一位同学遇到了和我一样的问题，且他没有解决这个问题。为了记录我的英勇历史，写下这篇日记。 一、介绍1.1 环境说明 系统：ubuntu18.04  1.2 问题介绍安装完mmdetection后运行，报以下错误： 1/lib/x86_64-linux-gnu/l">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-17T13:08:11.407Z">
+<meta property="og:updated_time" content="2020-04-17T13:09:51.278Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu安装glibc">
 <meta name="twitter:description" content="【摘 要】 本文讲述的是Ubuntu18.04上面升级glibc到2.29版本的辛酸而又励志故事。在查遍了百度，google，必应等，只有一位同学遇到了和我一样的问题，且他没有解决这个问题。为了记录我的英勇历史，写下这篇日记。 一、介绍1.1 环境说明 系统：ubuntu18.04  1.2 问题介绍安装完mmdetection后运行，报以下错误： 1/lib/x86_64-linux-gnu/l">
@@ -169,10 +169,10 @@
     .use-motion .logo-line-before i { left: initial; }
     .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
 
@@ -413,7 +413,7 @@
                 
               
 
-              <time title="创建时间：2020-04-17 19:32:40 / 修改时间：21:08:11" itemprop="dateCreated datePublished" datetime="2020-04-17T19:32:40+08:00">2020-04-17</time>
+              <time title="创建时间：2020-04-17 19:32:40 / 修改时间：21:09:51" itemprop="dateCreated datePublished" datetime="2020-04-17T19:32:40+08:00">2020-04-17</time>
             
 
             
@@ -487,12 +487,12 @@
 <h3 id="二、解决过程"><a href="#二、解决过程" class="headerlink" title="二、解决过程"></a>二、解决过程</h3><p>apt是按照不了的，不要想了。</p>
 <h4 id="2-1-下载glibc-2-29源码"><a href="#2-1-下载glibc-2-29源码" class="headerlink" title="2.1 下载glibc_2.29源码"></a>2.1 下载glibc_2.29源码</h4><p><a href="http://www.gnu.org/software/libc/" target="_blank" rel="noopener">下载链接</a></p>
 <p>解压到任意目录。</p>
-<h4 id="2-2-采坑记录"><a href="#2-2-采坑记录" class="headerlink" title="2.2 采坑记录"></a>2.2 采坑记录</h4><ul>
+<h4 id="2-2-踩坑记录"><a href="#2-2-踩坑记录" class="headerlink" title="2.2 踩坑记录"></a>2.2 踩坑记录</h4><ul>
 <li><p>第一个坑：不能再当前目录下直接configure，要重新建一个空文件夹，然后cd进去，在里面进行编译。（官方的解释是：这样如果出错，可以把这个文件夹下的内容删掉，比较方便。。。。官方脑子一定是进水了）</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 进入解压的文件夹后</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">../configure prefix=/opy/glibc</span><br></pre></td></tr></table></figure>
 <p>这一步可能出错，提示缺少几个包，有人是一个，有人是几个，这些包可以用<code>apt-get install</code>的方法直接安装。</p>
 </li>
-<li><p>第二个坑：这是个深坑，官方的文件里面没有<code>manual</code>文件夹，而在编译的时候，缺需要这个文件夹里面的文件，具体报错过程如下：</p>
+<li><p>第二个坑：这是个深坑，官方的文件里面没有<code>manual</code>文件夹，而在编译的时候，但是却需要这个文件夹里面的文件，具体报错过程如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8</span><br></pre></td></tr></table></figure>
 <p>注：<code>-j8</code>的意思是，8线程同时编译。</p>
 <p>报错如下：</p>
@@ -772,7 +772,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、介绍"><span class="nav-text">一、介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-环境说明"><span class="nav-text">1.1 环境说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-问题介绍"><span class="nav-text">1.2 问题介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、解决过程"><span class="nav-text">二、解决过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-下载glibc-2-29源码"><span class="nav-text">2.1 下载glibc_2.29源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-采坑记录"><span class="nav-text">2.2 采坑记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、总结"><span class="nav-text">三、总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、介绍"><span class="nav-text">一、介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-环境说明"><span class="nav-text">1.1 环境说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-问题介绍"><span class="nav-text">1.2 问题介绍</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、解决过程"><span class="nav-text">二、解决过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-下载glibc-2-29源码"><span class="nav-text">2.1 下载glibc_2.29源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-踩坑记录"><span class="nav-text">2.2 踩坑记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、总结"><span class="nav-text">三、总结</span></a></li></ol></div>
             
 
           </div>
@@ -1117,19 +1117,7 @@
         }, 300);
       }).append(e);
     })
-  </script>
-
-
-  
-  
-
-  
-  
-
-  
-
-
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1146,5 +1134,17 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body>
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
