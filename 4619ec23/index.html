@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/1.jpg?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="【摘 要】 本项目实现两个任务：1、使用ImageNet数据集训练CartoonGan和Pix2Pix网络，使其能够将灰度图转化为彩色图，分析两者性能的差距。2、使用非成对红外图像数据集训练CartoonGan，使其能够将红外图像转化为灰度图像。     Pix2Pix论文链接：https://arxiv.org/abs/1611.07004     Pix2Pix的GitHub地址：https:">
+<meta name="keywords" content="程序猿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="灰度&#x2F;红外图像彩色化">
+<meta property="og:url" content="https://www.zwenc.cn/4619ec23/index.html">
+<meta property="og:site_name" content="zwen">
+<meta property="og:description" content="【摘 要】 本项目实现两个任务：1、使用ImageNet数据集训练CartoonGan和Pix2Pix网络，使其能够将灰度图转化为彩色图，分析两者性能的差距。2、使用非成对红外图像数据集训练CartoonGan，使其能够将红外图像转化为灰度图像。     Pix2Pix论文链接：https://arxiv.org/abs/1611.07004     Pix2Pix的GitHub地址：https:">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/1590650769339.png">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/1590652379962.png">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/1590656650202.png">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/1590656777456.png">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/30_epoch_project_name_test_5.png">
+<meta property="og:image" content="https://www.zwenc.cn/4619ec23/27_epoch_project_name_test_4.png">
+<meta property="og:updated_time" content="2020-05-28T09:19:57.445Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="灰度&#x2F;红外图像彩色化">
+<meta name="twitter:description" content="【摘 要】 本项目实现两个任务：1、使用ImageNet数据集训练CartoonGan和Pix2Pix网络，使其能够将灰度图转化为彩色图，分析两者性能的差距。2、使用非成对红外图像数据集训练CartoonGan，使其能够将红外图像转化为灰度图像。     Pix2Pix论文链接：https://arxiv.org/abs/1611.07004     Pix2Pix的GitHub地址：https:">
+<meta name="twitter:image" content="https://www.zwenc.cn/4619ec23/1590650769339.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://www.zwenc.cn/4619ec23/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>灰度/红外图像彩色化 | zwen</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwen</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">要不是记性不好，我是不会写的。。</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-resume">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/project/" rel="section"><i class="menu-item-icon fa fa-fw fa-address-card"></i> <br>简历</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tools">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>工具</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/4619ec23/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwen">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">灰度/红外图像彩色化
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-28 14:16:20 / 修改时间：17:19:57" itemprop="dateCreated datePublished" datetime="2020-05-28T14:16:20+08:00">2020-05-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/作品/" itemprop="url" rel="index"><span itemprop="name">作品</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><font face="楷体" size="3"><strong>【摘 要】</strong> 本项目实现两个任务：1、使用ImageNet数据集训练CartoonGan和Pix2Pix网络，使其能够将灰度图转化为彩色图，分析两者性能的差距。2、使用非成对红外图像数据集训练CartoonGan，使其能够将红外图像转化为灰度图像。
+    <p>Pix2Pix论文链接：<a href="https://arxiv.org/abs/1611.07004" target="_blank" rel="noopener">https://arxiv.org/abs/1611.07004</a></p>
+    <p>Pix2Pix的GitHub地址：<a href="https://github.com/phillipi/pix2pix" target="_blank" rel="noopener">https://github.com/phillipi/pix2pix</a></p>
+    <p>CartoonGan论文链接：<a href="http://openaccess.thecvf.com/content_cvpr_2018/papers/Chen_CartoonGAN_Generative_Adversarial_CVPR_2018_paper.pdf" target="_blank" rel="noopener">点击跳转</a></p>
+    <p>CartoonGan的GitHub地址：<a href="https://github.com/znxlwm/pytorch-CartoonGAN" target="_blank" rel="noopener">https://github.com/znxlwm/pytorch-CartoonGAN</a></p>
+    </font></p>
+
+<h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><h4 id="1-1-功能介绍"><a href="#1-1-功能介绍" class="headerlink" title="1.1 功能介绍"></a>1.1 功能介绍</h4><p>实现功能如下：</p>
+<ul>
+<li>使用ImageNet数据集训练CartoonGan和Pix2Pix网络，使其能够将灰度图转化为彩色图。<ul>
+<li>对比CartoonGan和Pix2Pix的性能差距</li>
+</ul>
+</li>
+<li>使用非成对红外图像数据集训练CartoonGan，使其能够将红外图像转化为灰度图像。</li>
+</ul>
+<h4 id="1-2-网络介绍"><a href="#1-2-网络介绍" class="headerlink" title="1.2 网络介绍"></a>1.2 网络介绍</h4><h5 id="1-2-1-Pix2Pix"><a href="#1-2-1-Pix2Pix" class="headerlink" title="1.2.1 Pix2Pix"></a>1.2.1 Pix2Pix</h5><p>pix2pix<sup><a href="#fn_1" id="reffn_1">1</a></sup>使用的是<strong>成对数据集</strong>进行训练，生成器采用的是Unet<sup><a href="#fn_2" id="reffn_2">2</a></sup>结构，判别器使用的是马尔科夫性的判别器PatchGAN<sup><a href="#fn_3" id="reffn_3">3</a></sup>。结构如下图所示：</p>
+<p><img src="/4619ec23/1590650769339.png" alt="1590650769339"></p>
+<p>结构比较简单，修改网络的数据集，既可以实现灰度图像彩色化。</p>
+<p><a href="https://www.jianshu.com/p/8c7a7cb7198c" target="_blank" rel="noopener">细节可查看某大佬笔记</a></p>
+<h5 id="1-2-2-CartoonGan"><a href="#1-2-2-CartoonGan" class="headerlink" title="1.2.2 CartoonGan"></a>1.2.2 CartoonGan</h5><p>CartoonGan<sup><a href="#fn_4" id="reffn_4">4</a></sup>使用的是<strong>非成对数据集</strong>进行训练，生成器使用的编解码结构，判别器就是一个普通的分类网络，结构如下所示：</p>
+<p><img src="/4619ec23/1590652379962.png" alt="1590652379962"></p>
+<p>输入为图片为3通道，对数据集进行简单的预处理既可以开始训练。</p>
+<p><a href="https://blog.csdn.net/liongxiong/article/details/80869830" target="_blank" rel="noopener">细节可看CSDN大佬</a></p>
+<h3 id="二、实验步骤"><a href="#二、实验步骤" class="headerlink" title="二、实验步骤"></a>二、实验步骤</h3><ul>
+<li>将下载好的ImageNet数据集灰度化。</li>
+</ul>
+<h4 id="2-1-Pix2Pix灰度图彩色化"><a href="#2-1-Pix2Pix灰度图彩色化" class="headerlink" title="2.1 Pix2Pix灰度图彩色化"></a>2.1 Pix2Pix灰度图彩色化</h4><ul>
+<li>配置环境</li>
+<li>分割数据集，训练集0.7，测试集0.3。</li>
+<li>设置好目录后开始训练，在GTX 2070s上面训练3天，共200个epoch。</li>
+</ul>
+<h4 id="2-2-CartoonGan灰度图彩色化"><a href="#2-2-CartoonGan灰度图彩色化" class="headerlink" title="2.2 CartoonGan灰度图彩色化"></a>2.2 CartoonGan灰度图彩色化</h4><ul>
+<li>配置环境</li>
+<li>分割数据集，训练集0.7，测试集0.3。</li>
+<li>由于作者没有提供灰度图彩色化代码，需要自己关注输出结果调整网络参数。<ul>
+<li>现象：图片无明显彩色化，怀疑是内容损失惩罚系数过大，降低内容损失为0.2</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-3-CartoonGan红外图彩色化"><a href="#2-3-CartoonGan红外图彩色化" class="headerlink" title="2.3 CartoonGan红外图彩色化"></a>2.3 CartoonGan红外图彩色化</h4><p>更换数据集为红外图像，红外图像和灰度图的区别在于红外图像更加模型，需要模型具备更强的想象力。步骤如下：</p>
+<ul>
+<li>更换数据集，其他和2.2一样。</li>
+</ul>
+<h3 id="三、实验结果"><a href="#三、实验结果" class="headerlink" title="三、实验结果"></a>三、实验结果</h3><h4 id="3-1-Pix2Pix灰度图彩色化"><a href="#3-1-Pix2Pix灰度图彩色化" class="headerlink" title="3.1 Pix2Pix灰度图彩色化"></a>3.1 Pix2Pix灰度图彩色化</h4><p>Pix2Pix输出结果如下图所示：左边为灰度图，中间为生成图，右边为对应彩色图。</p>
+<p><img src="/4619ec23/1590656650202.png" alt="1590656650202"></p>
+<h4 id="3-2-CartoonGan灰度图彩色化"><a href="#3-2-CartoonGan灰度图彩色化" class="headerlink" title="3.2 CartoonGan灰度图彩色化"></a>3.2 CartoonGan灰度图彩色化</h4><p>CartoonGan输出结果如下图所示：左边为灰度图，中间为生成图，右边为对应彩色图。</p>
+<p><img src="/4619ec23/1590656777456.png" alt="1590656777456"></p>
+<h4 id="3-3-CartoonGan红外图彩色化"><a href="#3-3-CartoonGan红外图彩色化" class="headerlink" title="3.3 CartoonGan红外图彩色化"></a>3.3 CartoonGan红外图彩色化</h4><p><img src="/4619ec23/30_epoch_project_name_test_5.png" alt="30_epoch_project_name_test_5"></p>
+<p><img src="/4619ec23/27_epoch_project_name_test_4.png" alt="27_epoch_project_name_test_4"></p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>除此之外，对比了峰值信噪比，得出如果有成对数据集，Pix2Pix性能优于CartoonGan。但是面对红外图像，无成对数据集的情况，Pix2Pix便无能为力。</p>
+<p>在CartoonGan的训练过程中，作者默认设置的内容损失有些过大，调小会得到更好的结果。同时CartoonGan具有很大的成长空间，修改特征提取方式（作者使用VGG提取特征，权重为VGG官方默认）应该会得到一些有趣的结果。</p>
+<p>Pix2Pix处理每张图片用时：0.04914107492991856 s</p>
+<p>CartoonGan处理每张图片用时：0.02963963421908292 s</p>
+<h3 id="五、环境配置说明"><a href="#五、环境配置说明" class="headerlink" title="五、环境配置说明"></a>五、环境配置说明</h3><p>只记录Pix2Pix，CartoonGan配置方式类似。电脑需要安装好Ubuntu18.04，cudnn等必备库</p>
+<h4 id="5-1-环境配置"><a href="#5-1-环境配置" class="headerlink" title="5.1 环境配置"></a>5.1 环境配置</h4><ul>
+<li>python：3.6.6</li>
+<li>pytorch：1.5.0</li>
+<li>pillow：6.0.0</li>
+<li>scipy：1.2.0</li>
+<li>torchvision：2.3.1</li>
+<li>visdom</li>
+<li>dominate：2.3.1</li>
+</ul>
+<p>将上面的环境先安装好，conda创建环境时命名为：pix2pix，后面提示缺少什么模块安装什么模块。</p>
+<h4 id="5-2-数据集配置"><a href="#5-2-数据集配置" class="headerlink" title="5.2 数据集配置"></a>5.2 数据集配置</h4><p>数据集下载，由于数据集太大，使用测试集作训练，总共40670张。</p>
+<p><a href="http://images.cocodataset.org/zips/test2017.zip" target="_blank" rel="noopener">官网下载链接</a></p>
+<p><a href="https://pan.baidu.com/s/1ZuEl0iNk_kTvRkdgvE1opA" target="_blank" rel="noopener">百度云下载链接:  ch9u</a></p>
+<h5 id="5-2-1-目录结构"><a href="#5-2-1-目录结构" class="headerlink" title="5.2.1 目录结构"></a>5.2.1 目录结构</h5><ul>
+<li>根目录<ul>
+<li>train    <ul>
+<li>放置30000张图片</li>
+</ul>
+</li>
+<li>test<ul>
+<li>放置10670张图片</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>使用时，只需要将根目录地址给程序。</p>
+<h5 id="5-2-2-数据集分割"><a href="#5-2-2-数据集分割" class="headerlink" title="5.2.2 数据集分割"></a>5.2.2 数据集分割</h5><p>数据集分割代码，需要提前创建train和test文件夹，代码会自动将<code>test2017</code>下的全部图片，分割到<code>train</code>和<code>test</code>文件夹中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> shutil</span><br><span class="line"></span><br><span class="line">path = <span class="string">'/media/w/文档/ubuntu/coco/test2017'</span></span><br><span class="line">filelist = os.listdir(path)</span><br><span class="line"></span><br><span class="line">random.shuffle(filelist)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> index, pathName <span class="keyword">in</span> enumerate(filelist, <span class="number">1</span>):</span><br><span class="line">    src = os.path.join(path, pathName)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> index &lt;= <span class="number">30000</span>:</span><br><span class="line">        dst = os.path.join(<span class="string">'train/'</span>, pathName)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        dst = os.path.join(<span class="string">'test/'</span>, pathName)</span><br><span class="line"></span><br><span class="line">    shutil.copyfile(src, dst)</span><br></pre></td></tr></table></figure>
+<p>至此，数据集已处理完毕</p>
+<h4 id="5-3-打开visdom服务"><a href="#5-3-打开visdom服务" class="headerlink" title="5.3 打开visdom服务"></a>5.3 打开visdom服务</h4><p>必须要打开，不然测试或运行的时候会报错！！！！！</p>
+<p>打开终端，进入程序根目录下</p>
+<ul>
+<li>激活环境</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate pix2pix</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打开<code>visdom</code>服务</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m visdom.server</span><br></pre></td></tr></table></figure>
+<p>开始自动下载脚本，之后会弹出链接，点击链接即可在浏览器查看训练情况</p>
+<p>执行后，出现以下提示表示正在下载，如果太久，参考该链接解决: <a href="https://github.com/casuallyName/document-sharing/tree/master/static" target="_blank" rel="noopener">https://github.com/casuallyName/document-sharing/tree/master/static</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Checking for scripts.</span><br><span class="line">Downloading scripts, this may take a little while</span><br></pre></td></tr></table></figure>
+<p>提示：visdom在ubuntu下的地址为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/miniconda3/envs/pix2pix/lib/python3.6/site-packages/visdom</span><br></pre></td></tr></table></figure>
+<h4 id="5-4-训练配置"><a href="#5-4-训练配置" class="headerlink" title="5.4 训练配置"></a>5.4 训练配置</h4><ul>
+<li>下载代码，进入代码根目录</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>安装环境</p>
+<ul>
+<li>python 3.6.6</li>
+<li>pytorch 1.5.0</li>
+<li>visdom</li>
+<li>其他的提示缺啥，安装啥。</li>
+</ul>
+</li>
+<li><p>输入以下命令开始训练</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python train.py --dataroot /media/w/文档/ubuntu/coco --name BW2COLOR --model colorization</span><br></pre></td></tr></table></figure>
+<p>其中<code>dataroot</code>是数据集地址，数据集参考第二节的做法。</p>
+<h4 id="5-5-测试说明"><a href="#5-5-测试说明" class="headerlink" title="5.5 测试说明"></a>5.5 测试说明</h4><p>在代码根目录下创建<code>weight/BW2COLOR</code>文件夹，将<a href="https://pan.baidu.com/s/1aEGPfKKysMFRaGDhYO_Hlw" target="_blank" rel="noopener">权重文件： 0awi</a>放入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python test.py --dataroot /media/w/文档/ubuntu/dataset/imagenet/ --name BW2COLOR --model colorization --checkpoints_dir weight</span><br></pre></td></tr></table></figure>
+<p>其中<code>dataroot</code>是测试集地址，需要把测试图片放入到<code>imagenet</code>内的<code>test</code>文件夹中。</p>
+<h4 id="5-6-信噪比比较"><a href="#5-6-信噪比比较" class="headerlink" title="5.6 信噪比比较"></a>5.6 信噪比比较</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PSNR</span><span class="params">(img1, img2)</span>:</span></span><br><span class="line">    mse = np.mean((img1 - img2)** <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> mse == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span></span><br><span class="line">    PIXEL_MAX = <span class="number">255.0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">20</span> * math.log10(PIXEL_MAX / math.sqrt(mse))</span><br><span class="line"></span><br><span class="line">img1 = Image.open(<span class="string">"./results/BW2COLOR/test_latest/images/000000000183_fake_B_rgb.png"</span>)</span><br><span class="line">img2 = Image.open(<span class="string">"./results/BW2COLOR/test_latest/images/000000000183_real_A.png"</span>)</span><br><span class="line"></span><br><span class="line">img1_array = np.array(img1)</span><br><span class="line">img2_array = np.array(img2)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"The PSNR between image1 and image2 is: %.3f"</span> % PSNR(img1_array,img2_array))</span><br></pre></td></tr></table></figure>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><blockquote id="fn_1">
+<sup>1</sup>. <a href="https://arxiv.org/abs/1611.07004" target="_blank" rel="noopener">Image-to-Image Translation with Conditional Adversarial Networks</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="http://www.arxiv.org/pdf/1505.04597.pdf" target="_blank" rel="noopener">U-Net: Convolutional Networks for Biomedical Image Segmentation</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_3">
+<sup>3</sup>. <a href="https://www.jianshu.com/p/57ff6f96ce4c" target="_blank" rel="noopener">Patch-GAN Image-to-Image Translation with Conditional Adversarial Networks</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_4">
+<sup>4</sup>. <a href="http://openaccess.thecvf.com/content_cvpr_2018/papers/Chen_CartoonGAN_Generative_Adversarial_CVPR_2018_paper.pdf" target="_blank" rel="noopener">CartoonGAN: Generative Adversarial Networks for Photo Cartoonization</a><a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
+		
+	</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zwen 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/6155d250/" rel="next" title="模式识别-手写数字识别（作业）">
+                <i class="fa fa-chevron-left"></i> 模式识别-手写数字识别（作业）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.gif" alt="zwen">
+            
+              <p class="site-author-name" itemprop="name">zwen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/zwenc" title="GitHub &rarr; https://github.com/zwenc" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:1005714267@qq.com" title="E-Mail &rarr; mailto:1005714267@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、介绍"><span class="nav-text">一、介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-功能介绍"><span class="nav-text">1.1 功能介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-网络介绍"><span class="nav-text">1.2 网络介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-Pix2Pix"><span class="nav-text">1.2.1 Pix2Pix</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-CartoonGan"><span class="nav-text">1.2.2 CartoonGan</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、实验步骤"><span class="nav-text">二、实验步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Pix2Pix灰度图彩色化"><span class="nav-text">2.1 Pix2Pix灰度图彩色化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-CartoonGan灰度图彩色化"><span class="nav-text">2.2 CartoonGan灰度图彩色化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-CartoonGan红外图彩色化"><span class="nav-text">2.3 CartoonGan红外图彩色化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、实验结果"><span class="nav-text">三、实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Pix2Pix灰度图彩色化"><span class="nav-text">3.1 Pix2Pix灰度图彩色化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-CartoonGan灰度图彩色化"><span class="nav-text">3.2 CartoonGan灰度图彩色化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-CartoonGan红外图彩色化"><span class="nav-text">3.3 CartoonGan红外图彩色化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、总结"><span class="nav-text">四、总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、环境配置说明"><span class="nav-text">五、环境配置说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-环境配置"><span class="nav-text">5.1 环境配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-数据集配置"><span class="nav-text">5.2 数据集配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-1-目录结构"><span class="nav-text">5.2.1 目录结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-2-数据集分割"><span class="nav-text">5.2.2 数据集分割</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-打开visdom服务"><span class="nav-text">5.3 打开visdom服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-训练配置"><span class="nav-text">5.4 训练配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-测试说明"><span class="nav-text">5.5 测试说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-信噪比比较"><span class="nav-text">5.6 信噪比比较</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+    overflow: auto hidden;
+}
+</style>
+
+    
+  
+
+
+  
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/bookmark/bookmark.min.js?v=1.0"></script>
+  <script>
+  
+    bookmark.scrollToMark('auto', "#更多");
+  
+  </script>
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap');
+      $(e).after($wrap);
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text();
+        }).toArray().join('\n');
+        var ta = document.createElement('textarea');
+        var range = document.createRange(); //For Chrome
+        var sel = window.getSelection(); //For Chrome
+        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+        ta.style.top = yPosition + 'px'; //Prevent page scroll
+        ta.style.position = 'absolute';
+        ta.style.opacity = '0';
+        ta.value = code;
+        ta.textContent = code; //For FireFox
+        ta.contentEditable = true;
+        ta.readOnly = false;
+        document.body.appendChild(ta);
+        range.selectNode(ta);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        ta.setSelectionRange(0, code.length);
+        var result = document.execCommand('copy');
+        
+          if (result) $(this).text('复制成功');
+          else $(this).text('复制失败');
+        
+        ta.blur(); //For iOS
+        $(this).blur();
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn');
+        setTimeout(function () {
+          $b.text('复制');
+        }, 300);
+      }).append(e);
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
