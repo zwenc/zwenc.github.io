@@ -108,23 +108,23 @@
 <meta name="keywords" content="程序猿">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器视觉-梯度光流法">
-<meta property="og:url" content="https://www.zwenc.cn/ab251264/index.html">
+<meta property="og:url" content="https://zwenc.gitee.io/ab251264/index.html">
 <meta property="og:site_name" content="zwen">
 <meta property="og:description" content="一、简介11.1 什么的光流光流（optical flow）是空间运动物体在观察成像平面上的像素运动的瞬时速度。 光流法是利用图像序列中像素在时间域上的变化以及相邻帧之间的相关性来找到上一帧跟当前帧之间存在的对应关系，从而计算出相邻帧之间物体的运动信息的一种方法。 通常将二维图像平面特定坐标点上的灰度瞬时变化率定义为光流矢量。 1.2 光流的物理意义一般而言，光流是由于场景中前景目标本身的移动、相">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.zwenc.cn/ab251264/1571376737670.png">
+<meta property="og:image" content="https://zwenc.gitee.io/ab251264/1571376737670.png">
 <meta property="og:updated_time" content="2019-10-29T07:22:33.694Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器视觉-梯度光流法">
 <meta name="twitter:description" content="一、简介11.1 什么的光流光流（optical flow）是空间运动物体在观察成像平面上的像素运动的瞬时速度。 光流法是利用图像序列中像素在时间域上的变化以及相邻帧之间的相关性来找到上一帧跟当前帧之间存在的对应关系，从而计算出相邻帧之间物体的运动信息的一种方法。 通常将二维图像平面特定坐标点上的灰度瞬时变化率定义为光流矢量。 1.2 光流的物理意义一般而言，光流是由于场景中前景目标本身的移动、相">
-<meta name="twitter:image" content="https://www.zwenc.cn/ab251264/1571376737670.png">
+<meta name="twitter:image" content="https://zwenc.gitee.io/ab251264/1571376737670.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://www.zwenc.cn/ab251264/">
+  <link rel="canonical" href="https://zwenc.gitee.io/ab251264/">
 
 
 
@@ -372,7 +372,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.zwenc.cn/ab251264/">
+    <link itemprop="mainEntityOfPage" href="https://zwenc.gitee.io/ab251264/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zwen">
@@ -519,7 +519,7 @@ I(x+dx,y+dy,t+dt) = I(x,y,t) + I_x dx + I_y dy + I_t dt + O(N^2)</script><p>其�
 <script type="math/tex; mode=display">
 I_x dx + I_y dy + I_t dt = 0</script><p>两边同时除$dt$得到约束方程：</p>
 <script type="math/tex; mode=display">
-I_x u + I_y v = - I_t</script><p>其中$u,v$表示移动方向。约束方程左边的物理意义为：在同一副图片中根据$x,y$点的像素值和梯度信息在$x+u,y+v$位置的像素值，但是时间t之后，这里的像素值却不变。所以只需要经过$u,v$移动后使变化的像素值等于$I_t$即可。但是可以看到仅仅一点的$I_x,I_y,I_t$信息是无法计算出两个变量的。所以我们使用一个窗函数计算这个窗内的所有点之间的差值，这样我们就会得到一个<a href="https://www.zwenc.cn/d02c8031/">超定方程组</a>。根据超定方程组的结果：</p>
+I_x u + I_y v = - I_t</script><p>其中$u,v$表示移动方向。约束方程左边的物理意义为：在同一副图片中根据$x,y$点的像素值和梯度信息在$x+u,y+v$位置的像素值，但是时间t之后，这里的像素值却不变。所以只需要经过$u,v$移动后使变化的像素值等于$I_t$即可。但是可以看到仅仅一点的$I_x,I_y,I_t$信息是无法计算出两个变量的。所以我们使用一个窗函数计算这个窗内的所有点之间的差值，这样我们就会得到一个<a href="https://www.zwenc.cn/d02c8031/" target="_blank" rel="noopener">超定方程组</a>。根据超定方程组的结果：</p>
 <script type="math/tex; mode=display">
 p = (A^TA)^{-1} A^T B</script><p>其中p为：</p>
 <script type="math/tex; mode=display">
@@ -1166,7 +1166,19 @@ p = (A^TA)^{-1} A^T B</script><p>其中p为：</p>
         }, 300);
       }).append(e);
     })
-  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  </script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -1183,17 +1195,5 @@ p = (A^TA)^{-1} A^T B</script><p>其中p为：</p>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
 </script>
 <!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
-
-
-  
-  
-
-  
-  
-
-  
-
-
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":80,"height":160},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<!-- hexo-inject:end --></body>
 </html>
